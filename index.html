@@ -9,7 +9,7 @@
   :root{
     --bg:#F5F3EE;--surface:#FFFFFF;--surface2:#F0EDE6;
     --text:#1A1916;--text2:#6B6860;--text3:#A8A59F;
-    --accent:#C8512A;--accent2:#E8724A;--accent-bg:#FDF0EB;
+    --accent:#1A56A0;--accent2:#2D6FBF;--accent-bg:#EBF2FC;
     --green:#2D7A4F;--green-bg:#EAF3EE;
     --border:#E2DDD5;--border2:#CBC5BC;
     --radius:10px;--radius-lg:16px;
@@ -137,9 +137,14 @@
       <div class="mode-tab" onclick="setMode('admin')">Yönetici</div>
     </div>
     <div id="login-advisor">
-      <h2>Merhaba!</h2>
-      <p class="subtitle">Adınızı seçerek devam edin</p>
-      <div class="advisor-grid" id="advisor-grid"></div>
+      <h2>Tebrikler! 🎉</h2>
+      <p class="subtitle">Harika bir işlem bitirdin. Şimdi beraber kapatalım mı?</p>
+      <div class="field">
+        <label>Adınızı seçin</label>
+        <select id="advisor-select" style="font-size:13px;padding:10px 12px">
+          <option value="">-- Seçiniz --</option>
+        </select>
+      </div>
       <button class="btn btn-primary" onclick="loginAdvisor()">Devam Et</button>
     </div>
     <div id="login-admin" style="display:none">
@@ -327,19 +332,19 @@
 
 <script>
 const ADVISORS = [
-  {name:'Umut Tokkuş'},
-  {name:'İrem Tetik'},
-  {name:'Gamze Yetkin'},
-  {name:'Nazlı Beyazıt'},
-  {name:'Orhan Özazman & Aysun Yılmaz', duo:true},
-  {name:'Evşen Özazman'},
-  {name:'Derya Öztürk'},
-  {name:'Özlem Özgür'},
-  {name:'Özlem Varol'},
   {name:'Ayşegül Alpay'},
   {name:'Ayşegül Aras'},
-  {name:'Gizem Gök'},
+  {name:'Derya Öztürk'},
   {name:'Ebru Şanlı'},
+  {name:'Evşen Özazman'},
+  {name:'Gamze Yetkin'},
+  {name:'Gizem Gök'},
+  {name:'İrem Tetik'},
+  {name:'Nazlı Beyazıt'},
+  {name:'Orhan Özazman & Aysun Yılmaz', duo:true},
+  {name:'Umut Tokkuş'},
+  {name:'Özlem Özgür'},
+  {name:'Özlem Varol'},
 ];
 const ADVISOR_NAMES = ADVISORS.map(a=>a.name);
 const ADMIN_PASS = '784512';
@@ -520,20 +525,19 @@ function setMode(m){
 }
 
 function buildAdvisorGrid(){
-  const g=document.getElementById('advisor-grid');
-  g.innerHTML=ADVISORS.map(a=>{
-    if(a.duo) return `<div class="advisor-chip duo" onclick="selectAdvisor(this,'${a.name}')">${a.name}</div>`;
-    const parts=a.name.split(' ');
-    return `<div class="advisor-chip" onclick="selectAdvisor(this,'${a.name}')">${parts[0]}<br><span style="font-size:10px;opacity:.6">${parts.slice(1).join(' ')}</span></div>`;
-  }).join('');
+  const sel=document.getElementById('advisor-select');
+  sel.innerHTML='<option value="">-- Seçiniz --</option>'+ADVISORS.map(a=>`<option value="${a.name}">${a.name}</option>`).join('');
+  sel.onchange = function(){ selectedAdvisor = this.value; };
+  selectedAdvisor = null;
 }
 
 function selectAdvisor(el,name){
-  document.querySelectorAll('.advisor-chip').forEach(c=>c.classList.remove('selected'));
-  el.classList.add('selected'); selectedAdvisor=name;
+  selectedAdvisor=name;
 }
 
 function loginAdvisor(){
+  const sel=document.getElementById('advisor-select');
+  if(sel) selectedAdvisor=sel.value;
   if(!selectedAdvisor){alert('Lütfen adınızı seçin');return}
   currentUser={type:'advisor',name:selectedAdvisor};
   showScreen('s-form');
