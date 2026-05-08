@@ -83,7 +83,7 @@
   .nav-tabs{display:flex;gap:4px;background:var(--surface2);border-radius:var(--radius);padding:4px;margin-bottom:20px}
   .nav-tab{flex:1;padding:8px;text-align:center;border-radius:6px;font-size:12px;font-weight:500;cursor:pointer;color:var(--text2);transition:all .15s}
   .nav-tab.active{background:var(--surface);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,.08)}
-  .metric-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+  .metric-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
   .metric{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px;box-shadow:var(--shadow)}
   .metric-label{font-size:11px;color:var(--text3);font-weight:500;letter-spacing:.02em;margin-bottom:6px}
   .metric-value{font-size:22px;font-weight:600;color:var(--text);line-height:1;font-family:'DM Mono',monospace}
@@ -717,7 +717,9 @@ async function renderDashboard(){
   document.getElementById('metrics-row').innerHTML=`
     <div class="metric accent"><div class="metric-label">Yıllık Toplam Ciro</div><div class="metric-value">${fmtShort(totalCiro)}</div><div class="metric-sub">${thisYear} yılı</div></div>
     <div class="metric"><div class="metric-label">Bu Ay Ciro</div><div class="metric-value">${fmtShort(monthCiro)}</div><div class="metric-sub">${now.toLocaleDateString('tr-TR',{month:'long'})}</div></div>
-    <div class="metric"><div class="metric-label">Toplam Kapanış</div><div class="metric-value">${yearRecs.length}</div><div class="metric-sub">Bu yıl</div></div>`;
+    <div class="metric"><div class="metric-label">Toplam Kapanış</div><div class="metric-value">${yearRecs.length}</div><div class="metric-sub">Bu yıl</div></div>
+    <div class="metric" id="google-rating-card"><div class="metric-label">Google Puan</div><div class="metric-value" id="google-rating-val">...</div><div class="metric-sub" id="google-rating-sub">yükleniyor</div></div>`;
+  loadGoogleRating();
   const byAdvisor={};
   yearRecs.forEach(r=>{byAdvisor[r.advisor]=(byAdvisor[r.advisor]||0)+r.totalHB});
   const sorted=Object.entries(byAdvisor).sort((a,b)=>b[1]-a[1]);
@@ -883,6 +885,23 @@ function newCapanis(){
   showScreen('s-form');
   document.getElementById('success-msg').style.display='none';
   window.scrollTo(0,0);
+}
+
+async function loadGoogleRating(){
+  try{
+    const resp = await fetch(`https://places.googleapis.com/v1/places/${PLACE_ID}?fields=rating,userRatingsTotal&key=${PLACES_API_KEY}`);
+    const data = await resp.json();
+    if(data.rating){
+      document.getElementById('google-rating-val').textContent = '⭐ ' + data.rating.toFixed(1);
+      document.getElementById('google-rating-sub').textContent = data.userRatingsTotal + ' yorum';
+    } else {
+      document.getElementById('google-rating-val').textContent = '—';
+      document.getElementById('google-rating-sub').textContent = 'veri yok';
+    }
+  }catch(e){
+    document.getElementById('google-rating-val').textContent = '—';
+    document.getElementById('google-rating-sub').textContent = 'bağlantı hatası';
+  }
 }
 
 // Google Reviews
