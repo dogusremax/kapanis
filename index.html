@@ -183,15 +183,15 @@
       <div class="field-row">
         <div class="field"><label>İşlem Tarihi</label><input type="date" id="f-date"></div>
         <div class="field"><label>İşlem Tutarı (₺)</label>
-          <div class="currency-input"><span>₺</span><input type="number" id="f-amount" placeholder="0"></div>
+          <div class="currency-input"><span>₺</span><input type="text" id="f-amount" placeholder="0" inputmode="numeric" oninput="formatCurrency(this)"></div>
         </div>
       </div>
       <div class="field-row">
         <div class="field"><label>Mülk Sahibinden HB (₺)</label>
-          <div class="currency-input"><span>₺</span><input type="number" id="f-hb-owner" placeholder="0"></div>
+          <div class="currency-input"><span>₺</span><input type="text" id="f-hb-owner" placeholder="0" inputmode="numeric" oninput="formatCurrency(this)"></div>
         </div>
         <div class="field"><label>Alıcı/Kiracıdan HB (₺)</label>
-          <div class="currency-input"><span>₺</span><input type="number" id="f-hb-buyer" placeholder="0"></div>
+          <div class="currency-input"><span>₺</span><input type="text" id="f-hb-buyer" placeholder="0" inputmode="numeric" oninput="formatCurrency(this)"></div>
         </div>
       </div>
     </div>
@@ -200,7 +200,7 @@
       <div class="field"><label>Mülk Adresi</label><input type="text" id="f-address" placeholder="Mahalle, sokak, no..."></div>
       <div class="field-row">
         <div class="field"><label>Kapora (₺)</label>
-          <div class="currency-input"><span>₺</span><input type="number" id="f-deposit" placeholder="0"></div>
+          <div class="currency-input"><span>₺</span><input type="text" id="f-deposit" placeholder="0" inputmode="numeric" oninput="formatCurrency(this)"></div>
         </div>
         <div class="field"><label>Referral / Coop</label>
           <select id="f-ref"><option value="Yok">Yok</option><option value="Referral">Referral</option><option value="Co-operation">Co-operation</option></select>
@@ -367,6 +367,23 @@ const DOC_LABELS = {tapu:'🏠 Tapu', kontrat:'📝 Kontrat', fatura:'🧾 Fatur
 
 let currentUser=null, selectedAdvisor=null, selectedType='Satılık';
 let pendingFiles = {tapu:null, kontrat:null, fatura:null};
+
+function formatCurrency(el){
+  // İmleç pozisyonunu kaydet
+  let pos = el.selectionStart;
+  let raw = el.value.replace(/\./g,'').replace(/[^0-9]/g,'');
+  if(raw===''){el.value='';return;}
+  let formatted = Number(raw).toLocaleString('tr-TR');
+  el.value = formatted;
+  // İmleç pozisyonunu ayarla
+  let diff = formatted.length - (el.value.length - (el.value.length - formatted.length));
+  el.setSelectionRange(formatted.length, formatted.length);
+}
+
+function getCurrencyValue(id){
+  const val = document.getElementById(id).value.replace(/\./g,'').replace(',','.');
+  return Number(val)||0;
+}
 
 function fmt(n){return Number(n||0).toLocaleString('tr-TR')+'₺'}
 function fmtShort(n){n=Number(n||0);if(n>=1000000)return(n/1000000).toFixed(1)+'M₺';if(n>=1000)return Math.round(n/1000)+'K₺';return n+'₺'}
@@ -556,7 +573,7 @@ function resetForm(){
 
 async function submitForm(){
   const date=document.getElementById('f-date').value;
-  const amount=document.getElementById('f-amount').value;
+  const amount=getCurrencyValue('f-amount');
   const address=document.getElementById('f-address').value;
   if(!date||!amount||!address){alert('İşlem tarihi, tutarı ve adres zorunludur');return}
 
@@ -582,12 +599,12 @@ async function submitForm(){
     }
   }
 
-  const hbOwner=Number(document.getElementById('f-hb-owner').value||0);
-  const hbBuyer=Number(document.getElementById('f-hb-buyer').value||0);
+  const hbOwner=getCurrencyValue('f-hb-owner');
+  const hbBuyer=getCurrencyValue('f-hb-buyer');
   const rec={
     id:Date.now(), advisor:currentUser.name, type:selectedType, date,
-    amount:Number(amount), hbOwner, hbBuyer, totalHB:hbOwner+hbBuyer,
-    address, deposit:Number(document.getElementById('f-deposit').value||0),
+    amount:amount, hbOwner, hbBuyer, totalHB:hbOwner+hbBuyer,
+    address, deposit:getCurrencyValue('f-deposit'),
     ref:document.getElementById('f-ref').value,
     ownerName:document.getElementById('f-owner-name').value,
     ownerPhone:document.getElementById('f-owner-phone').value,
