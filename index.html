@@ -145,7 +145,7 @@
     <div id="login-admin" style="display:none">
       <h2>Yönetici Girişi</h2>
       <p class="subtitle">Yönetici şifresini girin</p>
-      <div class="field"><label>Şifre</label><input type="text" id="admin-pass" placeholder="admin123" onkeydown="if(event.key==='Enter')loginAdmin()"></div>
+      <div class="field"><label>Şifre</label><input type="password" id="admin-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')loginAdmin()"></div>
       <button class="btn btn-primary" onclick="loginAdmin()">Giriş Yap</button>
     </div>
   </div>
@@ -342,7 +342,7 @@ const ADVISORS = [
   {name:'Ebru Şanlı'},
 ];
 const ADVISOR_NAMES = ADVISORS.map(a=>a.name);
-const ADMIN_PASS = 'admin123';
+const ADMIN_PASS = '784512';
 const STORAGE_KEY = 'kapanis_records_v2';
 
 // Drive klasör ID haritası: danışman adı → {tapu, kontrat, fatura}
