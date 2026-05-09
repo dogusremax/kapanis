@@ -157,6 +157,10 @@
           <option value="">-- Seçiniz --</option>
         </select>
       </div>
+      <div class="field">
+        <label>PIN Kodunuz</label>
+        <input type="password" id="advisor-pin" placeholder="••••" maxlength="4" inputmode="numeric" onkeydown="if(event.key==='Enter')loginAdvisor()" style="letter-spacing:6px;font-size:18px;text-align:center">
+      </div>
       <button class="btn btn-primary" onclick="loginAdvisor()">Devam Et</button>
     </div>
     <div id="login-admin" style="display:none">
@@ -397,19 +401,19 @@
 
 <script>
 const ADVISORS = [
-  {name:'Ayşegül Alpay'},
-  {name:'Ayşegül Aras'},
-  {name:'Derya Öztürk'},
-  {name:'Ebru Şanlı'},
-  {name:'Evşen Özazman'},
-  {name:'Gamze Yetkin'},
-  {name:'Gizem Gök'},
-  {name:'İrem Tetik'},
-  {name:'Nazlı Beyazıt'},
-  {name:'Orhan Özazman & Aysun Yılmaz', duo:true},
-  {name:'Umut Tokkuş'},
-  {name:'Özlem Özgür'},
-  {name:'Özlem Varol'},
+  {name:'Ayşegül Alpay', pin:'2824'},
+  {name:'Ayşegül Aras', pin:'1409'},
+  {name:'Derya Öztürk', pin:'5506'},
+  {name:'Ebru Şanlı', pin:'5012'},
+  {name:'Evşen Özazman', pin:'4657'},
+  {name:'Gamze Yetkin', pin:'3286'},
+  {name:'Gizem Gök', pin:'2679'},
+  {name:'İrem Tetik', pin:'9935'},
+  {name:'Nazlı Beyazıt', pin:'2424'},
+  {name:'Orhan Özazman & Aysun Yılmaz', duo:true, pin:'7912'},
+  {name:'Umut Tokkuş', pin:'1520'},
+  {name:'Özlem Özgür', pin:'1488'},
+  {name:'Özlem Varol', pin:'2535'},
 ];
 const ADVISOR_NAMES = ADVISORS.map(a=>a.name);
 const BROKER_NAME = 'Umut Tokkuş';
@@ -624,6 +628,13 @@ function loginAdvisor(){
   const sel=document.getElementById('advisor-select');
   if(sel) selectedAdvisor=sel.value;
   if(!selectedAdvisor){alert('Lütfen adınızı seçin');return}
+  const pinInput = document.getElementById('advisor-pin');
+  if(pinInput){
+    const enteredPin = pinInput.value;
+    const advisor = ADVISORS.find(a=>a.name===selectedAdvisor);
+    if(!enteredPin){alert('Lütfen PIN kodunuzu girin');return}
+    if(advisor && advisor.pin !== enteredPin){alert('PIN kodu hatalı');pinInput.value='';pinInput.focus();return}
+  }
   currentUser={type:'advisor',name:selectedAdvisor};
   showScreen('s-form');
   document.getElementById('form-user-label').textContent=selectedAdvisor;
