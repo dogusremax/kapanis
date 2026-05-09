@@ -691,8 +691,42 @@ function resetForm(){
 async function submitForm(){
   const date=document.getElementById('f-date').value;
   const amount=getCurrencyValue('f-amount');
-  const address=document.getElementById('f-address').value;
-  if(!date||!amount||!address){alert('İşlem tarihi, tutarı ve adres zorunludur');return}
+  const address=document.getElementById('f-address').value.trim();
+  const ownerName=document.getElementById('f-owner-name').value.trim();
+  const ownerPhone=document.getElementById('f-owner-phone').value.trim();
+  const ownerEmail=document.getElementById('f-owner-email').value.trim();
+  const buyerName=document.getElementById('f-buyer-name').value.trim();
+  const buyerPhone=document.getElementById('f-buyer-phone').value.trim();
+  const buyerEmail=document.getElementById('f-buyer-email').value.trim();
+  const hbOwner=getCurrencyValue('f-hb-owner');
+  const hbBuyer=getCurrencyValue('f-hb-buyer');
+
+  // Zorunlu alan kontrolleri
+  const errors = [];
+  if(!date) errors.push('• İşlem tarihi');
+  if(!amount) errors.push('• İşlem tutarı');
+  if(!address) errors.push('• Adres');
+  if(hbOwner===0 && hbBuyer===0) errors.push('• En az bir hizmet bedeli (HB) girilmeli');
+  if(!ownerName) errors.push('• Mülk sahibi adı soyadı');
+  if(!ownerPhone) errors.push('• Mülk sahibi telefonu');
+  if(!ownerEmail) errors.push('• Mülk sahibi e-postası');
+  if(!buyerName) errors.push('• Alıcı / kiracı adı soyadı');
+  if(!buyerPhone) errors.push('• Alıcı / kiracı telefonu');
+  if(!buyerEmail) errors.push('• Alıcı / kiracı e-postası');
+
+  // Format kontrolleri
+  const phoneRegex = /^0 \(5\d{2}\) \d{3} \d{2} \d{2}$/;
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  if(ownerPhone && !phoneRegex.test(ownerPhone)) errors.push('• Mülk sahibi telefonu geçersiz format (0 (5XX) XXX XX XX)');
+  if(buyerPhone && !phoneRegex.test(buyerPhone)) errors.push('• Alıcı telefonu geçersiz format (0 (5XX) XXX XX XX)');
+  if(ownerEmail && !emailRegex.test(ownerEmail)) errors.push('• Mülk sahibi e-postası geçersiz format');
+  if(buyerEmail && !emailRegex.test(buyerEmail)) errors.push('• Alıcı e-postası geçersiz format');
+
+  if(errors.length > 0){
+    alert('Lütfen aşağıdaki alanları kontrol edin:\n\n' + errors.join('\n'));
+    return;
+  }
 
   const btn=document.getElementById('submit-btn');
   btn.disabled=true; btn.innerHTML='<span class="spinner" style="margin-right:6px;border-top-color:#fff"></span>Kaydediliyor...';
@@ -716,8 +750,6 @@ async function submitForm(){
     }
   }
 
-  const hbOwner=getCurrencyValue('f-hb-owner');
-  const hbBuyer=getCurrencyValue('f-hb-buyer');
   const rec={
     id:Date.now(), advisor:currentUser.name, type:selectedType, date,
     amount:amount, hbOwner, hbBuyer, totalHB:hbOwner+hbBuyer,
