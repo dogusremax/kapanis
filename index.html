@@ -789,6 +789,10 @@ async function renderRecords(){
     return true;
   }).sort((a,b)=>new Date(b.date)-new Date(a.date));
   const isAdmin = currentUser && currentUser.type === 'admin';
+  const toplamCiro = filtered.reduce((s,r)=>s+(Number(r.totalHB)||0),0);
+  const toplamTutar = filtered.reduce((s,r)=>s+(Number(r.amount)||0),0);
+  const advFilter2 = document.getElementById('filter-advisor').value;
+
   document.getElementById('records-tbody').innerHTML=filtered.length?filtered.map(r=>`
     <tr>
       <td>${r.advisor}</td>
@@ -799,6 +803,30 @@ async function renderRecords(){
       <td style="font-family:'DM Mono',monospace">${fmt(r.totalHB)}</td>
       <td>${isAdmin ? `<button class="delete-btn" onclick="deleteRecord(${r.id})">✕</button>` : ''}</td>
     </tr>`).join(''):`<tr><td colspan="${isAdmin?7:6}"><div class="empty">Filtrelerle eşleşen kayıt yok</div></td></tr>`;
+
+  // Toplam satırı - danışman seçiliyse veya her zaman göster
+  const summaryEl = document.getElementById('records-summary');
+  if(summaryEl && filtered.length > 0){
+    summaryEl.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:var(--accent-bg);border-radius:var(--radius);margin-top:8px;border:1px solid var(--border2)">
+        <div style="font-size:13px;color:var(--text2)">
+          <strong style="color:var(--text)">${filtered.length} kapanış</strong>
+          ${advFilter2 ? ' · ' + advFilter2 : ''}
+        </div>
+        <div style="display:flex;gap:24px">
+          <div style="text-align:right">
+            <div style="font-size:11px;color:var(--text3)">Toplam İşlem Tutarı</div>
+            <div style="font-family:'DM Mono',monospace;font-weight:600;color:var(--text)">${fmt(toplamTutar)}</div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-size:11px;color:var(--text3)">Toplam HB</div>
+            <div style="font-family:'DM Mono',monospace;font-weight:600;color:var(--accent)">${fmt(toplamCiro)}</div>
+          </div>
+        </div>
+      </div>`;
+  } else if(summaryEl) {
+    summaryEl.innerHTML = '';
+  }
 }
 
 async function deleteRecord(id){
