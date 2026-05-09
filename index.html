@@ -241,13 +241,15 @@
     </div>
     <div class="form-card">
       <div class="form-section-title">Müşteri Bilgileri</div>
+      <div class="field"><label>Mülk Sahibi Adı</label><input type="text" id="f-owner-name" placeholder="Ad Soyad" oninput="capitalizeWords(this)"></div>
       <div class="field-row">
-        <div class="field"><label>Mülk Sahibi Adı</label><input type="text" id="f-owner-name" placeholder="Ad Soyad" oninput="capitalizeWords(this)"></div>
         <div class="field"><label>Telefon</label><input type="text" id="f-owner-phone" placeholder="0 (5XX) XXX XX XX" oninput="formatPhone(this)" maxlength="17"></div>
+        <div class="field"><label>E-posta</label><input type="text" id="f-owner-email" placeholder="ornek@mail.com" inputmode="email"></div>
       </div>
+      <div class="field"><label>Alıcı / Kiracı Adı</label><input type="text" id="f-buyer-name" placeholder="Ad Soyad" oninput="capitalizeWords(this)"></div>
       <div class="field-row">
-        <div class="field"><label>Alıcı / Kiracı Adı</label><input type="text" id="f-buyer-name" placeholder="Ad Soyad" oninput="capitalizeWords(this)"></div>
         <div class="field"><label>Telefon</label><input type="text" id="f-buyer-phone" placeholder="0 (5XX) XXX XX XX" oninput="formatPhone(this)" maxlength="17"></div>
+        <div class="field"><label>E-posta</label><input type="text" id="f-buyer-email" placeholder="ornek@mail.com" inputmode="email"></div>
       </div>
     </div>
     <div class="form-card">
@@ -675,7 +677,7 @@ function setType(t){
 }
 
 function resetForm(){
-  ['f-date','f-amount','f-hb-owner','f-hb-buyer','f-address','f-deposit','f-owner-name','f-owner-phone','f-buyer-name','f-buyer-phone','f-notes'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=''});
+  ['f-date','f-amount','f-hb-owner','f-hb-buyer','f-address','f-deposit','f-owner-name','f-owner-phone','f-owner-email','f-buyer-name','f-buyer-phone','f-buyer-email','f-notes'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=''});
   document.getElementById('f-date').value=new Date().toISOString().split('T')[0];
   document.getElementById('f-ref').value='Yok';
   document.getElementById('f-satisfaction').value='Evet';
@@ -723,8 +725,12 @@ async function submitForm(){
     ref:document.getElementById('f-ref').value,
     ownerName:document.getElementById('f-owner-name').value,
     ownerPhone:document.getElementById('f-owner-phone').value,
+    ownerEmail:document.getElementById('f-owner-email').value,
+
     buyerName:document.getElementById('f-buyer-name').value,
     buyerPhone:document.getElementById('f-buyer-phone').value,
+    buyerEmail:document.getElementById('f-buyer-email').value,
+
     notes:document.getElementById('f-notes').value,
     satisfaction:document.getElementById('f-satisfaction').value,
     review:document.getElementById('f-review').value,
