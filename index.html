@@ -876,6 +876,30 @@ function launchConfetti(){
   animate();
 }
 
+function playApplause(){
+  try{
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const duration = 3;
+    const buf = ctx.createBuffer(1, ctx.sampleRate * duration, ctx.sampleRate);
+    const data = buf.getChannelData(0);
+    for(let i=0; i<data.length; i++){
+      // Alkış sesi — birden fazla "tık" sesi üst üste
+      const t = i / ctx.sampleRate;
+      const burst = Math.sin(t * 1200) * Math.exp(-((t % 0.08) * 40));
+      data[i] = burst * (Math.random() * 0.4 + 0.1) * Math.exp(-t * 0.8);
+    }
+    const src = ctx.createBufferSource();
+    src.buffer = buf;
+    // Reverb için ConvolverNode
+    const gain = ctx.createGain();
+    gain.gain.setValueAtTime(0.8, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + duration);
+    src.connect(gain);
+    gain.connect(ctx.destination);
+    src.start();
+  }catch(e){ console.log('Ses çalınamadı:', e); }
+}
+
 function showCelebration(name, amount, address){
   document.getElementById('celebrate-name').textContent = 'Tebrikler ' + name.split(' ')[0] + '! 🎊';
   document.getElementById('celebrate-msg').textContent = MOTIVASYON[Math.floor(Math.random()*MOTIVASYON.length)];
@@ -883,6 +907,7 @@ function showCelebration(name, amount, address){
   document.getElementById('celebrate-address').textContent = address || '';
   showScreen('s-celebrate');
   setTimeout(launchConfetti, 300);
+  setTimeout(playApplause, 100);
 }
 
 function newCapanis(){
