@@ -879,25 +879,39 @@ function launchConfetti(){
 function playApplause(){
   try{
     const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    const duration = 3;
-    const buf = ctx.createBuffer(1, ctx.sampleRate * duration, ctx.sampleRate);
-    const data = buf.getChannelData(0);
-    for(let i=0; i<data.length; i++){
-      // Alkış sesi — birden fazla "tık" sesi üst üste
-      const t = i / ctx.sampleRate;
-      const burst = Math.sin(t * 1200) * Math.exp(-((t % 0.08) * 40));
-      data[i] = burst * (Math.random() * 0.4 + 0.1) * Math.exp(-t * 0.8);
+    // Gerçekçi alkış sesi - çok sayıda rastgele tık sesi
+    const totalDuration = 4;
+    const sampleRate = ctx.sampleRate;
+    const buf = ctx.createBuffer(2, sampleRate * totalDuration, sampleRate);
+    
+    for(let ch=0; ch<2; ch++){
+      const data = buf.getChannelData(ch);
+      // Her 0-80ms'de bir alkış tık sesi
+      for(let clap=0; clap<60; clap++){
+        const startTime = Math.random() * totalDuration;
+        const startSample = Math.floor(startTime * sampleRate);
+        const clapDuration = Math.floor((0.02 + Math.random()*0.04) * sampleRate);
+        for(let s=0; s<clapDuration && startSample+s<data.length; s++){
+          const env = Math.exp(-s / (clapDuration * 0.3));
+          data[startSample + s] += (Math.random()*2-1) * 0.3 * env;
+        }
+      }
+      // Genel zarf - ortada daha yüksek
+      for(let i=0; i<data.length; i++){
+        const t = i / sampleRate;
+        const env = Math.sin(Math.PI * t / totalDuration);
+        data[i] *= env * 1.5;
+      }
     }
+    
     const src = ctx.createBufferSource();
     src.buffer = buf;
-    // Reverb için ConvolverNode
     const gain = ctx.createGain();
-    gain.gain.setValueAtTime(0.8, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + duration);
+    gain.gain.value = 1.2;
     src.connect(gain);
     gain.connect(ctx.destination);
     src.start();
-  }catch(e){ console.log('Ses çalınamadı:', e); }
+  }catch(e){ console.log('Ses hatası:', e); }
 }
 
 function showCelebration(name, amount, address){
