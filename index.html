@@ -310,7 +310,8 @@
       <div class="nav-tab active" onclick="showTab('overview')">Genel Bakış</div>
       <div class="nav-tab" onclick="showTab('records')">Tüm Kayıtlar</div>
       <div class="nav-tab" onclick="showTab('tracking')">Takip</div>
-      <div class="nav-tab" onclick="showTab('reviews')">Google Yorumlar</div>
+      <div class="nav-tab" onclick="showTab('reviews')">Yorumlar</div>
+      <div class="nav-tab" onclick="showTab('leaderboard')">Sıralama</div>
     </div>
     <div id="tab-overview">
       <div class="metric-row" id="metrics-row"></div>
@@ -345,6 +346,18 @@
       <div class="card">
         <div class="card-header"><span class="card-title">Müşteri Yorumları</span><span style="font-size:11px;color:var(--text3)" id="reviews-rating"></span></div>
         <div id="reviews-list"><div class="empty">Yükleniyor...</div></div>
+      </div>
+    </div>
+    <div id="tab-leaderboard" style="display:none">
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Sıralama</span>
+          <div style="display:flex;gap:6px">
+            <button onclick="setLbPeriod('month')" id="lb-btn-month" style="font-size:11px;padding:4px 10px;border-radius:20px;border:1px solid var(--accent);background:var(--accent);color:#fff;cursor:pointer">Bu Ay</button>
+            <button onclick="setLbPeriod('year')" id="lb-btn-year" style="font-size:11px;padding:4px 10px;border-radius:20px;border:1px solid var(--border2);background:transparent;color:var(--text2);cursor:pointer">Bu Yıl</button>
+          </div>
+        </div>
+        <div id="leaderboard-list"></div>
       </div>
     </div>
     <div id="tab-tracking" style="display:none">
@@ -847,9 +860,9 @@ async function deleteRecord(id){
 }
 
 function showTab(tab){
-  ['overview','records','tracking','reviews'].forEach(t=>{document.getElementById('tab-'+t).style.display=t===tab?'block':'none'});
-  document.querySelectorAll('.nav-tab').forEach((el,i)=>el.classList.toggle('active',['overview','records','tracking','reviews'][i]===tab));
-  if(tab==='records')renderRecords(); else if(tab==='reviews')loadReviews(); else renderDashboard();
+  ['overview','records','tracking','reviews','leaderboard'].forEach(t=>{document.getElementById('tab-'+t).style.display=t===tab?'block':'none'});
+  document.querySelectorAll('.nav-tab').forEach((el,i)=>el.classList.toggle('active',['overview','records','tracking','reviews','leaderboard'][i]===tab));
+  if(tab==='records')renderRecords(); else if(tab==='reviews')loadReviews(); else if(tab==='leaderboard')renderLeaderboard(); else renderDashboard();
 }
 
 const MOTIVASYON = [
@@ -985,6 +998,62 @@ async function loadGoogleRating(){
 // Google Reviews
 const PLACES_API_KEY = 'AIzaSyBzaQIDDpZFsUafA7bYdRaouP9z2u0EhPY';
 const PLACE_ID = 'ChIJdbmFqvvHyxQR_agtjpCfYW0';
+
+let lbPeriod = 'month';
+function setLbPeriod(p){
+  lbPeriod = p;
+  document.getElementById('lb-btn-month').style.background = p==='month' ? 'var(--accent)' : 'transparent';
+  document.getElementById('lb-btn-month').style.color = p==='month' ? '#fff' : 'var(--text2)';
+  document.getElementById('lb-btn-month').style.borderColor = p==='month' ? 'var(--accent)' : 'var(--border2)';
+  document.getElementById('lb-btn-year').style.background = p==='year' ? 'var(--accent)' : 'transparent';
+  document.getElementById('lb-btn-year').style.color = p==='year' ? '#fff' : 'var(--text2)';
+  document.getElementById('lb-btn-year').style.borderColor = p==='year' ? 'var(--accent)' : 'var(--border2)';
+  renderLeaderboard();
+}
+
+async function renderLeaderboard(){
+  const el = document.getElementById('leaderboard-list');
+  el.innerHTML = '<div class="empty">Yükleniyor...</div>';
+  const recs = await loadAllRecords();
+  const now = new Date();
+
+  const filtered = recs.filter(r=>{
+    const d = new Date(r.date);
+    if(lbPeriod==='month') return d.getFullYear()===now.getFullYear() && d.getMonth()===now.getMonth();
+    return d.getFullYear()===now.getFullYear();
+  });
+
+  // Danışman bazlı toplam HB
+  const totals = {};
+  ADVISOR_NAMES.forEach(a => totals[a] = 0);
+  filtered.forEach(r => {
+    if(!totals[r.advisor]) totals[r.advisor] = 0;
+    totals[r.advisor] += Number(r.totalHB)||0;
+  });
+
+  const sorted = Object.entries(totals).sort((a,b)=>b[1]-a[1]);
+  const maxVal = sorted[0]?.[1] || 1;
+  const medals = ['🥇','🥈','🥉'];
+
+  const periodLabel = lbPeriod==='month'
+    ? now.toLocaleDateString('tr-TR',{month:'long',year:'numeric'})
+    : now.getFullYear() + ' yılı';
+
+  el.innerHTML = `
+    <div style="font-size:11px;color:var(--text3);padding:8px 0 12px">${periodLabel} · HB tutarına göre</div>
+    ${sorted.map(([name,val],i)=>{
+      const pct = maxVal > 0 ? (val/maxVal*100) : 0;
+      const medal = i<3 ? `<span style="font-size:18px">${medals[i]}</span>` : `<span style="width:28px;height:28px;border-radius:50%;background:var(--surface2);display:inline-flex;align-items:center;justify-content:center;font-size:12px;color:var(--text2);font-weight:500">${i+1}</span>`;
+      return `<div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)">
+        <div style="width:28px;text-align:center">${medal}</div>
+        <div style="flex:1;font-size:13px;font-weight:500">${name}</div>
+        <div style="font-size:13px;font-family:'DM Mono',monospace;font-weight:${val>0?'600':'400'};color:${val>0?'var(--text)':'var(--text3)'};min-width:90px;text-align:right">${val>0?fmt(val):'—'}</div>
+        <div style="width:80px;height:6px;background:var(--surface2);border-radius:3px;overflow:hidden">
+          <div style="width:${pct}%;height:100%;background:${i===0?'#FAC775':i===1?'#B4B2A9':i===2?'#F0997B':'var(--accent)'};border-radius:3px;transition:width .3s"></div>
+        </div>
+      </div>`;
+    }).join('')}`;
+}
 
 async function loadReviews(){
   const el = document.getElementById('reviews-list');
