@@ -177,7 +177,18 @@
     </div>
     <div style="display:flex;align-items:center;gap:8px">
       <span class="header-user" id="form-user-label"></span>
+      <button class="btn btn-ghost btn-sm" onclick="toggleAdvisorLeaderboard()" id="lb-toggle-btn">🏆</button>
       <button class="btn btn-ghost btn-sm" onclick="logout()">Çıkış</button>
+    </div>
+  </div>
+  <div id="advisor-lb-panel" style="display:none;padding:12px 16px;max-width:520px;width:100%;margin:0 auto">
+    <div style="background:var(--surface);border-radius:var(--radius-lg);border:1px solid var(--border);padding:16px">
+      <div style="font-size:13px;font-weight:600;margin-bottom:12px;color:var(--text)">🏆 Sıralama</div>
+      <div style="display:flex;gap:6px;margin-bottom:12px">
+        <button onclick="setAdvLbPeriod('month')" id="adv-lb-month" style="font-size:11px;padding:4px 10px;border-radius:20px;border:1px solid var(--accent);background:var(--accent);color:#fff;cursor:pointer">Bu Ay</button>
+        <button onclick="setAdvLbPeriod('year')" id="adv-lb-year" style="font-size:11px;padding:4px 10px;border-radius:20px;border:1px solid var(--border2);background:transparent;color:var(--text2);cursor:pointer">Bu Yıl</button>
+      </div>
+      <div id="advisor-lb-list"></div>
     </div>
   </div>
   <div id="success-msg" style="display:none;padding:16px;max-width:520px;width:100%;margin:0 auto">
@@ -401,6 +412,7 @@ const ADVISORS = [
   {name:'Özlem Varol'},
 ];
 const ADVISOR_NAMES = ADVISORS.map(a=>a.name);
+const BROKER_NAME = 'Umut Tokkuş';
 const ADMIN_PASS = '784512';
 const STORAGE_KEY = 'kapanis_records_v2';
 
@@ -1010,6 +1022,57 @@ async function loadGoogleRating(){
 const PLACES_API_KEY = 'AIzaSyBzaQIDDpZFsUafA7bYdRaouP9z2u0EhPY';
 const PLACE_ID = 'ChIJdbmFqvvHyxQR_agtjpCfYW0';
 
+// Danışman ekranı sıralama
+let advLbPeriod = 'month';
+let advLbOpen = false;
+
+function toggleAdvisorLeaderboard(){
+  advLbOpen = !advLbOpen;
+  document.getElementById('advisor-lb-panel').style.display = advLbOpen ? 'block' : 'none';
+  document.getElementById('lb-toggle-btn').style.background = advLbOpen ? 'var(--accent-bg)' : '';
+  if(advLbOpen) renderAdvisorLeaderboard();
+}
+
+function setAdvLbPeriod(p){
+  advLbPeriod = p;
+  document.getElementById('adv-lb-month').style.background = p==='month' ? 'var(--accent)' : 'transparent';
+  document.getElementById('adv-lb-month').style.color = p==='month' ? '#fff' : 'var(--text2)';
+  document.getElementById('adv-lb-month').style.borderColor = p==='month' ? 'var(--accent)' : 'var(--border2)';
+  document.getElementById('adv-lb-year').style.background = p==='year' ? 'var(--accent)' : 'transparent';
+  document.getElementById('adv-lb-year').style.color = p==='year' ? '#fff' : 'var(--text2)';
+  document.getElementById('adv-lb-year').style.borderColor = p==='year' ? 'var(--accent)' : 'var(--border2)';
+  renderAdvisorLeaderboard();
+}
+
+async function renderAdvisorLeaderboard(){
+  const el = document.getElementById('advisor-lb-list');
+  el.innerHTML = '<div style="text-align:center;padding:16px"><img src="' + document.querySelector('.logo-icon img, .header-logo img').src + '" class="loading-spinner" style="width:40px;height:40px"></div>';
+  const recs = await loadAllRecords();
+  const now = new Date();
+  const filtered = recs.filter(r=>{
+    const d = new Date(r.date);
+    if(advLbPeriod==='month') return d.getFullYear()===now.getFullYear() && d.getMonth()===now.getMonth();
+    return d.getFullYear()===now.getFullYear();
+  });
+  const totals = {};
+  ADVISOR_NAMES.forEach(a => totals[a] = 0);
+  filtered.forEach(r => { if(!totals[r.advisor]) totals[r.advisor]=0; totals[r.advisor]+= Number(r.totalHB)||0; });
+  // Broker danışman sıralamasında görünmez
+  const sorted = Object.entries(totals).filter(([name])=>name!==BROKER_NAME).sort((a,b)=>b[1]-a[1]);
+  const medals = ['🥇','🥈','🥉'];
+  const currentName = currentUser?.name;
+  el.innerHTML = sorted.map(([name, val], i) => {
+    const isMe = name === currentName;
+    const rank = i < 3 && val > 0 ? medals[i] : (i+1);
+    const rankSize = i < 3 && val > 0 ? '16' : '12';
+    return `<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);${isMe?'background:var(--accent-bg);border-radius:8px;padding:8px;':''}">
+      <div style="width:24px;text-align:center;font-size:${rankSize}px">${rank}</div>
+      <div style="flex:1;font-size:13px;font-weight:${isMe?'600':'400'};color:${isMe?'var(--accent)':'var(--text)'}">${name}${isMe?' (Sen)':''}</div>
+      ${isMe ? `<div style="font-size:12px;color:var(--accent);font-weight:500">${val>0?'✓':''}</div>` : ''}
+    </div>`;
+  }).join('');
+}
+
 let lbPeriod = 'month';
 function setLbPeriod(p){
   lbPeriod = p;
@@ -1054,7 +1117,7 @@ async function renderLeaderboard(){
     <div style="font-size:11px;color:var(--text3);padding:8px 0 12px">${periodLabel} · HB tutarına göre</div>
     ${sorted.map(([name,val],i)=>{
       const pct = maxVal > 0 ? (val/maxVal*100) : 0;
-      const medal = i<3 ? `<span style="font-size:18px">${medals[i]}</span>` : `<span style="width:28px;height:28px;border-radius:50%;background:var(--surface2);display:inline-flex;align-items:center;justify-content:center;font-size:12px;color:var(--text2);font-weight:500">${i+1}</span>`;
+      const medal = i<3 && val>0 ? `<span style="font-size:18px">${medals[i]}</span>` : `<span style="width:28px;height:28px;border-radius:50%;background:var(--surface2);display:inline-flex;align-items:center;justify-content:center;font-size:12px;color:var(--text2);font-weight:500">${i+1}</span>`;
       return `<div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)">
         <div style="width:28px;text-align:center">${medal}</div>
         <div style="flex:1;font-size:13px;font-weight:500">${name}</div>
