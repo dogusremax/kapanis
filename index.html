@@ -151,13 +151,13 @@
     <div id="login-advisor">
       <h2>Tebrikler! 🎉</h2>
       <p class="subtitle">Harika bir işlem bitirdin. Şimdi beraber kapatalım mı?</p>
-      <div class="field">
+      <div class="field" id="select-field">
         <label>Adınızı seçin</label>
         <select id="advisor-select" style="font-size:13px;padding:10px 12px">
           <option value="">-- Seçiniz --</option>
         </select>
       </div>
-      <div class="field">
+      <div class="field" id="pin-field" style="display:none;text-align:center">
         <label>PIN Kodunuz</label>
         <input type="password" id="advisor-pin" placeholder="••••" maxlength="4" inputmode="numeric" onkeydown="if(event.key==='Enter')loginAdvisor()" style="letter-spacing:6px;font-size:18px;text-align:center">
       </div>
@@ -616,7 +616,21 @@ function setMode(m){
 function buildAdvisorGrid(){
   const sel=document.getElementById('advisor-select');
   sel.innerHTML='<option value="">-- Seçiniz --</option>'+ADVISORS.map(a=>`<option value="${a.name}">${a.name}</option>`).join('');
-  sel.onchange = function(){ selectedAdvisor = this.value; };
+  sel.onchange = function(){ 
+    selectedAdvisor = this.value; 
+    const pf=document.getElementById('pin-field'); 
+    const pi=document.getElementById('advisor-pin');
+    const sf=document.getElementById('select-field');
+    if(this.value){ 
+        pf.style.display='block'; 
+        if(sf) sf.style.display='none';
+        pi.value=''; 
+        setTimeout(()=>pi.focus(), 100); 
+    } else { 
+        pf.style.display='none';
+        if(sf) sf.style.display='block';
+    } 
+};
   selectedAdvisor = null;
 }
 
