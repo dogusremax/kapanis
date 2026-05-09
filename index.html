@@ -404,7 +404,8 @@ let pendingFiles = {tapu:null, kontrat:null, fatura:null};
 
 function capitalizeWords(el){
   const pos = el.selectionStart;
-  el.value = el.value.replace(/\b\w/g, c => c.toLocaleUpperCase('tr-TR'));
+  // Sadece her kelimenin ilk harfini büyük yap, gerisini küçük bırak
+  el.value = el.value.replace(/(?:^|\s)\S/g, c => c.toLocaleUpperCase('tr-TR'));
   el.setSelectionRange(pos, pos);
 }
 
