@@ -1249,6 +1249,6 @@ async function loadReviews(){
     </table>`;
 }
 
-buildAdvisorGrid();
+localStorage.clear(); buildAdvisorGrid();
 document.getElementById('f-date').value=new Date().toISOString().split('T')[0];
 </script>
