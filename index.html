@@ -412,7 +412,8 @@ const ADVISORS = [
   {name:'Gizem Gök', pin:'2679'},
   {name:'İrem Tetik', pin:'9935'},
   {name:'Nazlı Beyazıt', pin:'2424'},
-  {name:'Orhan Özazman & Aysun Yılmaz', duo:true, pin:'7912'},
+  {name:'Orhan Özazman', pin:'7912'},
+  {name:'Aysun Yılmaz', pin:'3847'},
   {name:'Umut Tokkuş', pin:'1520'},
   {name:'Özlem Özgür', pin:'1488'},
   {name:'Özlem Varol', pin:'2535'},
@@ -428,7 +429,8 @@ const DRIVE_FOLDERS = {
   'İrem Tetik':               {tapu:'1oIWjaKyFXrgKkturmRffttUSxqIN_TRd', kontrat:'1FnmQKxmJNstngbW-Ge2nGLoz1croQbOk', fatura:'1KHBwZrvz5OmzI5FgxMKLZlOOuqoc13aL'},
   'Gamze Yetkin':             {tapu:'1OAKcEaiw2h0IKKS_G3Ga8p9RNsklqlRp', kontrat:'1DKAVRA-RxFBYCE7dxQlw5MrhO-w9HfnQ', fatura:'1I9QBlaz4h5Fz82ETvOoei6MQ-AWuqNPc'},
   'Nazlı Beyazıt':            {tapu:'11AMEzySb-AZRI7I6eBt7CqToyuYgvvVo', kontrat:'1eX9F0j3AQx1K0V5QrUo_uQlsamj6bm9x', fatura:'1YHiKgIHU2p6hGjTjry_iH8Ipz9k6RVYf'},
-  'Orhan Özazman & Aysun Yılmaz': {tapu:'16ly3fejGy1YEZOffO3QKLovKghis-DqL', kontrat:'17TKsbiFxpIekyzkKMdJz2gPkXMCw8NyU', fatura:'1drz8XadN9xNpiEyRBin43yvsOl51o45G'},
+  'Orhan Özazman': {tapu:'16ly3fejGy1YEZOffO3QKLovKghis-DqL', kontrat:'17TKsbiFxpIekyzkKMdJz2gPkXMCw8NyU', fatura:'1drz8XadN9xNpiEyRBin43yvsOl51o45G'},
+  'Aysun Yılmaz': {tapu:'16ly3fejGy1YEZOffO3QKLovKghis-DqL', kontrat:'17TKsbiFxpIekyzkKMdJz2gPkXMCw8NyU', fatura:'1drz8XadN9xNpiEyRBin43yvsOl51o45G'},
   'Evşen Özazman':            {tapu:'1t4a4lUY3Izr7-qpxRJ72eTcFhQ4xS6XU', kontrat:'1Vb6-yretrJmD-iSG1snIy1OU5IRVQieb', fatura:'1MXl39XHjChCoskAqUSTHWdJM0gKkeLxv'},
   'Derya Öztürk':             {tapu:'1QpNtp70jxYlnZxWTT9Aa21GQFu8WFZ6p', kontrat:'10bkHDXsF0mpZdcG14HgLT_Pyqvp0isQz', fatura:'1IvcmroHLwLoYXY1rNI6bosXkQdCHnVBK'},
   'Özlem Özgür':              {tapu:'1aI1FtaDsvvYJ1x0kS2DRPSxRcNkls-GL', kontrat:'1aYP3pc1B4A5hWNUQeHaPnBCzS3Z2nfJl', fatura:'1DrgKpDz9Ker120drLyvXlxThKidBeXFe'},
@@ -487,16 +489,14 @@ function fmtShort(n){n=Number(n||0);if(n>=1000000)return(n/1000000).toFixed(1)+'
 
 function loadRecords(){try{const d=localStorage.getItem(STORAGE_KEY);return d?JSON.parse(d):[]}catch(e){return[]}}
 async function loadAllRecords(){
-  // Önce Sheets'ten yükle, sonra localStorage ile birleştir
   const sheetRecs = await loadFromSheets();
-  const localRecs = loadRecords();
-  // Sheets'teki id'lere göre tekrarları önle
-  const sheetIds = new Set(sheetRecs.map(r=>String(r.id)));
-  const onlyLocal = localRecs.filter(r=>!sheetIds.has(String(r.id)));
-  const all = [...sheetRecs, ...onlyLocal];
-  // Sheets kayıtlarını localStorage'a da kaydet
-  if(sheetRecs.length > 0) saveRecords(all);
-  return all;
+  if(sheetRecs.length > 0){
+    // Sheets varsa onu esas al, localStorage'ı senkronize et
+    saveRecords(sheetRecs);
+    return sheetRecs;
+  }
+  // Sheets boşsa localStorage'dan oku
+  return loadRecords();
 }
 function saveRecords(recs){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(recs))}catch(e){}}
 
@@ -519,7 +519,16 @@ async function loadFromSheets(){
     const resp = await fetch(APPS_SCRIPT_URL + '?action=getRecords', { redirect: 'follow' });
     const text = await resp.text();
     const json = JSON.parse(text);
-    return json.records || [];
+    const recs = json.records || [];
+    // Tutarları string'den sayıya çevir - nokta binlik ayraç, virgül ondalık
+    const pa = v => { 
+      if(typeof v==='number') return v; 
+      const s = String(v).replace(/[₺\s]/g,'').trim();
+      // "1.750.000" formatı - son noktadan sonra 3 rakam varsa binlik ayraç
+      const cleaned = s.replace(/\./g,'').replace(',','.');
+      return Number(cleaned) || 0; 
+    };
+    return recs.map(r => ({...r, amount:pa(r.amount), hbOwner:pa(r.hbOwner), hbBuyer:pa(r.hbBuyer), totalHB:pa(r.totalHB), deposit:pa(r.deposit)}));
   }catch(e){ return []; }
 }
 
@@ -1089,20 +1098,33 @@ async function renderAdvisorLeaderboard(){
     return d.getFullYear()===now.getFullYear();
   });
   const totals = {};
-  ADVISOR_NAMES.forEach(a => totals[a] = 0);
-  filtered.forEach(r => { if(!totals[r.advisor]) totals[r.advisor]=0; totals[r.advisor]+= Number(r.totalHB)||0; });
-  // Broker danışman sıralamasında görünmez
-  const sorted = Object.entries(totals).filter(([name])=>name!==BROKER_NAME).sort((a,b)=>b[1]-a[1]);
+  // Tüm danışmanları 0 ile başlat
+  ADVISOR_NAMES.filter(a=>a!==BROKER_NAME).forEach(a=>{ totals[a]=0; });
+  // Kapanışları işle
+  filtered.forEach(r => { if(r.advisor !== BROKER_NAME){ if(!totals[r.advisor]) totals[r.advisor]=0; totals[r.advisor]+= Number(r.totalHB)||0; }});
+  
+  // Bu ay: sadece kapanışı olanlar | Bu yıl: hepsi
+  let advisorList;
+  if(advLbPeriod === 'month'){
+    advisorList = Object.entries(totals).filter(([name,val])=>val>0).sort((a,b)=>b[1]-a[1]);
+  } else {
+    advisorList = Object.entries(totals).sort((a,b)=>b[1]-a[1]);
+  }
+  
   const medals = ['🥇','🥈','🥉'];
   const currentName = currentUser?.name;
-  el.innerHTML = sorted.map(([name, val], i) => {
+  if(advisorList.length === 0){
+    el.innerHTML = '<div style="text-align:center;padding:24px;color:var(--text3);font-size:13px">Henüz bu ay kapanış yok</div>';
+    return;
+  }
+  el.innerHTML = advisorList.map(([name, val], i) => {
     const isMe = name === currentName;
     const rank = i < 3 && val > 0 ? medals[i] : (i+1);
     const rankSize = i < 3 && val > 0 ? '16' : '12';
     return `<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);${isMe?'background:var(--accent-bg);border-radius:8px;padding:8px;':''}">
       <div style="width:24px;text-align:center;font-size:${rankSize}px">${rank}</div>
       <div style="flex:1;font-size:13px;font-weight:${isMe?'600':'400'};color:${isMe?'var(--accent)':'var(--text)'}">${name}${isMe?' (Sen)':''}</div>
-      ${isMe ? `<div style="font-size:12px;color:var(--accent);font-weight:500">${val>0?'✓':''}</div>` : ''}
+      ${isMe && val>0 ? `<div style="font-size:12px;color:var(--accent);font-weight:500">✓</div>` : ''}
     </div>`;
   }).join('');
 }
@@ -1139,7 +1161,7 @@ async function renderLeaderboard(){
     totals[r.advisor] += Number(r.totalHB)||0;
   });
 
-  const sorted = Object.entries(totals).sort((a,b)=>b[1]-a[1]);
+  const sorted = Object.entries(totals).filter(([,val])=>val>0).sort((a,b)=>b[1]-a[1]);
   const maxVal = sorted[0]?.[1] || 1;
   const medals = ['🥇','🥈','🥉'];
 
@@ -1151,7 +1173,7 @@ async function renderLeaderboard(){
     <div style="font-size:11px;color:var(--text3);padding:8px 0 12px">${periodLabel} · HB tutarına göre</div>
     ${sorted.map(([name,val],i)=>{
       const pct = maxVal > 0 ? (val/maxVal*100) : 0;
-      const medal = i<3 && val>0 ? `<span style="font-size:18px">${medals[i]}</span>` : `<span style="width:28px;height:28px;border-radius:50%;background:var(--surface2);display:inline-flex;align-items:center;justify-content:center;font-size:12px;color:var(--text2);font-weight:500">${i+1}</span>`;
+      const medal = i<3 ? `<span style="font-size:18px">${medals[i]}</span>` : `<span style="width:28px;height:28px;border-radius:50%;background:var(--surface2);display:inline-flex;align-items:center;justify-content:center;font-size:12px;color:var(--text2);font-weight:500">${i+1}</span>`;
       return `<div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)">
         <div style="width:28px;text-align:center">${medal}</div>
         <div style="flex:1;font-size:13px;font-weight:500">${name}</div>
