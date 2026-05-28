@@ -340,6 +340,7 @@
       <div class="nav-tab" onclick="showTab('tracking')">Takip</div>
       <div class="nav-tab" onclick="showTab('reviews')">Yorumlar</div>
       <div class="nav-tab" onclick="showTab('leaderboard')">Sıralama</div>
+      <div class="nav-tab" onclick="showTab('expenses')">Giderler</div>
     </div>
     <div id="tab-overview">
       <div class="metric-row" id="metrics-row"></div>
@@ -388,6 +389,44 @@
         <div id="leaderboard-list"></div>
       </div>
     </div>
+    <div id="tab-expenses" style="display:none">
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Gider Ekle</span>
+          <div style="display:flex;gap:6px">
+            <select id="exp-month" style="font-size:11px;padding:4px 8px;border-radius:8px;border:1px solid var(--border2)"></select>
+            <select id="exp-year" style="font-size:11px;padding:4px 8px;border-radius:8px;border:1px solid var(--border2)"></select>
+          </div>
+        </div>
+        <div style="display:grid;gap:8px;margin-bottom:12px">
+          <div class="field-row">
+            <div class="field"><label>Kategori</label><select id="exp-category"><option value="Ofis 13 Kira">Ofis 13 Kira</option>
+<option value="Ofis 14 Kira">Ofis 14 Kira</option>
+<option value="Aidat">Aidat</option>
+<option value="Elektrik">Elektrik</option>
+<option value="İnternet">İnternet</option>
+<option value="Santral">Santral</option>
+<option value="Muhasebe">Muhasebe</option>
+<option value="Sahibinden.com">Sahibinden.com</option>
+<option value="Sosyal Medya">Sosyal Medya</option>
+<option value="Temizlik">Temizlik</option>
+<option value="Mutfak">Mutfak</option>
+<option value="Remax Merkez">Remax Merkez</option>
+<option value="Bağkur Umut">Bağkur Umut</option>
+<option value="Bağkur Makbule">Bağkur Makbule</option>
+<option value="Vergi">Vergi</option></select></div>
+            <div class="field"><label>Tutar</label><input type="text" id="exp-amount" placeholder="0" inputmode="numeric" oninput="formatCurrency(this)"></div>
+          </div>
+          <div class="field"><label>Not (opsiyonel)</label><input type="text" id="exp-note" placeholder="Açıklama..."></div>
+          <button class="btn btn-primary" onclick="addExpense()">+ Gider Ekle</button>
+        </div>
+      </div>
+      <div class="card"><div id="exp-summary"></div></div>
+      <div class="card">
+        <div class="card-header"><span class="card-title">Gider Listesi</span></div>
+        <div id="exp-list"></div>
+      </div>
+    </div>
     <div id="tab-tracking" style="display:none">
       <div class="card">
         <div class="card-header"><span class="card-title">Bu Ay Giriş Yapanlar</span></div>
@@ -406,14 +445,12 @@ const ADVISORS = [
   {name:'Ayşegül Alpay', pin:'2824'},
   {name:'Ayşegül Aras', pin:'1409'},
   {name:'Derya Öztürk', pin:'5506'},
-  {name:'Ebru Şanlı', pin:'5012'},
   {name:'Evşen Özazman', pin:'4657'},
   {name:'Gamze Yetkin', pin:'3286'},
   {name:'Gizem Gök', pin:'2679'},
   {name:'İrem Tetik', pin:'9935'},
   {name:'Nazlı Beyazıt', pin:'2424'},
-  {name:'Orhan Özazman', pin:'7912'},
-  {name:'Aysun Yılmaz', pin:'3847'},
+  {name:'Orhan Özazman & Aysun Yılmaz', duo:true, pin:'7912'},
   {name:'Umut Tokkuş', pin:'1520'},
   {name:'Özlem Özgür', pin:'1488'},
   {name:'Özlem Varol', pin:'2535'},
@@ -429,8 +466,7 @@ const DRIVE_FOLDERS = {
   'İrem Tetik':               {tapu:'1oIWjaKyFXrgKkturmRffttUSxqIN_TRd', kontrat:'1FnmQKxmJNstngbW-Ge2nGLoz1croQbOk', fatura:'1KHBwZrvz5OmzI5FgxMKLZlOOuqoc13aL'},
   'Gamze Yetkin':             {tapu:'1OAKcEaiw2h0IKKS_G3Ga8p9RNsklqlRp', kontrat:'1DKAVRA-RxFBYCE7dxQlw5MrhO-w9HfnQ', fatura:'1I9QBlaz4h5Fz82ETvOoei6MQ-AWuqNPc'},
   'Nazlı Beyazıt':            {tapu:'11AMEzySb-AZRI7I6eBt7CqToyuYgvvVo', kontrat:'1eX9F0j3AQx1K0V5QrUo_uQlsamj6bm9x', fatura:'1YHiKgIHU2p6hGjTjry_iH8Ipz9k6RVYf'},
-  'Orhan Özazman': {tapu:'16ly3fejGy1YEZOffO3QKLovKghis-DqL', kontrat:'17TKsbiFxpIekyzkKMdJz2gPkXMCw8NyU', fatura:'1drz8XadN9xNpiEyRBin43yvsOl51o45G'},
-  'Aysun Yılmaz': {tapu:'16ly3fejGy1YEZOffO3QKLovKghis-DqL', kontrat:'17TKsbiFxpIekyzkKMdJz2gPkXMCw8NyU', fatura:'1drz8XadN9xNpiEyRBin43yvsOl51o45G'},
+  'Orhan Özazman & Aysun Yılmaz': {tapu:'16ly3fejGy1YEZOffO3QKLovKghis-DqL', kontrat:'17TKsbiFxpIekyzkKMdJz2gPkXMCw8NyU', fatura:'1drz8XadN9xNpiEyRBin43yvsOl51o45G'},
   'Evşen Özazman':            {tapu:'1t4a4lUY3Izr7-qpxRJ72eTcFhQ4xS6XU', kontrat:'1Vb6-yretrJmD-iSG1snIy1OU5IRVQieb', fatura:'1MXl39XHjChCoskAqUSTHWdJM0gKkeLxv'},
   'Derya Öztürk':             {tapu:'1QpNtp70jxYlnZxWTT9Aa21GQFu8WFZ6p', kontrat:'10bkHDXsF0mpZdcG14HgLT_Pyqvp0isQz', fatura:'1IvcmroHLwLoYXY1rNI6bosXkQdCHnVBK'},
   'Özlem Özgür':              {tapu:'1aI1FtaDsvvYJ1x0kS2DRPSxRcNkls-GL', kontrat:'1aYP3pc1B4A5hWNUQeHaPnBCzS3Z2nfJl', fatura:'1DrgKpDz9Ker120drLyvXlxThKidBeXFe'},
@@ -489,14 +525,16 @@ function fmtShort(n){n=Number(n||0);if(n>=1000000)return(n/1000000).toFixed(1)+'
 
 function loadRecords(){try{const d=localStorage.getItem(STORAGE_KEY);return d?JSON.parse(d):[]}catch(e){return[]}}
 async function loadAllRecords(){
+  // Önce Sheets'ten yükle, sonra localStorage ile birleştir
   const sheetRecs = await loadFromSheets();
-  if(sheetRecs.length > 0){
-    // Sheets varsa onu esas al, localStorage'ı senkronize et
-    saveRecords(sheetRecs);
-    return sheetRecs;
-  }
-  // Sheets boşsa localStorage'dan oku
-  return loadRecords();
+  const localRecs = loadRecords();
+  // Sheets'teki id'lere göre tekrarları önle
+  const sheetIds = new Set(sheetRecs.map(r=>String(r.id)));
+  const onlyLocal = localRecs.filter(r=>!sheetIds.has(String(r.id)));
+  const all = [...sheetRecs, ...onlyLocal];
+  // Sheets kayıtlarını localStorage'a da kaydet
+  if(sheetRecs.length > 0) saveRecords(all);
+  return all;
 }
 function saveRecords(recs){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(recs))}catch(e){}}
 
@@ -519,16 +557,7 @@ async function loadFromSheets(){
     const resp = await fetch(APPS_SCRIPT_URL + '?action=getRecords', { redirect: 'follow' });
     const text = await resp.text();
     const json = JSON.parse(text);
-    const recs = json.records || [];
-    // Tutarları string'den sayıya çevir - nokta binlik ayraç, virgül ondalık
-    const pa = v => { 
-      if(typeof v==='number') return v; 
-      const s = String(v).replace(/[₺\s]/g,'').trim();
-      // "1.750.000" formatı - son noktadan sonra 3 rakam varsa binlik ayraç
-      const cleaned = s.replace(/\./g,'').replace(',','.');
-      return Number(cleaned) || 0; 
-    };
-    return recs.map(r => ({...r, amount:pa(r.amount), hbOwner:pa(r.hbOwner), hbBuyer:pa(r.hbBuyer), totalHB:pa(r.totalHB), deposit:pa(r.deposit)}));
+    return json.records || [];
   }catch(e){ return []; }
 }
 
@@ -954,9 +983,9 @@ async function deleteRecord(id){
 }
 
 function showTab(tab){
-  ['overview','records','tracking','reviews','leaderboard'].forEach(t=>{document.getElementById('tab-'+t).style.display=t===tab?'block':'none'});
-  document.querySelectorAll('.nav-tab').forEach((el,i)=>el.classList.toggle('active',['overview','records','tracking','reviews','leaderboard'][i]===tab));
-  if(tab==='records')renderRecords(); else if(tab==='reviews')loadReviews(); else if(tab==='leaderboard')renderLeaderboard(); else renderDashboard();
+  ['overview','records','tracking','reviews','leaderboard','expenses'].forEach(t=>{document.getElementById('tab-'+t).style.display=t===tab?'block':'none'});
+  document.querySelectorAll('.nav-tab').forEach((el,i)=>el.classList.toggle('active',['overview','records','tracking','reviews','leaderboard','expenses'][i]===tab));
+  if(tab==='records')renderRecords(); else if(tab==='reviews')loadReviews(); else if(tab==='leaderboard')renderLeaderboard(); else if(tab==='expenses')renderExpenses(); else renderDashboard();
 }
 
 const MOTIVASYON = [
@@ -1066,6 +1095,93 @@ const PLACES_API_KEY = 'AIzaSyBzaQIDDpZFsUafA7bYdRaouP9z2u0EhPY';
 const PLACE_ID = 'ChIJdbmFqvvHyxQR_agtjpCfYW0';
 
 // Danışman ekranı sıralama
+
+const EXP_KEY = 'kapanis_expenses';
+function loadExpenses(){ try{ const d=localStorage.getItem(EXP_KEY); return d?JSON.parse(d):[]; }catch(e){ return []; } }
+function saveExpenses(exps){ try{ localStorage.setItem(EXP_KEY,JSON.stringify(exps)); }catch(e){} }
+
+function initExpenseFilters(){
+  const now=new Date();
+  const ms=document.getElementById('exp-month');
+  const ys=document.getElementById('exp-year');
+  if(!ms||!ys) return;
+  const months=['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
+  ms.innerHTML=months.map((m,i)=>`<option value="${i+1}" ${i+1===now.getMonth()+1?'selected':''}>${m}</option>`).join('');
+  ys.innerHTML=[2025,2026,2027].map(y=>`<option value="${y}" ${y===now.getFullYear()?'selected':''}>${y}</option>`).join('');
+  ms.onchange=renderExpenses; ys.onchange=renderExpenses;
+}
+
+async function addExpense(){
+  const cat=document.getElementById('exp-category').value;
+  const amount=getCurrencyValue('exp-amount');
+  const note=document.getElementById('exp-note').value.trim();
+  const month=parseInt(document.getElementById('exp-month').value);
+  const year=parseInt(document.getElementById('exp-year').value);
+  if(!amount){alert('Lütfen tutar girin');return;}
+  const exps=loadExpenses();
+  exps.push({id:Date.now(),category:cat,amount,note,month,year});
+  saveExpenses(exps);
+  document.getElementById('exp-amount').value='';
+  document.getElementById('exp-note').value='';
+  renderExpenses();
+}
+
+function deleteExpense(id){
+  if(!confirm('Bu gideri silmek istediğinize emin misiniz?')) return;
+  saveExpenses(loadExpenses().filter(e=>e.id!==id));
+  renderExpenses();
+}
+
+async function renderExpenses(){
+  initExpenseFilters();
+  const month=parseInt(document.getElementById('exp-month').value);
+  const year=parseInt(document.getElementById('exp-year').value);
+  const exps=loadExpenses();
+  const monthExps=exps.filter(e=>e.month===month&&e.year===year);
+  const yearExps=exps.filter(e=>e.year===year);
+  const totalMonthExp=monthExps.reduce((s,e)=>s+e.amount,0);
+  const totalYearExp=yearExps.reduce((s,e)=>s+e.amount,0);
+  const recs=await loadAllRecords();
+  // Komisyon hesabı: Umut Tokkuş %90, diğer danışmanlar %42
+  function officeShare(r){ const hb=Number(r.totalHB)||0; return r.advisor===BROKER_NAME ? hb*0.9 : hb*0.42; }
+  const monthIncome=recs.filter(r=>{const d=new Date(r.date);return d.getMonth()+1===month&&d.getFullYear()===year;}).reduce((s,r)=>s+officeShare(r),0);
+  const yearIncome=recs.filter(r=>new Date(r.date).getFullYear()===year).reduce((s,r)=>s+officeShare(r),0);
+  const monthProfit=monthIncome-totalMonthExp;
+  const yearProfit=yearIncome-totalYearExp;
+  const mnames=['','Ocak','Subat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
+  const sumEl=document.getElementById('exp-summary');
+  sumEl.innerHTML=`
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+      <div>
+        <div style="font-size:12px;color:var(--text3);margin-bottom:8px;font-weight:500">${mnames[month]} ${year} <span style=\"font-size:10px;opacity:0.7\">(Ofis Payı)</span></div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="display:flex;justify-content:space-between;font-size:13px"><span>Gelir</span><span style="font-family:'DM Mono',monospace;color:var(--green)">${fmt(monthIncome)}</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:13px"><span>Gider</span><span style="font-family:'DM Mono',monospace;color:#EF4444">${fmt(totalMonthExp)}</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:700;border-top:1px solid var(--border);padding-top:6px"><span>Kar/Zarar</span><span style="font-family:'DM Mono',monospace;color:${monthProfit>=0?'var(--green)':'#EF4444'}">${monthProfit>=0?'+':''}${fmt(monthProfit)}</span></div>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:12px;color:var(--text3);margin-bottom:8px;font-weight:500">${year} Yılı</div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="display:flex;justify-content:space-between;font-size:13px"><span>Gelir</span><span style="font-family:'DM Mono',monospace;color:var(--green)">${fmt(yearIncome)}</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:13px"><span>Gider</span><span style="font-family:'DM Mono',monospace;color:#EF4444">${fmt(totalYearExp)}</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:700;border-top:1px solid var(--border);padding-top:6px"><span>Kar/Zarar</span><span style="font-family:'DM Mono',monospace;color:${yearProfit>=0?'var(--green)':'#EF4444'}">${yearProfit>=0?'+':''}${fmt(yearProfit)}</span></div>
+        </div>
+      </div>
+    </div>`;
+  const listEl=document.getElementById('exp-list');
+  if(!monthExps.length){listEl.innerHTML='<div class="empty">Bu ay için gider yok</div>';return;}
+  listEl.innerHTML=monthExps.sort((a,b)=>b.id-a.id).map(e=>`
+    <div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border)">
+      <div style="flex:1"><div style="font-size:13px;font-weight:500">${e.category}</div>${e.note?`<div style="font-size:11px;color:var(--text3)">${e.note}</div>`:''}</div>
+      <div style="font-family:'DM Mono',monospace;font-size:13px;color:#EF4444">${fmt(e.amount)}</div>
+      <button class="delete-btn" onclick="deleteExpense(${e.id})">✕</button>
+    </div>`).join('')+`
+    <div style="display:flex;justify-content:space-between;padding:10px 0;font-weight:600;font-size:13px">
+      <span>Toplam Gider</span><span style="font-family:'DM Mono',monospace;color:#EF4444">${fmt(totalMonthExp)}</span>
+    </div>`;
+}
+
 let advLbPeriod = 'month';
 let advLbOpen = false;
 
@@ -1098,33 +1214,20 @@ async function renderAdvisorLeaderboard(){
     return d.getFullYear()===now.getFullYear();
   });
   const totals = {};
-  // Tüm danışmanları 0 ile başlat
-  ADVISOR_NAMES.filter(a=>a!==BROKER_NAME).forEach(a=>{ totals[a]=0; });
-  // Kapanışları işle
-  filtered.forEach(r => { if(r.advisor !== BROKER_NAME){ if(!totals[r.advisor]) totals[r.advisor]=0; totals[r.advisor]+= Number(r.totalHB)||0; }});
-  
-  // Bu ay: sadece kapanışı olanlar | Bu yıl: hepsi
-  let advisorList;
-  if(advLbPeriod === 'month'){
-    advisorList = Object.entries(totals).filter(([name,val])=>val>0).sort((a,b)=>b[1]-a[1]);
-  } else {
-    advisorList = Object.entries(totals).sort((a,b)=>b[1]-a[1]);
-  }
-  
+  ADVISOR_NAMES.forEach(a => totals[a] = 0);
+  filtered.forEach(r => { if(!totals[r.advisor]) totals[r.advisor]=0; totals[r.advisor]+= Number(r.totalHB)||0; });
+  // Broker danışman sıralamasında görünmez
+  const sorted = Object.entries(totals).filter(([name])=>name!==BROKER_NAME).sort((a,b)=>b[1]-a[1]);
   const medals = ['🥇','🥈','🥉'];
   const currentName = currentUser?.name;
-  if(advisorList.length === 0){
-    el.innerHTML = '<div style="text-align:center;padding:24px;color:var(--text3);font-size:13px">Henüz bu ay kapanış yok</div>';
-    return;
-  }
-  el.innerHTML = advisorList.map(([name, val], i) => {
+  el.innerHTML = sorted.map(([name, val], i) => {
     const isMe = name === currentName;
     const rank = i < 3 && val > 0 ? medals[i] : (i+1);
     const rankSize = i < 3 && val > 0 ? '16' : '12';
     return `<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);${isMe?'background:var(--accent-bg);border-radius:8px;padding:8px;':''}">
       <div style="width:24px;text-align:center;font-size:${rankSize}px">${rank}</div>
       <div style="flex:1;font-size:13px;font-weight:${isMe?'600':'400'};color:${isMe?'var(--accent)':'var(--text)'}">${name}${isMe?' (Sen)':''}</div>
-      ${isMe && val>0 ? `<div style="font-size:12px;color:var(--accent);font-weight:500">✓</div>` : ''}
+      ${isMe ? `<div style="font-size:12px;color:var(--accent);font-weight:500">${val>0?'✓':''}</div>` : ''}
     </div>`;
   }).join('');
 }
@@ -1161,7 +1264,7 @@ async function renderLeaderboard(){
     totals[r.advisor] += Number(r.totalHB)||0;
   });
 
-  const sorted = Object.entries(totals).filter(([,val])=>val>0).sort((a,b)=>b[1]-a[1]);
+  const sorted = Object.entries(totals).sort((a,b)=>b[1]-a[1]);
   const maxVal = sorted[0]?.[1] || 1;
   const medals = ['🥇','🥈','🥉'];
 
@@ -1173,7 +1276,7 @@ async function renderLeaderboard(){
     <div style="font-size:11px;color:var(--text3);padding:8px 0 12px">${periodLabel} · HB tutarına göre</div>
     ${sorted.map(([name,val],i)=>{
       const pct = maxVal > 0 ? (val/maxVal*100) : 0;
-      const medal = i<3 ? `<span style="font-size:18px">${medals[i]}</span>` : `<span style="width:28px;height:28px;border-radius:50%;background:var(--surface2);display:inline-flex;align-items:center;justify-content:center;font-size:12px;color:var(--text2);font-weight:500">${i+1}</span>`;
+      const medal = i<3 && val>0 ? `<span style="font-size:18px">${medals[i]}</span>` : `<span style="width:28px;height:28px;border-radius:50%;background:var(--surface2);display:inline-flex;align-items:center;justify-content:center;font-size:12px;color:var(--text2);font-weight:500">${i+1}</span>`;
       return `<div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)">
         <div style="width:28px;text-align:center">${medal}</div>
         <div style="flex:1;font-size:13px;font-weight:500">${name}</div>
@@ -1249,6 +1352,6 @@ async function loadReviews(){
     </table>`;
 }
 
-localStorage.clear(); buildAdvisorGrid();
+buildAdvisorGrid();
 document.getElementById('f-date').value=new Date().toISOString().split('T')[0];
 </script>
