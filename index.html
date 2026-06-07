@@ -244,12 +244,12 @@
       <div class="field"><label>Mülk Sahibi Adı</label><input type="text" id="f-owner-name" placeholder="Ad Soyad" oninput="capitalizeWords(this)"></div>
       <div class="field-row">
         <div class="field"><label>Telefon</label><input type="text" id="f-owner-phone" placeholder="0 (5XX) XXX XX XX" oninput="formatPhone(this)" maxlength="17"></div>
-        <div class="field"><label>E-posta</label><input type="text" id="f-owner-email" placeholder="ornek@mail.com" inputmode="email"></div>
+        <div class="field"><label>E-posta</label><input type="text" id="f-owner-email" placeholder="ornek@mail.com" inputmode="email" oninput="validateEmail(this)"></div>
       </div>
       <div class="field"><label>Alıcı / Kiracı Adı</label><input type="text" id="f-buyer-name" placeholder="Ad Soyad" oninput="capitalizeWords(this)"></div>
       <div class="field-row">
         <div class="field"><label>Telefon</label><input type="text" id="f-buyer-phone" placeholder="0 (5XX) XXX XX XX" oninput="formatPhone(this)" maxlength="17"></div>
-        <div class="field"><label>E-posta</label><input type="text" id="f-buyer-email" placeholder="ornek@mail.com" inputmode="email"></div>
+        <div class="field"><label>E-posta</label><input type="text" id="f-buyer-email" placeholder="ornek@mail.com" inputmode="email" oninput="validateEmail(this)"></div>
       </div>
     </div>
     <div class="form-card">
@@ -340,7 +340,6 @@
       <div class="nav-tab" onclick="showTab('tracking')">Takip</div>
       <div class="nav-tab" onclick="showTab('reviews')">Yorumlar</div>
       <div class="nav-tab" onclick="showTab('leaderboard')">Sıralama</div>
-      <div class="nav-tab" onclick="showTab('expenses')">Giderler</div>
     </div>
     <div id="tab-overview">
       <div class="metric-row" id="metrics-row"></div>
@@ -389,44 +388,6 @@
         <div id="leaderboard-list"></div>
       </div>
     </div>
-    <div id="tab-expenses" style="display:none">
-      <div class="card">
-        <div class="card-header">
-          <span class="card-title">Gider Ekle</span>
-          <div style="display:flex;gap:6px">
-            <select id="exp-month" style="font-size:11px;padding:4px 8px;border-radius:8px;border:1px solid var(--border2)"></select>
-            <select id="exp-year" style="font-size:11px;padding:4px 8px;border-radius:8px;border:1px solid var(--border2)"></select>
-          </div>
-        </div>
-        <div style="display:grid;gap:8px;margin-bottom:12px">
-          <div class="field-row">
-            <div class="field"><label>Kategori</label><select id="exp-category"><option value="Ofis 13 Kira">Ofis 13 Kira</option>
-<option value="Ofis 14 Kira">Ofis 14 Kira</option>
-<option value="Aidat">Aidat</option>
-<option value="Elektrik">Elektrik</option>
-<option value="İnternet">İnternet</option>
-<option value="Santral">Santral</option>
-<option value="Muhasebe">Muhasebe</option>
-<option value="Sahibinden.com">Sahibinden.com</option>
-<option value="Sosyal Medya">Sosyal Medya</option>
-<option value="Temizlik">Temizlik</option>
-<option value="Mutfak">Mutfak</option>
-<option value="Remax Merkez">Remax Merkez</option>
-<option value="Bağkur Umut">Bağkur Umut</option>
-<option value="Bağkur Makbule">Bağkur Makbule</option>
-<option value="Vergi">Vergi</option></select></div>
-            <div class="field"><label>Tutar</label><input type="text" id="exp-amount" placeholder="0" inputmode="numeric" oninput="formatCurrency(this)"></div>
-          </div>
-          <div class="field"><label>Not (opsiyonel)</label><input type="text" id="exp-note" placeholder="Açıklama..."></div>
-          <button class="btn btn-primary" onclick="addExpense()">+ Gider Ekle</button>
-        </div>
-      </div>
-      <div class="card"><div id="exp-summary"></div></div>
-      <div class="card">
-        <div class="card-header"><span class="card-title">Gider Listesi</span></div>
-        <div id="exp-list"></div>
-      </div>
-    </div>
     <div id="tab-tracking" style="display:none">
       <div class="card">
         <div class="card-header"><span class="card-title">Bu Ay Giriş Yapanlar</span></div>
@@ -445,6 +406,7 @@ const ADVISORS = [
   {name:'Ayşegül Alpay', pin:'2824'},
   {name:'Ayşegül Aras', pin:'1409'},
   {name:'Derya Öztürk', pin:'5506'},
+  {name:'Ebru Şanlı', pin:'5012'},
   {name:'Evşen Özazman', pin:'4657'},
   {name:'Gamze Yetkin', pin:'3286'},
   {name:'Gizem Gök', pin:'2679'},
@@ -482,6 +444,16 @@ const DOC_LABELS = {tapu:'🏠 Tapu', kontrat:'📝 Kontrat', fatura:'🧾 Fatur
 
 let currentUser=null, selectedAdvisor=null, selectedType='Satılık';
 let pendingFiles = {tapu:null, kontrat:null, fatura:null};
+
+function validateEmail(el){
+  const val = el.value.trim();
+  const valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
+  if(val.length > 0){
+    el.style.borderColor = valid ? 'var(--green)' : '#EF4444';
+  } else {
+    el.style.borderColor = '';
+  }
+}
 
 function capitalizeWords(el){
   const pos = el.selectionStart;
@@ -983,9 +955,9 @@ async function deleteRecord(id){
 }
 
 function showTab(tab){
-  ['overview','records','tracking','reviews','leaderboard','expenses'].forEach(t=>{document.getElementById('tab-'+t).style.display=t===tab?'block':'none'});
-  document.querySelectorAll('.nav-tab').forEach((el,i)=>el.classList.toggle('active',['overview','records','tracking','reviews','leaderboard','expenses'][i]===tab));
-  if(tab==='records')renderRecords(); else if(tab==='reviews')loadReviews(); else if(tab==='leaderboard')renderLeaderboard(); else if(tab==='expenses')renderExpenses(); else renderDashboard();
+  ['overview','records','tracking','reviews','leaderboard'].forEach(t=>{document.getElementById('tab-'+t).style.display=t===tab?'block':'none'});
+  document.querySelectorAll('.nav-tab').forEach((el,i)=>el.classList.toggle('active',['overview','records','tracking','reviews','leaderboard'][i]===tab));
+  if(tab==='records')renderRecords(); else if(tab==='reviews')loadReviews(); else if(tab==='leaderboard')renderLeaderboard(); else renderDashboard();
 }
 
 const MOTIVASYON = [
@@ -1095,93 +1067,6 @@ const PLACES_API_KEY = 'AIzaSyBzaQIDDpZFsUafA7bYdRaouP9z2u0EhPY';
 const PLACE_ID = 'ChIJdbmFqvvHyxQR_agtjpCfYW0';
 
 // Danışman ekranı sıralama
-
-const EXP_KEY = 'kapanis_expenses';
-function loadExpenses(){ try{ const d=localStorage.getItem(EXP_KEY); return d?JSON.parse(d):[]; }catch(e){ return []; } }
-function saveExpenses(exps){ try{ localStorage.setItem(EXP_KEY,JSON.stringify(exps)); }catch(e){} }
-
-function initExpenseFilters(){
-  const now=new Date();
-  const ms=document.getElementById('exp-month');
-  const ys=document.getElementById('exp-year');
-  if(!ms||!ys) return;
-  const months=['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
-  ms.innerHTML=months.map((m,i)=>`<option value="${i+1}" ${i+1===now.getMonth()+1?'selected':''}>${m}</option>`).join('');
-  ys.innerHTML=[2025,2026,2027].map(y=>`<option value="${y}" ${y===now.getFullYear()?'selected':''}>${y}</option>`).join('');
-  ms.onchange=renderExpenses; ys.onchange=renderExpenses;
-}
-
-async function addExpense(){
-  const cat=document.getElementById('exp-category').value;
-  const amount=getCurrencyValue('exp-amount');
-  const note=document.getElementById('exp-note').value.trim();
-  const month=parseInt(document.getElementById('exp-month').value);
-  const year=parseInt(document.getElementById('exp-year').value);
-  if(!amount){alert('Lütfen tutar girin');return;}
-  const exps=loadExpenses();
-  exps.push({id:Date.now(),category:cat,amount,note,month,year});
-  saveExpenses(exps);
-  document.getElementById('exp-amount').value='';
-  document.getElementById('exp-note').value='';
-  renderExpenses();
-}
-
-function deleteExpense(id){
-  if(!confirm('Bu gideri silmek istediğinize emin misiniz?')) return;
-  saveExpenses(loadExpenses().filter(e=>e.id!==id));
-  renderExpenses();
-}
-
-async function renderExpenses(){
-  initExpenseFilters();
-  const month=parseInt(document.getElementById('exp-month').value);
-  const year=parseInt(document.getElementById('exp-year').value);
-  const exps=loadExpenses();
-  const monthExps=exps.filter(e=>e.month===month&&e.year===year);
-  const yearExps=exps.filter(e=>e.year===year);
-  const totalMonthExp=monthExps.reduce((s,e)=>s+e.amount,0);
-  const totalYearExp=yearExps.reduce((s,e)=>s+e.amount,0);
-  const recs=await loadAllRecords();
-  // Komisyon hesabı: Umut Tokkuş %90, diğer danışmanlar %42
-  function officeShare(r){ const hb=Number(r.totalHB)||0; return r.advisor===BROKER_NAME ? hb*0.9 : hb*0.42; }
-  const monthIncome=recs.filter(r=>{const d=new Date(r.date);return d.getMonth()+1===month&&d.getFullYear()===year;}).reduce((s,r)=>s+officeShare(r),0);
-  const yearIncome=recs.filter(r=>new Date(r.date).getFullYear()===year).reduce((s,r)=>s+officeShare(r),0);
-  const monthProfit=monthIncome-totalMonthExp;
-  const yearProfit=yearIncome-totalYearExp;
-  const mnames=['','Ocak','Subat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
-  const sumEl=document.getElementById('exp-summary');
-  sumEl.innerHTML=`
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
-      <div>
-        <div style="font-size:12px;color:var(--text3);margin-bottom:8px;font-weight:500">${mnames[month]} ${year} <span style=\"font-size:10px;opacity:0.7\">(Ofis Payı)</span></div>
-        <div style="display:flex;flex-direction:column;gap:6px">
-          <div style="display:flex;justify-content:space-between;font-size:13px"><span>Gelir</span><span style="font-family:'DM Mono',monospace;color:var(--green)">${fmt(monthIncome)}</span></div>
-          <div style="display:flex;justify-content:space-between;font-size:13px"><span>Gider</span><span style="font-family:'DM Mono',monospace;color:#EF4444">${fmt(totalMonthExp)}</span></div>
-          <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:700;border-top:1px solid var(--border);padding-top:6px"><span>Kar/Zarar</span><span style="font-family:'DM Mono',monospace;color:${monthProfit>=0?'var(--green)':'#EF4444'}">${monthProfit>=0?'+':''}${fmt(monthProfit)}</span></div>
-        </div>
-      </div>
-      <div>
-        <div style="font-size:12px;color:var(--text3);margin-bottom:8px;font-weight:500">${year} Yılı</div>
-        <div style="display:flex;flex-direction:column;gap:6px">
-          <div style="display:flex;justify-content:space-between;font-size:13px"><span>Gelir</span><span style="font-family:'DM Mono',monospace;color:var(--green)">${fmt(yearIncome)}</span></div>
-          <div style="display:flex;justify-content:space-between;font-size:13px"><span>Gider</span><span style="font-family:'DM Mono',monospace;color:#EF4444">${fmt(totalYearExp)}</span></div>
-          <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:700;border-top:1px solid var(--border);padding-top:6px"><span>Kar/Zarar</span><span style="font-family:'DM Mono',monospace;color:${yearProfit>=0?'var(--green)':'#EF4444'}">${yearProfit>=0?'+':''}${fmt(yearProfit)}</span></div>
-        </div>
-      </div>
-    </div>`;
-  const listEl=document.getElementById('exp-list');
-  if(!monthExps.length){listEl.innerHTML='<div class="empty">Bu ay için gider yok</div>';return;}
-  listEl.innerHTML=monthExps.sort((a,b)=>b.id-a.id).map(e=>`
-    <div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border)">
-      <div style="flex:1"><div style="font-size:13px;font-weight:500">${e.category}</div>${e.note?`<div style="font-size:11px;color:var(--text3)">${e.note}</div>`:''}</div>
-      <div style="font-family:'DM Mono',monospace;font-size:13px;color:#EF4444">${fmt(e.amount)}</div>
-      <button class="delete-btn" onclick="deleteExpense(${e.id})">✕</button>
-    </div>`).join('')+`
-    <div style="display:flex;justify-content:space-between;padding:10px 0;font-weight:600;font-size:13px">
-      <span>Toplam Gider</span><span style="font-family:'DM Mono',monospace;color:#EF4444">${fmt(totalMonthExp)}</span>
-    </div>`;
-}
-
 let advLbPeriod = 'month';
 let advLbOpen = false;
 
