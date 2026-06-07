@@ -340,6 +340,7 @@
       <div class="nav-tab" onclick="showTab('tracking')">Takip</div>
       <div class="nav-tab" onclick="showTab('reviews')">Yorumlar</div>
       <div class="nav-tab" onclick="showTab('leaderboard')">Sıralama</div>
+      <div class="nav-tab" onclick="showTab('expenses')">Giderler</div>
     </div>
     <div id="tab-overview">
       <div class="metric-row" id="metrics-row"></div>
@@ -388,6 +389,44 @@
         <div id="leaderboard-list"></div>
       </div>
     </div>
+    <div id="tab-expenses" style="display:none">
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Gider Ekle</span>
+          <div style="display:flex;gap:6px">
+            <select id="exp-month" style="font-size:11px;padding:4px 8px;border-radius:8px;border:1px solid var(--border2)"></select>
+            <select id="exp-year" style="font-size:11px;padding:4px 8px;border-radius:8px;border:1px solid var(--border2)"></select>
+          </div>
+        </div>
+        <div style="display:grid;gap:8px;margin-bottom:12px">
+          <div class="field-row">
+            <div class="field"><label>Kategori</label><select id="exp-category"><option value="Ofis 13 Kira">Ofis 13 Kira</option>
+<option value="Ofis 14 Kira">Ofis 14 Kira</option>
+<option value="Aidat">Aidat</option>
+<option value="Elektrik">Elektrik</option>
+<option value="İnternet">İnternet</option>
+<option value="Santral">Santral</option>
+<option value="Muhasebe">Muhasebe</option>
+<option value="Sahibinden.com">Sahibinden.com</option>
+<option value="Sosyal Medya">Sosyal Medya</option>
+<option value="Temizlik">Temizlik</option>
+<option value="Mutfak">Mutfak</option>
+<option value="Remax Merkez">Remax Merkez</option>
+<option value="Bağkur Umut">Bağkur Umut</option>
+<option value="Bağkur Makbule">Bağkur Makbule</option>
+<option value="Vergi">Vergi</option></select></div>
+            <div class="field"><label>Tutar</label><input type="text" id="exp-amount" placeholder="0" inputmode="numeric" oninput="formatCurrency(this)"></div>
+          </div>
+          <div class="field"><label>Not (opsiyonel)</label><input type="text" id="exp-note" placeholder="Açıklama..."></div>
+          <button class="btn btn-primary" onclick="addExpense()">+ Gider Ekle</button>
+        </div>
+      </div>
+      <div class="card"><div id="exp-summary"></div></div>
+      <div class="card">
+        <div class="card-header"><span class="card-title">Gider Listesi</span></div>
+        <div id="exp-list"></div>
+      </div>
+    </div>
     <div id="tab-tracking" style="display:none">
       <div class="card">
         <div class="card-header"><span class="card-title">Bu Ay Giriş Yapanlar</span></div>
@@ -406,7 +445,6 @@ const ADVISORS = [
   {name:'Ayşegül Alpay', pin:'2824'},
   {name:'Ayşegül Aras', pin:'1409'},
   {name:'Derya Öztürk', pin:'5506'},
-  {name:'Ebru Şanlı', pin:'5012'},
   {name:'Evşen Özazman', pin:'4657'},
   {name:'Gamze Yetkin', pin:'3286'},
   {name:'Gizem Gök', pin:'2679'},
@@ -436,7 +474,6 @@ const DRIVE_FOLDERS = {
   'Ayşegül Alpay':            {tapu:'1AstXHpMZRRwfYaZWRnktbEpgM__G8W18', kontrat:'1osjT8pbrr_k4PvgR1p3BUOI0NpnRKiUB', fatura:'1PI-QQjt_jRaz6ygnYH4_xDPfRiqXLnbF'},
   'Ayşegül Aras':             {tapu:'18_yBlFVibG4qFShT6xyQtO51y2eGGnQh', kontrat:'1ZGid92W21SMopHuUZcGeEvy-DN0P96Sw', fatura:'1LpWNY3mw4bcsyDx1GNxtNLodeS1dOXz5'},
   'Gizem Gök':                {tapu:'1HGJmvqJPn4IsA53UuSgAqstRshqfcpOH', kontrat:'10bqRPtshduy-f22vBhPUgHwWA0wZkUm1', fatura:'1Ego8_-kBvP8Ghvt42s424ngQ6QbJ71mu'},
-  'Ebru Şanlı':               {tapu:'1pO1dEASpp7WrNtF6fyFYZb210GPl7Nmg', kontrat:'1qpI23CUB9w6ULHGi0QfHsjN9PiwS0Zl-', fatura:'1z3xGTrghGcsLl0gjCrMu4Yvgik4cl7cb'},
 };
 
 const DOC_TYPES = ['tapu','kontrat','fatura'];
@@ -955,9 +992,9 @@ async function deleteRecord(id){
 }
 
 function showTab(tab){
-  ['overview','records','tracking','reviews','leaderboard'].forEach(t=>{document.getElementById('tab-'+t).style.display=t===tab?'block':'none'});
-  document.querySelectorAll('.nav-tab').forEach((el,i)=>el.classList.toggle('active',['overview','records','tracking','reviews','leaderboard'][i]===tab));
-  if(tab==='records')renderRecords(); else if(tab==='reviews')loadReviews(); else if(tab==='leaderboard')renderLeaderboard(); else renderDashboard();
+  ['overview','records','tracking','reviews','leaderboard','expenses'].forEach(t=>{document.getElementById('tab-'+t).style.display=t===tab?'block':'none'});
+  document.querySelectorAll('.nav-tab').forEach((el,i)=>el.classList.toggle('active',['overview','records','tracking','reviews','leaderboard','expenses'][i]===tab));
+  if(tab==='records')renderRecords(); else if(tab==='reviews')loadReviews(); else if(tab==='leaderboard')renderLeaderboard(); else if(tab==='expenses')renderExpenses(); else renderDashboard();
 }
 
 const MOTIVASYON = [
@@ -1038,6 +1075,105 @@ function newCapanis(){
   showScreen('s-form');
   document.getElementById('success-msg').style.display='none';
   window.scrollTo(0,0);
+}
+
+
+// ===== KOMİSYON KURALLARI =====
+// Kıbrıs + herhangi danışman → %10 merkez, %90 danışmana, ofise 0
+// Türkiye + Umut Tokkuş → %90 ofise
+// Türkiye + diğer danışmanlar → %52 ofise, %48 danışmana
+function isCyprus(r){ return r.address && r.address.toLowerCase().includes('kıbrıs'); }
+function officeShare(r){
+  const hb = Number(r.totalHB)||0;
+  if(isCyprus(r)) return 0;
+  if(r.advisor === BROKER_NAME) return hb * 0.9;
+  return hb * 0.52;
+}
+
+// ===== GİDER YÖNETİMİ =====
+const EXP_KEY = 'kapanis_expenses';
+function loadExpenses(){ try{ const d=localStorage.getItem(EXP_KEY); return d?JSON.parse(d):[]; }catch(e){ return []; } }
+function saveExpenses(exps){ try{ localStorage.setItem(EXP_KEY,JSON.stringify(exps)); }catch(e){} }
+
+function initExpenseFilters(){
+  const now=new Date();
+  const ms=document.getElementById('exp-month');
+  const ys=document.getElementById('exp-year');
+  if(!ms||!ys) return;
+  const months=['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
+  if(!ms.options.length){
+    ms.innerHTML=months.map((m,i)=>`<option value="${i+1}" ${i+1===now.getMonth()+1?'selected':''}>${m}</option>`).join('');
+    ys.innerHTML=[2025,2026,2027].map(y=>`<option value="${y}" ${y===now.getFullYear()?'selected':''}>${y}</option>`).join('');
+    ms.onchange=renderExpenses; ys.onchange=renderExpenses;
+  }
+}
+
+async function addExpense(){
+  const cat=document.getElementById('exp-category').value;
+  const amount=getCurrencyValue('exp-amount');
+  const note=document.getElementById('exp-note').value.trim();
+  const month=parseInt(document.getElementById('exp-month').value);
+  const year=parseInt(document.getElementById('exp-year').value);
+  if(!amount){alert('Lütfen tutar girin');return;}
+  const exps=loadExpenses();
+  exps.push({id:Date.now(),category:cat,amount,note,month,year});
+  saveExpenses(exps);
+  document.getElementById('exp-amount').value='';
+  document.getElementById('exp-note').value='';
+  renderExpenses();
+}
+
+function deleteExpense(id){
+  if(!confirm('Bu gideri silmek istediğinize emin misiniz?')) return;
+  saveExpenses(loadExpenses().filter(e=>e.id!==id));
+  renderExpenses();
+}
+
+async function renderExpenses(){
+  initExpenseFilters();
+  const month=parseInt(document.getElementById('exp-month').value);
+  const year=parseInt(document.getElementById('exp-year').value);
+  const exps=loadExpenses();
+  const monthExps=exps.filter(e=>e.month===month&&e.year===year);
+  const yearExps=exps.filter(e=>e.year===year);
+  const totalMonthExp=monthExps.reduce((s,e)=>s+e.amount,0);
+  const totalYearExp=yearExps.reduce((s,e)=>s+e.amount,0);
+  const recs=await loadAllRecords();
+  const monthIncome=recs.filter(r=>{const d=new Date(r.date);return d.getMonth()+1===month&&d.getFullYear()===year;}).reduce((s,r)=>s+officeShare(r),0);
+  const yearIncome=recs.filter(r=>new Date(r.date).getFullYear()===year).reduce((s,r)=>s+officeShare(r),0);
+  const monthProfit=monthIncome-totalMonthExp;
+  const yearProfit=yearIncome-totalYearExp;
+  const mnames=['','Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
+  document.getElementById('exp-summary').innerHTML=`
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:4px 0">
+      <div>
+        <div style="font-size:12px;color:var(--text3);margin-bottom:8px;font-weight:500">${mnames[month]} ${year}</div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="display:flex;justify-content:space-between;font-size:13px"><span>Ofis Geliri</span><span style="font-family:'DM Mono',monospace;color:var(--green,#22c55e)">${fmt(monthIncome)}</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:13px"><span>Gider</span><span style="font-family:'DM Mono',monospace;color:#EF4444">${fmt(totalMonthExp)}</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:700;border-top:1px solid var(--border);padding-top:6px"><span>Kar/Zarar</span><span style="font-family:'DM Mono',monospace;color:${monthProfit>=0?'var(--green,#22c55e)':'#EF4444'}">${monthProfit>=0?'+':''}${fmt(monthProfit)}</span></div>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:12px;color:var(--text3);margin-bottom:8px;font-weight:500">${year} Yılı</div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="display:flex;justify-content:space-between;font-size:13px"><span>Ofis Geliri</span><span style="font-family:'DM Mono',monospace;color:var(--green,#22c55e)">${fmt(yearIncome)}</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:13px"><span>Gider</span><span style="font-family:'DM Mono',monospace;color:#EF4444">${fmt(totalYearExp)}</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:700;border-top:1px solid var(--border);padding-top:6px"><span>Kar/Zarar</span><span style="font-family:'DM Mono',monospace;color:${yearProfit>=0?'var(--green,#22c55e)':'#EF4444'}">${yearProfit>=0?'+':''}${fmt(yearProfit)}</span></div>
+        </div>
+      </div>
+    </div>`;
+  const listEl=document.getElementById('exp-list');
+  if(!monthExps.length){listEl.innerHTML='<div class="empty">Bu ay için gider yok</div>';return;}
+  listEl.innerHTML=monthExps.sort((a,b)=>b.id-a.id).map(e=>`
+    <div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border)">
+      <div style="flex:1"><div style="font-size:13px;font-weight:500">${e.category}</div>${e.note?`<div style="font-size:11px;color:var(--text3)">${e.note}</div>`:''}</div>
+      <div style="font-family:'DM Mono',monospace;font-size:13px;color:#EF4444">${fmt(e.amount)}</div>
+      <button class="delete-btn" onclick="deleteExpense(${e.id})">✕</button>
+    </div>`).join('')+`
+    <div style="display:flex;justify-content:space-between;padding:10px 0;font-weight:600;font-size:13px">
+      <span>Toplam Gider</span><span style="font-family:'DM Mono',monospace;color:#EF4444">${fmt(totalMonthExp)}</span>
+    </div>`;
 }
 
 async function loadGoogleRating(){
