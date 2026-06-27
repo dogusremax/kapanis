@@ -9,7 +9,10 @@
 <meta name="theme-color" content="#1A56A0">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon.png">
-<meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Kapanış Formu</title><style>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Kapanış Formu</title></head>
+<body>
+
+<style>
   @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap');
   *{box-sizing:border-box;margin:0;padding:0}
   :root{
@@ -133,8 +136,6 @@
   @keyframes spinLogo{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
   .loading-spinner{width:56px;height:56px;border-radius:50%;overflow:hidden;animation:spinLogo 1s linear infinite;display:inline-block}
 </style>
-</head>
-<body>
 
 <!-- LOGIN -->
 <div id="s-login" class="screen active">
@@ -363,8 +364,7 @@
   <div class="dash-body fade-in">
     <div class="nav-tabs">
       <div class="nav-tab active" onclick="showTab('overview')">Genel Bakış</div>
-      <div class="nav-tab active" onclick="showTab('overview')">Genel Bakış</div>
-  <div class="nav-tab" onclick="showTab('records')">Tüm Kayıtlar</div>
+      <div class="nav-tab" onclick="showTab('records')">Tüm Kayıtlar</div>
       <div class="nav-tab" onclick="showTab('tracking')">Takip</div>
       <div class="nav-tab" onclick="showTab('reviews')">Yorumlar</div>
       <div class="nav-tab" onclick="showTab('leaderboard')">Sıralama</div>
@@ -852,23 +852,15 @@ function loginAdvisor(){
 function loginAdmin(){
   const p=document.getElementById('admin-pass').value;
   if(p!==ADMIN_PASS){alert('Şifre hatalı');return}
-  currentUser={type:'admin'}; showScreen('s-dash'); try{ renderDashboard(); }catch(e){ console.warn('Dashboard hatası:',e); }
+  currentUser={type:'admin'}; showScreen('s-dash'); renderDashboard();
 }
 
 function logout(){currentUser=null;selectedAdvisor=null;showScreen('s-login');buildAdvisorGrid()}
 
 function showScreen(id){
-  document.querySelectorAll('.screen').forEach(s=>{
-    s.classList.remove('active');
-    s.style.display='none';
-    s.style.visibility='hidden';
-  });
-  const s=document.getElementById(id);
-  s.style.display='flex';
-  s.style.visibility='visible';
-  s.style.flexDirection='column';
-  s.style.minHeight='100vh';
-  s.classList.add('active');
+  document.querySelectorAll('.screen').forEach(s=>{s.classList.remove('active');s.style.display='none'});
+  const s=document.getElementById(id); s.style.display='flex';
+  setTimeout(()=>s.classList.add('active'),10);
 }
 
 function setType(t){
@@ -1030,8 +1022,7 @@ async function exportExcel(){
 }
 
 async function renderDashboard(){
-  let recs=[];
-  try{ recs=await loadAllRecords(); }catch(e){ console.warn('Dashboard yükleme hatası:',e); }
+  const recs=await loadAllRecords();
   const now=new Date(); const thisYear=now.getFullYear(); const thisMonth=now.getMonth();
   const yearRecs=recs.filter(r=>new Date(r.date).getFullYear()===thisYear);
   const monthRecs=yearRecs.filter(r=>new Date(r.date).getMonth()===thisMonth);
