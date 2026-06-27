@@ -227,13 +227,19 @@
           <div class="currency-input"><span>₺</span><input type="text" id="f-amount" placeholder="0" inputmode="numeric" oninput="formatCurrency(this)"></div>
         </div>
       </div>
+      <div id="wrap-hb-mulk">
       <div class="field-row">
         <div class="field"><label>Mülk Sahibinden HB (₺)</label>
           <div class="currency-input"><span>₺</span><input type="text" id="f-hb-owner" placeholder="0" inputmode="numeric" oninput="formatCurrency(this)"></div>
         </div>
+      </div>
+      </div>
+      <div id="wrap-hb-alici">
+      <div class="field-row">
         <div class="field"><label>Alıcı/Kiracıdan HB (₺)</label>
           <div class="currency-input"><span>₺</span><input type="text" id="f-hb-buyer" placeholder="0" inputmode="numeric" oninput="formatCurrency(this)"></div>
         </div>
+      </div>
       </div>
     </div>
     <div class="form-card">
@@ -513,6 +519,7 @@ function toggleTaraf(val){
   const wHbAlici = document.getElementById('wrap-hb-alici');
   const wPaylasim = document.getElementById('wrap-paylasim');
   const wPartner = document.getElementById('f-ref-partner-wrap');
+  if(!wMulk||!wAlici) return;
 
   if(val === 'mulk-sahibi'){
     wMulk.style.display = 'block';
