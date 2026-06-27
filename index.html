@@ -277,7 +277,7 @@
     <div class="form-card">
       <div class="form-section-title">Belgeler — Drive'a otomatik yüklenir</div>
       <div class="docs-grid">
-        <div class="field" style="margin:0">
+        <div class="field" style="margin:0" id="wrap-tapu">
           <label>Tapu</label>
           <div class="upload-area" id="ua-tapu" onclick="triggerUpload('tapu')">
             <input type="file" id="f-tapu" accept="image/*,.pdf" style="display:none" onchange="handleFileStrict('tapu',this)">
@@ -298,13 +298,19 @@
           </div>
         </div>
         <div class="field" style="margin:0">
-          <label>Fatura</label>
-          <div class="upload-area" id="ua-fatura" onclick="triggerUpload('fatura')">
-            <input type="file" id="f-fatura" accept="image/*,.pdf" style="display:none" onchange="handleFileStrict('fatura',this)">
-            <div class="upload-icon" id="ui-fatura">🧾</div>
-            <div class="upload-label" id="ul-fatura">Ekle</div>
-            <div class="upload-hint" id="uh-fatura">Net fotoğraf veya PDF</div>
-            <button class="upload-remove" id="ur-fatura" style="display:none" onclick="removeFile(event,'fatura')">✕ Kaldır</button>
+          <label>Ofise Kesilen Fatura</label>
+          <div style="display:flex;gap:8px;margin-bottom:8px">
+            <button type="button" class="type-pill active" id="fatura-var-btn" onclick="setFaturaVarYok('var')" style="flex:1;padding:8px;font-size:12px">Var</button>
+            <button type="button" class="type-pill" id="fatura-yok-btn" onclick="setFaturaVarYok('yok')" style="flex:1;padding:8px;font-size:12px">Yok</button>
+          </div>
+          <div id="wrap-fatura-upload">
+            <div class="upload-area" id="ua-fatura" onclick="triggerUpload('fatura')">
+              <input type="file" id="f-fatura" accept="image/*,.pdf" style="display:none" onchange="handleFileStrict('fatura',this)">
+              <div class="upload-icon" id="ui-fatura">🧾</div>
+              <div class="upload-label" id="ul-fatura">Ekle</div>
+              <div class="upload-hint" id="uh-fatura">Net fotoğraf veya PDF</div>
+              <button class="upload-remove" id="ur-fatura" style="display:none" onclick="removeFile(event,'fatura')">✕ Kaldır</button>
+            </div>
           </div>
         </div>
       </div>
@@ -860,6 +866,22 @@ function showScreen(id){
 function setType(t){
   selectedType=t;
   document.querySelectorAll('.type-pill').forEach(p=>p.classList.toggle('active',p.textContent===t));
+  // Tapu: sadece Satılık ve Devir'de göster
+  const wrapTapu = document.getElementById('wrap-tapu');
+  if(wrapTapu) wrapTapu.style.display = (t==='Kiralık') ? 'none' : 'block';
+}
+
+function setFaturaVarYok(val){
+  document.getElementById('fatura-var-btn').classList.toggle('active', val==='var');
+  document.getElementById('fatura-yok-btn').classList.toggle('active', val==='yok');
+  const wrapUpload = document.getElementById('wrap-fatura-upload');
+  if(val==='yok'){
+    wrapUpload.style.display = 'none';
+    pendingFiles['fatura'] = null;
+    document.getElementById('f-fatura').value = '';
+  } else {
+    wrapUpload.style.display = 'block';
+  }
 }
 
 function resetForm(){
