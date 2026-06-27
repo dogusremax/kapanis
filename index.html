@@ -858,9 +858,17 @@ function loginAdmin(){
 function logout(){currentUser=null;selectedAdvisor=null;showScreen('s-login');buildAdvisorGrid()}
 
 function showScreen(id){
-  document.querySelectorAll('.screen').forEach(s=>{s.classList.remove('active');s.style.display='none'});
-  const s=document.getElementById(id); s.style.display='flex';
-  setTimeout(()=>s.classList.add('active'),10);
+  document.querySelectorAll('.screen').forEach(s=>{
+    s.classList.remove('active');
+    s.style.display='none';
+    s.style.visibility='hidden';
+  });
+  const s=document.getElementById(id);
+  s.style.display='flex';
+  s.style.visibility='visible';
+  s.style.flexDirection='column';
+  s.style.minHeight='100vh';
+  s.classList.add('active');
 }
 
 function setType(t){
