@@ -258,30 +258,30 @@
         <div class="field" style="margin:0">
           <label>Tapu</label>
           <div class="upload-area" id="ua-tapu" onclick="triggerUpload('tapu')">
-            <input type="file" id="f-tapu" accept="image/*,.pdf" style="display:none" onchange="handleFile('tapu',this)">
+            <input type="file" id="f-tapu" accept="image/*,.pdf" style="display:none" onchange="handleFileStrict('tapu',this)">
             <div class="upload-icon" id="ui-tapu">🏠</div>
             <div class="upload-label" id="ul-tapu">Ekle</div>
-            <div class="upload-hint" id="uh-tapu">JPG, PNG, PDF</div>
+            <div class="upload-hint" id="uh-tapu">Net fotoğraf veya PDF</div>
             <button class="upload-remove" id="ur-tapu" style="display:none" onclick="removeFile(event,'tapu')">✕ Kaldır</button>
           </div>
         </div>
         <div class="field" style="margin:0">
           <label>Kontrat</label>
           <div class="upload-area" id="ua-kontrat" onclick="triggerUpload('kontrat')">
-            <input type="file" id="f-kontrat" accept="image/*,.pdf" style="display:none" onchange="handleFile('kontrat',this)">
+            <input type="file" id="f-kontrat" accept=".pdf" style="display:none" onchange="handleKontrat(this)" multiple>
             <div class="upload-icon" id="ui-kontrat">📝</div>
             <div class="upload-label" id="ul-kontrat">Ekle</div>
-            <div class="upload-hint" id="uh-kontrat">JPG, PNG, PDF</div>
+            <div class="upload-hint" id="uh-kontrat">Tüm sayfalar — PDF</div>
             <button class="upload-remove" id="ur-kontrat" style="display:none" onclick="removeFile(event,'kontrat')">✕ Kaldır</button>
           </div>
         </div>
         <div class="field" style="margin:0">
           <label>Fatura</label>
           <div class="upload-area" id="ua-fatura" onclick="triggerUpload('fatura')">
-            <input type="file" id="f-fatura" accept="image/*,.pdf" style="display:none" onchange="handleFile('fatura',this)">
+            <input type="file" id="f-fatura" accept="image/*,.pdf" style="display:none" onchange="handleFileStrict('fatura',this)">
             <div class="upload-icon" id="ui-fatura">🧾</div>
             <div class="upload-label" id="ul-fatura">Ekle</div>
-            <div class="upload-hint" id="uh-fatura">JPG, PNG, PDF</div>
+            <div class="upload-hint" id="uh-fatura">Net fotoğraf veya PDF</div>
             <button class="upload-remove" id="ur-fatura" style="display:none" onclick="removeFile(event,'fatura')">✕ Kaldır</button>
           </div>
         </div>
@@ -604,6 +604,74 @@ async function uploadFileToDrive(file, folderId, fileName){
     reader.onerror = ()=> resolve(null);
     reader.readAsDataURL(file);
   });
+}
+
+
+// Kontrat - çoklu dosya (tüm sayfalar)
+let kontratFiles = [];
+function handleKontrat(input){
+  const files = Array.from(input.files);
+  if(!files.length) return;
+  
+  // Sadece PDF kontrolü
+  const nonPdf = files.filter(f => f.type !== 'application/pdf' && !f.name.toLowerCase().endsWith('.pdf'));
+  if(nonPdf.length > 0){
+    alert('Kontrat sadece PDF formatında yüklenebilir. Lütfen tüm sayfaları tek PDF olarak birleştirin veya ayrı PDF dosyaları olarak yükleyin.');
+    input.value = '';
+    return;
+  }
+  
+  // Boyut kontrolü
+  const tooBig = files.filter(f => f.size > 20*1024*1024);
+  if(tooBig.length > 0){
+    alert('Bir veya daha fazla dosya 20MB\'dan büyük. Lütfen dosyaları sıkıştırın.');
+    input.value = '';
+    return;
+  }
+  
+  kontratFiles = files;
+  pendingFiles['kontrat'] = files[0]; // Ana dosya
+  
+  const ua = document.getElementById('ua-kontrat');
+  ua.classList.add('has-file');
+  
+  if(files.length === 1){
+    document.getElementById('ul-kontrat').textContent = files[0].name.length > 16 ? files[0].name.slice(0,14)+'…' : files[0].name;
+    document.getElementById('uh-kontrat').textContent = (files[0].size/1024).toFixed(0) + 'KB';
+  } else {
+    document.getElementById('ul-kontrat').textContent = files.length + ' sayfa yüklendi';
+    const totalSize = files.reduce((s,f) => s+f.size, 0);
+    document.getElementById('uh-kontrat').textContent = (totalSize/1024).toFixed(0) + 'KB toplam';
+  }
+  document.getElementById('ur-kontrat').style.display='inline-flex';
+}
+
+// Tapu ve fatura - net görsel kontrolü
+function handleFileStrict(type, input){
+  const file = input.files[0];
+  if(!file) return;
+  
+  if(file.size > 20*1024*1024){
+    alert('Dosya 20MB\'dan büyük olamaz');
+    input.value = '';
+    return;
+  }
+  
+  // Format kontrolü
+  const validTypes = ['image/jpeg','image/jpg','image/png','image/heic','image/heif','application/pdf'];
+  if(!validTypes.includes(file.type) && !file.name.match(/\.(jpg|jpeg|png|pdf|heic|heif)$/i)){
+    alert('Lütfen net bir fotoğraf (JPG, PNG) veya PDF yükleyin.');
+    input.value = '';
+    return;
+  }
+  
+  pendingFiles[type] = file;
+  const ua = document.getElementById('ua-'+type);
+  ua.classList.add('has-file');
+  const shortName = file.name.length > 18 ? file.name.slice(0,16)+'…' : file.name;
+  document.getElementById('ul-'+type).textContent = shortName;
+  document.getElementById('uh-'+type).textContent = (file.size/1024).toFixed(0) + 'KB';
+  document.getElementById('ur-'+type).style.display = 'inline-flex';
 }
 
 function triggerUpload(type){
