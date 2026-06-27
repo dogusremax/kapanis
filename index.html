@@ -205,6 +205,15 @@
     <div class="form-card">
       <div class="form-section-title">İşlem Bilgileri</div>
       <div class="field">
+        <label style="font-size:13px;font-weight:600;color:var(--accent)">Hangi tarafı temsil ettiniz?</label>
+        <select id="f-taraf" onchange="toggleTaraf(this.value)" style="font-size:13px;border:2px solid var(--accent)">
+          <option value="">— Seçiniz —</option>
+          <option value="mulk-sahibi">Mülk Sahibi</option>
+          <option value="alici-kiraci">Alıcı / Kiracı</option>
+          <option value="her-ikisi">Her İkisi</option>
+        </select>
+      </div>
+      <div class="field">
         <label>İşlem Türü</label>
         <div class="type-pills">
           <div class="type-pill active" onclick="setType('Satılık')">Satılık</div>
