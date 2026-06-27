@@ -234,18 +234,31 @@
         <div class="field"><label>Kapora (₺)</label>
           <div class="currency-input"><span>₺</span><input type="text" id="f-deposit" placeholder="0" inputmode="numeric" oninput="formatCurrency(this)"></div>
         </div>
-        <div class="field"><label>Referral / Coop</label>
-          <select id="f-ref"><option value="Yok">Yok</option><option value="Referral">Referral</option><option value="Co-operation">Co-operation</option></select>
+        <div id="wrap-paylasim"><div class="field"><label>Paylaşımlı Kapanış</label>
+          <select id="f-ref-shared" onchange="toggleSharedAdvisor(this.value)">
+            <option value="Hayır">Hayır</option>
+            <option value="Evet">Evet</option>
+          </select>
+        </div>
+      </div>
+        <div class="field" id="f-ref-partner-wrap" style="display:none">
+          <label>Ortak Danışman</label>
+          <select id="f-ref">
+            <option value="">— Seçiniz —</option>
+          </select>
         </div>
       </div>
     </div>
     <div class="form-card">
       <div class="form-section-title">Müşteri Bilgileri</div>
+      <div id="wrap-mulk-sahibi">
       <div class="field"><label>Mülk Sahibi Adı</label><input type="text" id="f-owner-name" placeholder="Ad Soyad" oninput="capitalizeWords(this)"></div>
       <div class="field-row">
         <div class="field"><label>Telefon</label><input type="text" id="f-owner-phone" placeholder="0 (5XX) XXX XX XX" oninput="formatPhone(this)" maxlength="17"></div>
         <div class="field"><label>E-posta</label><input type="text" id="f-owner-email" placeholder="ornek@mail.com" inputmode="email" oninput="validateEmail(this)"></div>
       </div>
+      </div>
+      <div id="wrap-alici-kiraci">
       <div class="field"><label>Alıcı / Kiracı Adı</label><input type="text" id="f-buyer-name" placeholder="Ad Soyad" oninput="capitalizeWords(this)"></div>
       <div class="field-row">
         <div class="field"><label>Telefon</label><input type="text" id="f-buyer-phone" placeholder="0 (5XX) XXX XX XX" oninput="formatPhone(this)" maxlength="17"></div>
@@ -477,6 +490,59 @@ const DOC_LABELS = {tapu:'🏠 Tapu', kontrat:'📝 Kontrat', fatura:'🧾 Fatur
 
 let currentUser=null, selectedAdvisor=null, selectedType='Satılık';
 let pendingFiles = {tapu:null, kontrat:null, fatura:null};
+
+function toggleTaraf(val){
+  const wMulk = document.getElementById('wrap-mulk-sahibi');
+  const wAlici = document.getElementById('wrap-alici-kiraci');
+  const wHbMulk = document.getElementById('wrap-hb-mulk');
+  const wHbAlici = document.getElementById('wrap-hb-alici');
+  const wPaylasim = document.getElementById('wrap-paylasim');
+  const wPartner = document.getElementById('f-ref-partner-wrap');
+
+  if(val === 'mulk-sahibi'){
+    wMulk.style.display = 'block';
+    wAlici.style.display = 'none';
+    wHbMulk.style.display = 'block';
+    wHbAlici.style.display = 'none';
+    // Alıcı paylaşımlı - otomatik
+    wPaylasim.style.display = 'block';
+    document.getElementById('f-ref-shared').value = 'Evet';
+    toggleSharedAdvisor('Evet');
+  } else if(val === 'alici-kiraci'){
+    wMulk.style.display = 'none';
+    wAlici.style.display = 'block';
+    wHbMulk.style.display = 'none';
+    wHbAlici.style.display = 'block';
+    // Mülk sahibi paylaşımlı - otomatik
+    wPaylasim.style.display = 'block';
+    document.getElementById('f-ref-shared').value = 'Evet';
+    toggleSharedAdvisor('Evet');
+  } else if(val === 'her-ikisi'){
+    wMulk.style.display = 'block';
+    wAlici.style.display = 'block';
+    wHbMulk.style.display = 'block';
+    wHbAlici.style.display = 'block';
+    wPaylasim.style.display = 'none';
+    document.getElementById('f-ref-shared').value = 'Hayır';
+    if(wPartner) wPartner.style.display = 'none';
+  }
+}
+
+function toggleSharedAdvisor(val){
+  const wrap = document.getElementById('f-ref-partner-wrap');
+  const sel = document.getElementById('f-ref');
+  if(val === 'Evet'){
+    wrap.style.display = 'block';
+    // Mevcut danışman hariç listeyi doldur
+    const currentName = currentUser ? currentUser.name : '';
+    sel.innerHTML = '<option value="">— Seçiniz —</option>' + 
+      ADVISOR_NAMES.filter(a => a !== currentName && a !== BROKER_NAME)
+        .map(a => `<option value="${a}">${a}</option>`).join('');
+  } else {
+    wrap.style.display = 'none';
+    sel.value = '';
+  }
+}
 
 function validateEmail(el){
   const val = el.value.trim();
@@ -790,7 +856,7 @@ function setType(t){
 function resetForm(){
   ['f-date','f-amount','f-hb-owner','f-hb-buyer','f-address','f-deposit','f-owner-name','f-owner-phone','f-owner-email','f-buyer-name','f-buyer-phone','f-buyer-email','f-notes'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=''});
   document.getElementById('f-date').value=new Date().toISOString().split('T')[0];
-  document.getElementById('f-ref').value='Yok';
+  document.getElementById('f-ref-shared').value='Hayır'; document.getElementById('f-taraf').value=''; document.getElementById('f-ref').value=''; document.getElementById('f-ref-partner-wrap').style.display='none';
   document.getElementById('f-satisfaction').value='Evet';
   document.getElementById('f-review').value='Bekliyor';
   setType('Satılık');
@@ -865,7 +931,7 @@ async function submitForm(){
     id:Date.now(), advisor:currentUser.name, type:selectedType, date,
     amount:amount, hbOwner, hbBuyer, totalHB:hbOwner+hbBuyer,
     address, deposit:getCurrencyValue('f-deposit'),
-    ref:document.getElementById('f-ref').value,
+    ref:(()=>{ const shared=document.getElementById('f-ref-shared').value; const partner=document.getElementById('f-ref').value; return shared==='Evet'&&partner ? 'Co-op: '+partner : 'Yok'; })(),
     ownerName:document.getElementById('f-owner-name').value,
     ownerPhone:document.getElementById('f-owner-phone').value,
     ownerEmail:document.getElementById('f-owner-email').value,
