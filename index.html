@@ -227,15 +227,14 @@
           <div class="currency-input"><span>₺</span><input type="text" id="f-amount" placeholder="0" inputmode="numeric" oninput="formatCurrency(this)"></div>
         </div>
       </div>
-      <div id="wrap-hb-mulk"><div class="field-row"><div class="field-row">
+      <div class="field-row">
         <div class="field"><label>Mülk Sahibinden HB (₺)</label>
           <div class="currency-input"><span>₺</span><input type="text" id="f-hb-owner" placeholder="0" inputmode="numeric" oninput="formatCurrency(this)"></div>
-        </div></div></div>
-<div id="wrap-hb-alici"><div class="field-row">
+        </div>
         <div class="field"><label>Alıcı/Kiracıdan HB (₺)</label>
           <div class="currency-input"><span>₺</span><input type="text" id="f-hb-buyer" placeholder="0" inputmode="numeric" oninput="formatCurrency(this)"></div>
         </div>
-      </div></div></div>
+      </div>
     </div>
     <div class="form-card">
       <div class="form-section-title">Mülk Bilgisi</div>
@@ -514,24 +513,33 @@ function toggleTaraf(val){
   const wHbAlici = document.getElementById('wrap-hb-alici');
   const wPaylasim = document.getElementById('wrap-paylasim');
   const wPartner = document.getElementById('f-ref-partner-wrap');
-  // Null kontrolü
-  const show = (el) => { if(el) el.style.display='block'; };
-  const hide = (el) => { if(el) el.style.display='none'; };
+
   if(val === 'mulk-sahibi'){
-    show(wMulk); hide(wAlici); show(wHbMulk); hide(wHbAlici);
-    show(wPaylasim);
-    if(document.getElementById('f-ref-shared')) document.getElementById('f-ref-shared').value='Evet';
+    wMulk.style.display = 'block';
+    wAlici.style.display = 'none';
+    wHbMulk.style.display = 'block';
+    wHbAlici.style.display = 'none';
+    // Alıcı paylaşımlı - otomatik
+    wPaylasim.style.display = 'block';
+    document.getElementById('f-ref-shared').value = 'Evet';
     toggleSharedAdvisor('Evet');
   } else if(val === 'alici-kiraci'){
-    hide(wMulk); show(wAlici); hide(wHbMulk); show(wHbAlici);
-    show(wPaylasim);
-    if(document.getElementById('f-ref-shared')) document.getElementById('f-ref-shared').value='Evet';
+    wMulk.style.display = 'none';
+    wAlici.style.display = 'block';
+    wHbMulk.style.display = 'none';
+    wHbAlici.style.display = 'block';
+    // Mülk sahibi paylaşımlı - otomatik
+    wPaylasim.style.display = 'block';
+    document.getElementById('f-ref-shared').value = 'Evet';
     toggleSharedAdvisor('Evet');
   } else if(val === 'her-ikisi'){
-    show(wMulk); show(wAlici); show(wHbMulk); show(wHbAlici);
-    hide(wPaylasim);
-    if(document.getElementById('f-ref-shared')) document.getElementById('f-ref-shared').value='Hayır';
-    if(wPartner) wPartner.style.display='none';
+    wMulk.style.display = 'block';
+    wAlici.style.display = 'block';
+    wHbMulk.style.display = 'block';
+    wHbAlici.style.display = 'block';
+    wPaylasim.style.display = 'none';
+    document.getElementById('f-ref-shared').value = 'Hayır';
+    if(wPartner) wPartner.style.display = 'none';
   }
 }
 
