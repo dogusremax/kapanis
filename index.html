@@ -852,7 +852,7 @@ function loginAdvisor(){
 function loginAdmin(){
   const p=document.getElementById('admin-pass').value;
   if(p!==ADMIN_PASS){alert('Şifre hatalı');return}
-  currentUser={type:'admin'}; showScreen('s-dash'); renderDashboard();
+  currentUser={type:'admin'}; showScreen('s-dash'); try{ renderDashboard(); }catch(e){ console.warn('Dashboard hatası:',e); }
 }
 
 function logout(){currentUser=null;selectedAdvisor=null;showScreen('s-login');buildAdvisorGrid()}
@@ -1022,7 +1022,8 @@ async function exportExcel(){
 }
 
 async function renderDashboard(){
-  const recs=await loadAllRecords();
+  let recs=[];
+  try{ recs=await loadAllRecords(); }catch(e){ console.warn('Dashboard yükleme hatası:',e); }
   const now=new Date(); const thisYear=now.getFullYear(); const thisMonth=now.getMonth();
   const yearRecs=recs.filter(r=>new Date(r.date).getFullYear()===thisYear);
   const monthRecs=yearRecs.filter(r=>new Date(r.date).getMonth()===thisMonth);
