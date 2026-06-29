@@ -1998,14 +1998,9 @@ document.addEventListener('click', function(e){
   selectedAdvisor = null;
 }
 
-function selectAdvisor(el,name){
-  selectedAdvisor=name;
-}
 
 function loginAdvisor(){
-  const sel=document.getElementById('advisor-select');
-  if(sel) selectedAdvisor=sel.value;
-  if(!selectedAdvisor){alert('Lütfen adınızı seçin');return}
+  if(!selectedAdvisor){alert('Lütfen danışman seçin');return}
   const pinInput = document.getElementById('advisor-pin');
   if(pinInput){
     const enteredPin = pinInput.value;
