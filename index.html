@@ -1924,44 +1924,7 @@ function toggleBrokerPass(){
   if(area.classList.contains('show')) document.getElementById('admin-pass').focus();
 }
 
-function resetAdvisorSelect(){
-  document.getElementById('pin-area').classList.remove('show');
-  document.getElementById('advisor-pin').value = '';
-  selectedAdvisor = null;
-  document.getElementById('dropdown-label').textContent = 'Seçiniz...';
-  document.getElementById('dropdown-selector').classList.remove('selected');
-  document.querySelectorAll('.dropdown-item').forEach(i => i.classList.remove('selected'));
-}
-
 let selectedAdvisor = null;
-function selectAdvisor(name){
-  selectedAdvisor = name;
-  // Dropdown güncelle
-  document.getElementById('dropdown-label').textContent = name;
-  document.getElementById('dropdown-selector').classList.add('selected');
-  document.querySelectorAll('.dropdown-item').forEach(i => {
-    i.classList.toggle('selected', i.dataset.name === name);
-  });
-  // Dropdown kapat
-  document.getElementById('dropdown-list').classList.remove('open');
-  document.getElementById('dropdown-selector').classList.remove('open');
-  document.getElementById('dropdown-arrow').classList.remove('open');
-  // PIN alanını göster
-  document.getElementById('pin-area').classList.add('show');
-  setTimeout(() => document.getElementById('advisor-pin').focus(), 100);
-}
-
-function loginAdvisor(){
-  if(!selectedAdvisor){alert('Danışman seçin');return;}
-  const pin = document.getElementById('advisor-pin').value;
-  const advisor = ADVISORS.find(a => a.name === selectedAdvisor);
-  if(!advisor){alert('Danışman bulunamadı');return;}
-  if(String(advisor.pin) !== String(pin)){alert('PIN yanlış');document.getElementById('advisor-pin').value='';return;}
-  currentUser = {type:'advisor', name:advisor.name, folders:advisor.folders};
-  document.getElementById('header-user-name').textContent = advisor.name;
-  showScreen('s-form');
-  resetForm();
-}
 
 function buildAdvisorGrid(){
   const list = document.getElementById('dropdown-list');
@@ -1986,7 +1949,6 @@ function toggleDropdown(){
   arrow.classList.toggle('open', !isOpen);
 }
 
-// Dışarı tıklayınca kapat
 document.addEventListener('click', function(e){
   const wrap = document.getElementById('dropdown-wrap');
   if(wrap && !wrap.contains(e.target)){
@@ -1994,24 +1956,44 @@ document.addEventListener('click', function(e){
     document.getElementById('dropdown-selector').classList.remove('open');
     document.getElementById('dropdown-arrow').classList.remove('open');
   }
-});;
-  selectedAdvisor = null;
+});
+
+function selectAdvisor(name){
+  selectedAdvisor = name;
+  document.getElementById('dropdown-label').textContent = name;
+  document.getElementById('dropdown-selector').classList.add('selected');
+  document.querySelectorAll('.dropdown-item').forEach(i => {
+    i.classList.toggle('selected', i.dataset.name === name);
+  });
+  document.getElementById('dropdown-list').classList.remove('open');
+  document.getElementById('dropdown-selector').classList.remove('open');
+  document.getElementById('dropdown-arrow').classList.remove('open');
+  document.getElementById('pin-area').classList.add('show');
+  setTimeout(() => document.getElementById('advisor-pin').focus(), 100);
 }
 
+function resetAdvisorSelect(){
+  document.getElementById('pin-area').classList.remove('show');
+  document.getElementById('advisor-pin').value = '';
+  selectedAdvisor = null;
+  document.getElementById('dropdown-label').textContent = 'Seçiniz...';
+  document.getElementById('dropdown-selector').classList.remove('selected');
+  document.querySelectorAll('.dropdown-item').forEach(i => i.classList.remove('selected'));
+}
 
 function loginAdvisor(){
-  if(!selectedAdvisor){alert('Lütfen danışman seçin');return}
-  const pinInput = document.getElementById('advisor-pin');
-  if(pinInput){
-    const enteredPin = pinInput.value;
-    const advisor = ADVISORS.find(a=>a.name===selectedAdvisor);
-    if(!enteredPin){alert('Lütfen PIN kodunuzu girin');return}
-    if(advisor && advisor.pin !== enteredPin){alert('PIN kodu hatalı');pinInput.value='';pinInput.focus();return}
-  }
-  currentUser={type:'advisor',name:selectedAdvisor};
+  if(!selectedAdvisor){ alert('Lütfen danışman seçin'); return; }
+  const pin = document.getElementById('advisor-pin').value;
+  if(!pin){ alert('Lütfen PIN kodunuzu girin'); return; }
+  const advisor = ADVISORS.find(a => a.name === selectedAdvisor);
+  if(!advisor){ alert('Danışman bulunamadı'); return; }
+  if(String(advisor.pin) !== String(pin)){ alert('PIN kodu hatalı'); document.getElementById('advisor-pin').value=''; document.getElementById('advisor-pin').focus(); return; }
+  currentUser = {type:'advisor', name:advisor.name, folders:advisor.folders};
+  if(document.getElementById('header-user-name')) document.getElementById('header-user-name').textContent = advisor.name;
+  if(document.getElementById('form-user-label')) document.getElementById('form-user-label').textContent = advisor.name;
   showScreen('s-form');
-  document.getElementById('form-user-label').textContent=selectedAdvisor;
-  resetForm(); document.getElementById('success-msg').style.display='none';
+  resetForm();
+  if(document.getElementById('success-msg')) document.getElementById('success-msg').style.display='none';
 }
 
 function loginAdmin(){
