@@ -667,7 +667,8 @@ async function uploadFileToDrive(file, folderId, fileName){
         params.append('fileName', fileName);
         params.append('folderId', folderId);
         params.append('mimeType', mimeType);
-        params.append('base64', base64Data);
+        params.append('action', 'uploadFile');
+        params.append('fileData', base64Data);
 
         const resp = await fetch(APPS_SCRIPT_URL, {
           method: 'POST',
