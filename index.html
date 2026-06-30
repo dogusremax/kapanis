@@ -9,8 +9,7 @@
 <meta name="theme-color" content="#1A56A0">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon.png">
-<meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Kapanış Formu</title>
-</head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Kapanış Formu</title></head>
 <body>
 
 <style>
@@ -274,7 +273,6 @@
         <div class="field"><label>Telefon</label><input type="text" id="f-buyer-phone" placeholder="0 (5XX) XXX XX XX" oninput="formatPhone(this)" maxlength="17"></div>
         <div class="field"><label>E-posta</label><input type="text" id="f-buyer-email" placeholder="ornek@mail.com" inputmode="email" oninput="validateEmail(this)"></div>
       </div>
-    </div>
     </div>
     <div class="form-card">
       <div class="form-section-title">Belgeler — Drive'a otomatik yüklenir</div>
@@ -611,17 +609,11 @@ function getCurrencyValue(id){
 function fmt(n){return Number(n||0).toLocaleString('tr-TR')+'₺'}
 function fmtShort(n){n=Number(n||0);if(n>=1000000)return(n/1000000).toFixed(1)+'M₺';if(n>=1000)return Math.round(n/1000)+'K₺';return n+'₺'}
 
-// Geçerli kayıt mı? (null / bozuk / id'siz satırları ele) — beyaz ekranın asıl çözümü
-function isValidRecord(r){ return r && typeof r==='object' && r.id!=null && r.id!=='' ; }
-function loadRecords(){try{const d=localStorage.getItem(STORAGE_KEY);const arr=d?JSON.parse(d):[];return Array.isArray(arr)?arr.filter(isValidRecord):[]}catch(e){return[]}}
+function loadRecords(){try{const d=localStorage.getItem(STORAGE_KEY);return d?JSON.parse(d):[]}catch(e){return[]}}
 async function loadAllRecords(){
   // Önce Sheets'ten yükle, sonra localStorage ile birleştir
-  let sheetRecs = await loadFromSheets();
-  let localRecs = loadRecords();
-  // Sheets veya localStorage'dan gelen null/boş/id'siz satırları ayıkla
-  // (Sheets'te silinmiş/boş bir satır olduğunda eski kod burada çöküyor ve broker paneli beyaz kalıyordu)
-  sheetRecs = (Array.isArray(sheetRecs) ? sheetRecs : []).filter(isValidRecord);
-  localRecs = (Array.isArray(localRecs) ? localRecs : []).filter(isValidRecord);
+  const sheetRecs = await loadFromSheets();
+  const localRecs = loadRecords();
   // Sheets'teki id'lere göre tekrarları önle
   const sheetIds = new Set(sheetRecs.map(r=>String(r.id)));
   const onlyLocal = localRecs.filter(r=>!sheetIds.has(String(r.id)));
@@ -645,20 +637,14 @@ async function saveToSheets(rec){
   }catch(e){ console.warn('Sheets kayıt hatası:', e); }
 }
 
-// Google Sheets'ten kayıtları yükle (8sn zaman aşımı ile - takılmayı önler)
+// Google Sheets'ten kayıtları yükle
 async function loadFromSheets(){
   try{
-    const ctrl = new AbortController();
-    const timer = setTimeout(()=>ctrl.abort(), 8000);
-    const resp = await fetch(APPS_SCRIPT_URL + '?action=getRecords', { redirect: 'follow', signal: ctrl.signal });
-    clearTimeout(timer);
+    const resp = await fetch(APPS_SCRIPT_URL + '?action=getRecords', { redirect: 'follow' });
     const text = await resp.text();
     const json = JSON.parse(text);
     return json.records || [];
-  }catch(e){
-    console.warn('Sheets baglantisi atlandi:', e.name==='AbortError'?'zaman asimi':e.message);
-    return [];
-  }
+  }catch(e){ return []; }
 }
 
 // Google Apps Script endpoint ile Drive'a yükle
@@ -864,27 +850,17 @@ function loginAdvisor(){
 }
 
 function loginAdmin(){
-  const el=document.getElementById('admin-pass');
-  if(!el)return;
-  if(el.value!==ADMIN_PASS){alert('Şifre hatalı');return}
-  currentUser={type:'admin'};
-  try{
-    showScreen('s-dash');
-    renderDashboard();
-  }catch(err){ console.error('loginAdmin hatası:', err); }
+  const p=document.getElementById('admin-pass').value;
+  if(p!==ADMIN_PASS){alert('Şifre hatalı');return}
+  currentUser={type:'admin'}; showScreen('s-dash'); renderDashboard();
 }
 
 function logout(){currentUser=null;selectedAdvisor=null;showScreen('s-login');buildAdvisorGrid()}
 
 function showScreen(id){
   document.querySelectorAll('.screen').forEach(s=>{s.classList.remove('active');s.style.display='none'});
-  const s=document.getElementById(id);
-  // Yüksekliği inline garanti et (CSS sınıfı gecikmesine/ezilmesine bağlı kalma)
-  s.style.display='flex';
-  s.style.flexDirection='column';
-  s.style.minHeight='100vh';
-  s.classList.add('active');
-  if(window.scrollTo) window.scrollTo(0,0);
+  const s=document.getElementById(id); s.style.display='flex';
+  setTimeout(()=>s.classList.add('active'),10);
 }
 
 function setType(t){
@@ -1046,7 +1022,6 @@ async function exportExcel(){
 }
 
 async function renderDashboard(){
- try{
   const recs=await loadAllRecords();
   const now=new Date(); const thisYear=now.getFullYear(); const thisMonth=now.getMonth();
   const yearRecs=recs.filter(r=>new Date(r.date).getFullYear()===thisYear);
@@ -1100,11 +1075,6 @@ async function renderDashboard(){
     ?`<div style="padding:4px 0">${present.map(a=>`<span style="display:inline-flex;align-items:center;gap:5px;padding:5px 10px;background:var(--green-bg);border:1px solid #B8DEC9;border-radius:20px;font-size:11px;color:var(--green);margin:3px"><span style="width:7px;height:7px;border-radius:50%;background:var(--green);flex-shrink:0"></span>${a}</span>`).join('')}</div>
       <div style="margin-top:12px;font-size:12px;color:var(--text3)">${present.length} danışman bu ay giriş yaptı · ${missing.length} eksik</div>`
     :`<div style="text-align:center;padding:24px;color:var(--text3);font-size:13px">Bu ay henüz giriş yapan yok</div>`;
- }catch(err){
-  console.error('renderDashboard hatası:', err);
-  const mr=document.getElementById('metrics-row');
-  if(mr) mr.innerHTML='<div class="metric"><div class="metric-label">Panel yüklenemedi</div><div class="metric-value" style="font-size:14px">Veri okunurken sorun oluştu</div><div class="metric-sub">Sayfayı yenileyip tekrar deneyin</div></div>';
- }
 }
 
 async function renderRecords(){
