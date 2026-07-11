@@ -323,6 +323,7 @@
         </div>
         <div id="wrap-paylasim"><div class="field"><label>Paylaşımlı Kapanış</label>
           <select id="f-ref-shared" onchange="toggleSharedAdvisor(this.value)">
+            <option value="">— Seçiniz —</option>
             <option value="Hayır">Hayır</option>
             <option value="Evet">Evet</option>
           </select>
@@ -649,19 +650,19 @@ function toggleTaraf(val){
     wAlici.style.display = 'none';
     wHbMulk.style.display = 'block';
     wHbAlici.style.display = 'none';
-    // Alıcı paylaşımlı - otomatik
+    // Paylaşımlı kapanış: danışman kendisi seçmeli
     wPaylasim.style.display = 'block';
-    document.getElementById('f-ref-shared').value = 'Evet';
-    toggleSharedAdvisor('Evet');
+    document.getElementById('f-ref-shared').value = '';
+    toggleSharedAdvisor('');
   } else if(val === 'alici-kiraci'){
     wMulk.style.display = 'none';
     wAlici.style.display = 'block';
     wHbMulk.style.display = 'none';
     wHbAlici.style.display = 'block';
-    // Mülk sahibi paylaşımlı - otomatik
+    // Paylaşımlı kapanış: danışman kendisi seçmeli
     wPaylasim.style.display = 'block';
-    document.getElementById('f-ref-shared').value = 'Evet';
-    toggleSharedAdvisor('Evet');
+    document.getElementById('f-ref-shared').value = '';
+    toggleSharedAdvisor('');
   } else if(val === 'her-ikisi'){
     wMulk.style.display = 'block';
     wAlici.style.display = 'block';
@@ -1082,7 +1083,7 @@ function setFaturaVarYok(val){
 function resetForm(){
   ['f-date','f-amount','f-hb-owner','f-hb-buyer','f-address','f-deposit','f-owner-name','f-owner-phone','f-owner-email','f-buyer-name','f-buyer-phone','f-buyer-email','f-notes'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=''});
   document.getElementById('f-date').value=new Date().toISOString().split('T')[0];
-  document.getElementById('f-ref-shared').value='Hayır'; document.getElementById('f-taraf').value=''; document.getElementById('f-ref').value=''; document.getElementById('f-ref-partner-wrap').style.display='none';
+  document.getElementById('f-ref-shared').value=''; document.getElementById('f-taraf').value=''; document.getElementById('f-ref').value=''; document.getElementById('f-ref-partner-wrap').style.display='none';
   { const t=document.getElementById('f-ref-type'); if(t) t.value=''; const fw=document.getElementById('f-ref-firm'); if(fw) fw.value=''; const tw=document.getElementById('f-ref-type-wrap'); if(tw) tw.style.display='none'; const ftw=document.getElementById('f-ref-firm-wrap'); if(ftw) ftw.style.display='none'; }
   document.getElementById('f-review').value='Hayır';
   setType('Satılık');
@@ -1123,7 +1124,12 @@ async function submitForm(){
   if(document.getElementById('f-deposit').value.trim()==='') errors.push('• Kapora (yoksa 0 yazın)');
 
   // Paylaşımlı kapanış detayları
-  if(document.getElementById('f-ref-shared').value==='Evet'){
+  // Paylaşımlı kapanış: alan görünüyorsa Evet/Hayır seçilmiş olmalı
+  const refShared=document.getElementById('f-ref-shared').value;
+  if((taraf==='mulk-sahibi'||taraf==='alici-kiraci') && refShared===''){
+    errors.push('• Paylaşımlı kapanış (Evet / Hayır)');
+  }
+  if(refShared==='Evet'){
     const refType=document.getElementById('f-ref-type').value;
     if(!refType){
       errors.push('• Paylaşım türü (ofis içi / farklı firma)');
