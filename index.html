@@ -1099,14 +1099,39 @@ async function submitForm(){
   const hbOwner=getCurrencyValue('f-hb-owner');
   const hbBuyer=getCurrencyValue('f-hb-buyer');
 
-  // Zorunlu alan kontrolleri
+  // Zorunlu alan kontrolleri — TÜM alanlar doldurulmadan form kaydedilemez
   const errors = [];
-  if(!date) errors.push('• İşlem tarihi');
-  if(!amount) errors.push('• İşlem tutarı');
-  if(!address) errors.push('• Adres');
-  if(hbOwner===0 && hbBuyer===0) errors.push('• En az bir hizmet bedeli (HB) girilmeli');
   const taraf=document.getElementById('f-taraf').value;
   if(!taraf) errors.push('• Hangi tarafı temsil ettiğiniz');
+  if(!date) errors.push('• İşlem tarihi');
+  if(!amount) errors.push('• İşlem tutarı');
+  if(!address) errors.push('• Mülk adresi');
+
+  // HB: görünen taraf(lar)ın alanı boş bırakılamaz (yoksa 0 yazılmalı)
+  const hbOwnerRaw=document.getElementById('f-hb-owner').value.trim();
+  const hbBuyerRaw=document.getElementById('f-hb-buyer').value.trim();
+  if((taraf==='mulk-sahibi'||taraf==='her-ikisi') && hbOwnerRaw==='') errors.push('• Mülk sahibinden HB (yoksa 0 yazın)');
+  if((taraf==='alici-kiraci'||taraf==='her-ikisi') && hbBuyerRaw==='') errors.push('• Alıcı/kiracıdan HB (yoksa 0 yazın)');
+  if(hbOwner===0 && hbBuyer===0) errors.push('• En az bir hizmet bedeli (HB) sıfırdan büyük olmalı');
+
+  // Kapora: boş bırakılamaz (yoksa 0 yazılmalı)
+  if(document.getElementById('f-deposit').value.trim()==='') errors.push('• Kapora (yoksa 0 yazın)');
+
+  // Paylaşımlı kapanış detayları
+  if(document.getElementById('f-ref-shared').value==='Evet'){
+    const refType=document.getElementById('f-ref-type').value;
+    if(refType==='dis'){
+      if(!(document.getElementById('f-ref-firm').value||'').trim()) errors.push('• Ortak emlak firması adı');
+    } else {
+      if(!document.getElementById('f-ref').value) errors.push('• Ortak danışman seçimi');
+    }
+  }
+
+  // Belgeler: tapu (Kiralık hariç) ve kontrat zorunlu; fatura "Var" ise dosyası zorunlu
+  if(selectedType!=='Kiralık' && !pendingFiles['tapu']) errors.push('• Tapu belgesi (PDF)');
+  if(!pendingFiles['kontrat']) errors.push('• Kontrat belgesi (PDF)');
+  const faturaVar = document.getElementById('fatura-var-btn').classList.contains('active');
+  if(faturaVar && !pendingFiles['fatura']) errors.push('• Fatura belgesi (PDF) — fatura kesilmediyse "Yok" seçin');
   // Mülk sahibi bilgileri yalnızca mülk sahibi tarafı (veya her ikisi) temsil edildiyse zorunlu
   if(taraf==='mulk-sahibi' || taraf==='her-ikisi'){
     if(!ownerName) errors.push('• Mülk sahibi adı soyadı');
