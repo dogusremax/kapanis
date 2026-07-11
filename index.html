@@ -949,7 +949,7 @@ function removeFile(e,type){
   ua.classList.remove('has-file');
   ua.classList.remove('uploading');
   document.getElementById('ul-'+type).textContent='Ekle';
-  document.getElementById('uh-'+type).textContent='JPG, PNG, PDF';
+  document.getElementById('uh-'+type).textContent = (type==='kontrat') ? 'Tüm sayfalar — sadece PDF' : 'Sadece PDF';
   document.getElementById('ur-'+type).style.display='none';
 }
 
@@ -1288,7 +1288,7 @@ function editRecord(id){
   const docRow=(t)=>{
     const cur = t==='tapu'?r.tapuLink : t==='kontrat'?r.kontratLink : r.faturaLink;
     const durum = cur?'<span style="color:var(--green);font-weight:600">✓ yüklü</span>':'<span style="color:#b00">yok</span>';
-    return `<div style="margin-bottom:12px"><label style="display:block;font-size:12px;color:var(--text2);margin-bottom:3px">${DOC_LABELS[t]} — ${durum}</label><input id="edit-file-${t}" type="file" accept="image/*,application/pdf" style="width:100%;font-size:12px"><div style="font-size:11px;color:var(--text2);margin-top:2px">Değiştirmek için yeni dosya seçin; boş bırakırsanız mevcut evrak korunur.</div></div>`;
+    return `<div style="margin-bottom:12px"><label style="display:block;font-size:12px;color:var(--text2);margin-bottom:3px">${DOC_LABELS[t]} — ${durum}</label><input id="edit-file-${t}" type="file" accept=".pdf,application/pdf" style="width:100%;font-size:12px"><div style="font-size:11px;color:var(--text2);margin-top:2px">Değiştirmek için yeni dosya seçin (sadece PDF); boş bırakırsanız mevcut evrak korunur.</div></div>`;
   };
   document.getElementById('rec-detail-body').innerHTML=`
     <div style="background:var(--accent);color:#fff;padding:16px 20px;position:sticky;top:0"><div style="font-size:16px;font-weight:600">✏️ Kaydı Düzenle</div></div>
