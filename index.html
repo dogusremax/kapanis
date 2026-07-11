@@ -1320,7 +1320,7 @@ function editRecord(id){
   const num=v=>Number(v||0);
   const dateVal=r.date?String(r.date).slice(0,10):'';
   const advOptions=ADVISOR_NAMES.map(a=>`<option value="${esc(a)}" ${a===r.advisor?'selected':''}>${a}</option>`).join('');
-  const typeOptions=['Satılık','Kiralık'].map(t=>`<option value="${t}" ${t===r.type?'selected':''}>${t}</option>`).join('');
+  const typeOptions=['Satılık','Kiralık','Devir'].map(t=>`<option value="${t}" ${t===r.type?'selected':''}>${t}</option>`).join('');
   const inpStyle='width:100%;box-sizing:border-box;padding:8px 10px;border:1px solid var(--border);border-radius:7px;font-size:14px;font-family:Arial';
   const fld=(label,fid,val,type='text',extra='')=>`<div style="margin-bottom:10px;${extra}"><label style="display:block;font-size:12px;color:var(--text2);margin-bottom:3px">${label}</label><input id="${fid}" type="${type}" value="${esc(val)}" style="${inpStyle}"></div>`;
   const docRow=(t)=>{
@@ -1363,7 +1363,25 @@ async function saveRecordEdit(id){
   const gn=i=>{const el=document.getElementById(i);return Number(el?.value||0);};
   const advisor=gv('edit-advisor');
   const dateNew=gv('edit-date');
-  if(!dateNew){alert('İşlem tarihi boş olamaz.');return;}
+  // Zorunlu alan kontrolleri — ana formla aynı kurallar
+  const eErrors=[];
+  if(!dateNew) eErrors.push('• İşlem tarihi');
+  if(!gn('edit-amount')) eErrors.push('• İşlem tutarı');
+  if(!gv('edit-address')) eErrors.push('• Mülk adresi');
+  if(gn('edit-hbOwner')===0 && gn('edit-hbBuyer')===0) eErrors.push('• En az bir hizmet bedeli (HB) sıfırdan büyük olmalı');
+  // Doldurulmuş telefon/e-posta alanlarında format kontrolü
+  const ePhoneRx=/^0 \(5\d{2}\) \d{3} \d{2} \d{2}$/;
+  const eMailRx=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const eOp=gv('edit-ownerPhone'), eBp=gv('edit-buyerPhone'), eOe=gv('edit-ownerEmail'), eBe=gv('edit-buyerEmail');
+  if(eOp && !ePhoneRx.test(eOp)) eErrors.push('• Mülk sahibi telefonu geçersiz format (0 (5XX) XXX XX XX)');
+  if(eBp && !ePhoneRx.test(eBp)) eErrors.push('• Alıcı telefonu geçersiz format (0 (5XX) XXX XX XX)');
+  if(eOe && !eMailRx.test(eOe)) eErrors.push('• Mülk sahibi e-postası geçersiz format');
+  if(eBe && !eMailRx.test(eBe)) eErrors.push('• Alıcı e-postası geçersiz format');
+  // En az bir tarafın müşteri bilgisi eksiksiz olmalı
+  const ownerOk = gv('edit-ownerName') && eOp && eOe;
+  const buyerOk = gv('edit-buyerName') && eBp && eBe;
+  if(!ownerOk && !buyerOk) eErrors.push('• En az bir tarafın müşteri bilgileri (ad + telefon + e-posta) eksiksiz olmalı');
+  if(eErrors.length>0){alert('Lütfen aşağıdaki alanları kontrol edin:\n\n'+eErrors.join('\n'));return;}
   const btn=document.getElementById('edit-save-btn');
   if(btn){btn.disabled=true;btn.innerHTML='<span class="spinner" style="margin-right:6px;border-top-color:#fff"></span>Kaydediliyor...';}
   // Evraklar: yeni dosya seçildiyse yükle, yoksa mevcut linki koru
