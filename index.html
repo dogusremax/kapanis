@@ -580,6 +580,8 @@ function canonAdvisor(name){ const n=String(name||'').trim(); return ADVISOR_CAN
 // Aysun & Orhan: kayıtlar takım olarak tutulur; ama SIRALAMADA ikiye ayrılır (%50/%50) ve eşit sıralanır.
 const DUO_TEAM='Aysun&Orhan Team';
 const DUO_MEMBERS=['Aysun Yılmaz','Orhan Özazman'];
+// Sıralamalarda gösterilmeyecek (ayrılan) danışmanlar — kayıtları/ciroları sistemde kalır, yalnız sıralama/ödül dışı.
+const HIDDEN_FROM_RANKING=['Derya Öztürk'];
 // stats: {ad:{ciro,islem,memnun}} — takımı iki üyeye yarı yarıya böler
 function splitDuoStats(stats){
   if(stats[DUO_TEAM]){
@@ -1366,7 +1368,7 @@ async function renderDashboard(preRecs){
     <div class="metric"><div class="metric-label">Bu Ay Ciro</div><div class="metric-value">${fmtShort(monthCiro)}</div><div class="metric-sub">${now.toLocaleDateString('tr-TR',{month:'long'})}</div></div>
     <div class="metric"><div class="metric-label">Toplam Kapanış</div><div class="metric-value">${yearRecs.length}</div><div class="metric-sub">Bu yıl</div></div>`;
   const byAdvisor={};
-  yearRecs.forEach(r=>{byAdvisor[r.advisor]=(byAdvisor[r.advisor]||0)+(Number(r.totalHB)||0)});
+  yearRecs.forEach(r=>{ if(HIDDEN_FROM_RANKING.includes(r.advisor)) return; byAdvisor[r.advisor]=(byAdvisor[r.advisor]||0)+(Number(r.totalHB)||0)});
   splitDuoMap(byAdvisor);
   const sortedBars=Object.entries(byAdvisor).sort((a,b)=>b[1]-a[1] || String(a[0]).localeCompare(String(b[0]),'tr'));
   let _br=0,_bp=null;
@@ -1868,6 +1870,7 @@ async function renderLeaderboard(){
   const stats = {};
   filtered.forEach(r=>{
     if(r.advisor===BROKER_NAME) return; // broker (Umut) çeyrek sıralamasında yer almaz
+    if(HIDDEN_FROM_RANKING.includes(r.advisor)) return; // ayrılan danışman sıralamada yok (verisi durur)
     const a = r.advisor;
     if(!stats[a]) stats[a] = {ciro:0, islem:0, memnun:0};
     stats[a].ciro += Number(r.totalHB)||0;
