@@ -666,10 +666,10 @@ function toggleSharedAdvisor(val){
   const sel = document.getElementById('f-ref');
   if(val === 'Evet'){
     wrap.style.display = 'block';
-    // Mevcut danışman hariç listeyi doldur
+    // Mevcut danışman hariç listeyi doldur (Umut Tokkuş dahil — onunla da ortak yapılabilir)
     const currentName = currentUser ? currentUser.name : '';
     sel.innerHTML = '<option value="">— Seçiniz —</option>' + 
-      ADVISOR_NAMES.filter(a => a !== currentName && a !== BROKER_NAME)
+      ADVISOR_NAMES.filter(a => a !== currentName)
         .map(a => `<option value="${a}">${a}</option>`).join('');
   } else {
     wrap.style.display = 'none';
@@ -1869,25 +1869,28 @@ async function renderLeaderboard(){
   // Danışman bazlı ciro / işlem / memnuniyet
   const stats = {};
   filtered.forEach(r=>{
-    if(r.advisor===BROKER_NAME) return; // broker (Umut) çeyrek sıralamasında yer almaz
     if(HIDDEN_FROM_RANKING.includes(r.advisor)) return; // ayrılan danışman sıralamada yok (verisi durur)
+    const _coop = /co-?op/i.test(String(r.ref||''));
+    if(r.advisor===BROKER_NAME && !_coop) return; // Umut'un SOLO işleri sıralama/toplam dışı
+    // Umut'un ORTAK payı: toplama dahil (arka planda paylaşım), ama satır/madalyada gösterilmez
     const a = r.advisor;
     if(!stats[a]) stats[a] = {ciro:0, islem:0, memnun:0};
     stats[a].ciro += Number(r.totalHB)||0;
-    const _coop = /co-?op/i.test(String(r.ref||'')); // "Co-op: X" veya "Co-operation" → ortak
-    stats[a].islem += _coop ? 0.5 : 1; // ortak = 0.5; takım da ortaksa 0.5 sayılır, sonra /2 -> 3'lüde 0.25, saf takımda 0.5
+    stats[a].islem += _coop ? 0.5 : 1; // ortak = 0.5; takım da ortaksa 0.5, sonra /2 -> 3'lüde 0.25, saf takımda 0.5
     if(r.review==='Evet') stats[a].memnun++;
   });
 
   splitDuoStats(stats);
-  const ranked = rankByCiro(stats);
+  // Toplam: Umut'un ortak payları dahil (arka planda paylaşım) → ortak kapanışlar tam yansır
+  const topCiro = Object.values(stats).reduce((a,v)=>a+(v.ciro||0),0);
+  const topIslem = Object.values(stats).reduce((a,v)=>a+(v.islem||0),0);
+  const topMemnun = Object.values(stats).reduce((a,v)=>a+(v.memnun||0),0);
+  // Satırlar: Umut (broker) yarışmaz, gösterilmez
+  const rankStats = Object.assign({}, stats); delete rankStats[BROKER_NAME];
+  const ranked = rankByCiro(rankStats);
   const medals = ['🥇','🥈','🥉'];
 
   if(!ranked.length){ el.innerHTML = '<div class="empty">Bu çeyrekte kapanış yok</div>'; return; }
-
-  const topCiro = ranked.reduce((a,r)=>a+(r.s.ciro||0),0);
-  const topIslem = ranked.reduce((a,r)=>a+(r.s.islem||0),0);
-  const topMemnun = ranked.reduce((a,r)=>a+(r.s.memnun||0),0);
 
   const th='padding:8px 6px;color:var(--text3);font-weight:500;border-bottom:1px solid var(--border)';
   const td='padding:9px 6px;border-bottom:1px solid var(--border)';
@@ -1919,7 +1922,7 @@ async function renderLeaderboard(){
         <td style="${tf};text-align:center">${nfmt(topMemnun)}</td>
       </tr></tfoot>
     </table>
-    <div style="font-size:10px;color:var(--text3);padding:8px 2px 0">⭐ = müşterinin Google yorumu bıraktığı kapanış sayısı</div>`;
+    <div style="font-size:10px;color:var(--text3);padding:8px 2px 0">⭐ = müşterinin Google yorumu bıraktığı kapanış sayısı · Umut (broker) sıralamada gösterilmez; onunla yapılan ortak kapanışların payı TOPLAM'a dahildir.</div>`;
 }
 
 // Sıralamada bir danışmana tıklanınca o çeyrekteki kapanışlarını kartla açar
