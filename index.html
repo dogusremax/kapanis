@@ -577,6 +577,30 @@ const ADVISOR_CANON = {
 };
 function canonAdvisor(name){ const n=String(name||'').trim(); return ADVISOR_CANON[n]||n; }
 
+// Aysun & Orhan: kayıtlar takım olarak tutulur; ama SIRALAMADA ikiye ayrılır (%50/%50) ve eşit sıralanır.
+const DUO_TEAM='Aysun&Orhan Team';
+const DUO_MEMBERS=['Aysun Yılmaz','Orhan Özazman'];
+// stats: {ad:{ciro,islem,memnun}} — takımı iki üyeye yarı yarıya böler
+function splitDuoStats(stats){
+  if(stats[DUO_TEAM]){
+    const t=stats[DUO_TEAM]; delete stats[DUO_TEAM];
+    DUO_MEMBERS.forEach(m=>{ stats[m]={ciro:(t.ciro||0)/2, islem:(t.islem||0)/2, memnun:(t.memnun||0)/2, _duo:true}; });
+  }
+  return stats;
+}
+// ciro haritasını (ad:sayı) böler
+function splitDuoMap(map){
+  if(map[DUO_TEAM]!=null){ const v=map[DUO_TEAM]; delete map[DUO_TEAM]; DUO_MEMBERS.forEach(m=>{ map[m]=v/2; }); }
+  return map;
+}
+// beraberlik sıralaması: eşit ciro = aynı sıra; sonraki farklı ciro +1 (atlamaz) -> 1,2,2,3...
+function rankByCiro(stats){
+  const sorted=Object.entries(stats).sort((a,b)=>(b[1].ciro||0)-(a[1].ciro||0) || String(a[0]).localeCompare(String(b[0]),'tr'));
+  let rank=0, prev=null;
+  return sorted.map(([name,s])=>{ if(prev===null||(s.ciro||0)!==prev){rank++;prev=(s.ciro||0);} return {name,s,rank}; });
+}
+function nfmt(x){ x=Number(x)||0; return (x%1===0)?String(x):x.toFixed(1); }
+
 // Drive klasör ID haritası: danışman adı → {tapu, kontrat, fatura}
 const DRIVE_FOLDERS = {
   'Umut Tokkuş':              {tapu:'1WMvIyHV1nkCR7myBokb63QdGGFS1wUcn', kontrat:'1xWx4K44HvK_Y_WV4tM4-blmwjYc2LxpJ', fatura:'1HE48AQl7UPS27Fde45m1HnlZYTTnSa9d'},
@@ -1343,13 +1367,16 @@ async function renderDashboard(preRecs){
     <div class="metric"><div class="metric-label">Toplam Kapanış</div><div class="metric-value">${yearRecs.length}</div><div class="metric-sub">Bu yıl</div></div>`;
   const byAdvisor={};
   yearRecs.forEach(r=>{byAdvisor[r.advisor]=(byAdvisor[r.advisor]||0)+(Number(r.totalHB)||0)});
-  const sorted=Object.entries(byAdvisor).sort((a,b)=>b[1]-a[1]);
-  const maxVal=sorted[0]?.[1]||1;
+  splitDuoMap(byAdvisor);
+  const sortedBars=Object.entries(byAdvisor).sort((a,b)=>b[1]-a[1] || String(a[0]).localeCompare(String(b[0]),'tr'));
+  let _br=0,_bp=null;
+  const barRanked=sortedBars.map(([name,val])=>{ if(_bp===null||val!==_bp){_br++;_bp=val;} return {name,val,rank:_br}; });
+  const maxVal=barRanked[0]?.val||1;
   document.getElementById('period-label').textContent=thisYear+' yılı';
-  document.getElementById('advisor-bars').innerHTML=sorted.length?sorted.map(([name,val],i)=>`
+  document.getElementById('advisor-bars').innerHTML=barRanked.length?barRanked.map(({name,val,rank})=>`
     <div class="bar-row">
-      <span class="rank-badge ${i<3?'r'+(i+1):''}">${i+1}</span>
-      <div class="bar-label">${name}</div>
+      <span class="rank-badge ${rank<=3?'r'+rank:''}">${rank}</span>
+      <div class="bar-label">${name}${DUO_MEMBERS.includes(name)?' <span style="color:var(--text3);font-size:10px">· ortak</span>':''}</div>
       <div class="bar-track"><div class="bar-fill" style="width:${Math.round(val/maxVal*100)}%"></div></div>
       <div class="bar-val">${fmtShort(val)}</div>
     </div>`).join(''):`<div class="empty">Henüz kayıt yok</div>`;
@@ -1848,14 +1875,15 @@ async function renderLeaderboard(){
     if(r.review==='Evet') stats[a].memnun++;
   });
 
-  const sorted = Object.entries(stats).sort((a,b)=>b[1].ciro-a[1].ciro);
+  splitDuoStats(stats);
+  const ranked = rankByCiro(stats);
   const medals = ['🥇','🥈','🥉'];
 
-  if(!sorted.length){ el.innerHTML = '<div class="empty">Bu çeyrekte kapanış yok</div>'; return; }
+  if(!ranked.length){ el.innerHTML = '<div class="empty">Bu çeyrekte kapanış yok</div>'; return; }
 
-  const topCiro = sorted.reduce((s,[,v])=>s+v.ciro,0);
-  const topIslem = sorted.reduce((s,[,v])=>s+v.islem,0);
-  const topMemnun = sorted.reduce((s,[,v])=>s+v.memnun,0);
+  const topCiro = ranked.reduce((a,r)=>a+(r.s.ciro||0),0);
+  const topIslem = ranked.reduce((a,r)=>a+(r.s.islem||0),0);
+  const topMemnun = ranked.reduce((a,r)=>a+(r.s.memnun||0),0);
 
   const th='padding:8px 6px;color:var(--text3);font-weight:500;border-bottom:1px solid var(--border)';
   const td='padding:9px 6px;border-bottom:1px solid var(--border)';
@@ -1870,21 +1898,21 @@ async function renderLeaderboard(){
         <th style="${th};text-align:center">⭐</th>
       </tr></thead>
       <tbody>
-        ${sorted.map(([name,s],i)=>`
+        ${ranked.map(({name,s,rank})=>`
           <tr onclick="showAdvisorQuarterDetail('${name.replace(/'/g,"\\'")}')" style="cursor:pointer">
-            <td style="${td};text-align:center">${i<3?`<span style="font-size:17px">${medals[i]}</span>`:`<span style="color:var(--text3);font-size:12px">${i+1}</span>`}</td>
-            <td style="${td};font-weight:500">${name} <span style="color:var(--accent);font-size:11px">›</span></td>
+            <td style="${td};text-align:center">${rank<=3?`<span style="font-size:17px">${medals[rank-1]}</span>`:`<span style="color:var(--text3);font-size:12px">${rank}</span>`}</td>
+            <td style="${td};font-weight:500">${name}${s._duo?' <span style="color:var(--text3);font-size:10px">· ortak</span>':''} <span style="color:var(--accent);font-size:11px">›</span></td>
             <td style="${td};text-align:right;font-family:Arial,sans-serif;font-weight:600">${fmt(s.ciro)}</td>
-            <td style="${td};text-align:center">${s.islem}</td>
-            <td style="${td};text-align:center;color:var(--text2)">${s.memnun}</td>
+            <td style="${td};text-align:center">${nfmt(s.islem)}</td>
+            <td style="${td};text-align:center;color:var(--text2)">${nfmt(s.memnun)}</td>
           </tr>`).join('')}
       </tbody>
       <tfoot><tr>
         <td style="${tf}"></td>
         <td style="${tf}">TOPLAM</td>
         <td style="${tf};text-align:right;font-family:Arial,sans-serif;color:var(--accent)">${fmt(topCiro)}</td>
-        <td style="${tf};text-align:center">${topIslem}</td>
-        <td style="${tf};text-align:center">${topMemnun}</td>
+        <td style="${tf};text-align:center">${nfmt(topIslem)}</td>
+        <td style="${tf};text-align:center">${nfmt(topMemnun)}</td>
       </tr></tfoot>
     </table>
     <div style="font-size:10px;color:var(--text3);padding:8px 2px 0">⭐ = müşterinin Google yorumu bıraktığı kapanış sayısı</div>`;
@@ -1893,8 +1921,10 @@ async function renderLeaderboard(){
 // Sıralamada bir danışmana tıklanınca o çeyrekteki kapanışlarını kartla açar
 function showAdvisorQuarterDetail(name){
   const now=new Date(); const yr=now.getFullYear();
+  const isDuo = DUO_MEMBERS.includes(name);
+  const filterName = isDuo ? DUO_TEAM : name;
   const recs=_recordsCache.filter(r=>{
-    if(r.advisor!==name) return false;
+    if(r.advisor!==filterName) return false;
     const d=new Date(r.date);
     if(d.getFullYear()!==yr) return false;
     if(lbQuarter==='year') return true;
@@ -1902,9 +1932,11 @@ function showAdvisorQuarterDetail(name){
   }).sort((a,b)=>new Date(b.date)-new Date(a.date));
 
   const periodTxt = lbQuarter==='year' ? yr+' yılı' : `${yr} · ${lbQuarter+1}. Çeyrek (${QUARTER_MONTHS[lbQuarter]})`;
-  const toplamCiro = recs.reduce((s,r)=>s+(Number(r.totalHB)||0),0);
-  const islem = recs.length;
-  const memnun = recs.filter(r=>r.review==='Evet').length;
+  const nDeals = recs.length;
+  const half = isDuo ? 2 : 1;
+  const toplamCiro = recs.reduce((s,r)=>s+(Number(r.totalHB)||0),0) / half;
+  const islem = nDeals / half;
+  const memnun = recs.filter(r=>r.review==='Evet').length / half;
   const fmtDate=d=>{ const x=new Date(d); return isNaN(x)?'':x.toLocaleDateString('tr-TR'); };
 
   const list = recs.length ? recs.map(r=>`
@@ -1920,7 +1952,7 @@ function showAdvisorQuarterDetail(name){
   document.getElementById('rec-detail-body').innerHTML=`
     <div style="background:var(--accent);color:#fff;padding:18px 20px;position:sticky;top:0">
       <div style="font-size:17px;font-weight:700">${name}</div>
-      <div style="font-size:12px;opacity:.85;margin-top:2px">${periodTxt}</div>
+      <div style="font-size:12px;opacity:.85;margin-top:2px">${periodTxt}${isDuo?' · Aysun & Orhan ortak (%50 pay)':''}</div>
     </div>
     <div style="display:flex;gap:8px;padding:14px 20px">
       <div style="flex:1;background:var(--surface2);border-radius:9px;padding:10px;text-align:center">
@@ -1929,15 +1961,15 @@ function showAdvisorQuarterDetail(name){
       </div>
       <div style="flex:1;background:var(--surface2);border-radius:9px;padding:10px;text-align:center">
         <div style="font-size:11px;color:var(--text2)">İşlem</div>
-        <div style="font-size:15px;font-weight:700">${islem}</div>
+        <div style="font-size:15px;font-weight:700">${nfmt(islem)}</div>
       </div>
       <div style="flex:1;background:var(--surface2);border-radius:9px;padding:10px;text-align:center">
         <div style="font-size:11px;color:var(--text2)">⭐ Yorum</div>
-        <div style="font-size:15px;font-weight:700">${memnun}</div>
+        <div style="font-size:15px;font-weight:700">${nfmt(memnun)}</div>
       </div>
     </div>
     <div style="padding:0 20px 16px">
-      <div style="font-size:12px;color:var(--text3);font-weight:600;margin:4px 0 6px">KAPANIŞLAR (${islem})</div>
+      <div style="font-size:12px;color:var(--text3);font-weight:600;margin:4px 0 6px">KAPANIŞLAR (${nDeals})</div>
       ${list}
     </div>
     <div style="padding:14px 20px;border-top:1px solid var(--border);text-align:right;position:sticky;bottom:0;background:var(--surface)">
