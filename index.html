@@ -1874,7 +1874,8 @@ async function renderLeaderboard(){
     const a = r.advisor;
     if(!stats[a]) stats[a] = {ciro:0, islem:0, memnun:0};
     stats[a].ciro += Number(r.totalHB)||0;
-    stats[a].islem++;
+    const _coop = /co-?op/i.test(String(r.ref||'')); // "Co-op: X" veya "Co-operation" → ortak
+    stats[a].islem += _coop ? 0.5 : 1; // ortak = 0.5; takım da ortaksa 0.5 sayılır, sonra /2 -> 3'lüde 0.25, saf takımda 0.5
     if(r.review==='Evet') stats[a].memnun++;
   });
 
@@ -1938,7 +1939,7 @@ function showAdvisorQuarterDetail(name){
   const nDeals = recs.length;
   const half = isDuo ? 2 : 1;
   const toplamCiro = recs.reduce((s,r)=>s+(Number(r.totalHB)||0),0) / half;
-  const islem = nDeals / half;
+  const islem = recs.reduce((s,r)=> s + (/co-?op/i.test(String(r.ref||''))?0.5:1), 0) / (isDuo?2:1);
   const memnun = recs.filter(r=>r.review==='Evet').length / half;
   const fmtDate=d=>{ const x=new Date(d); return isNaN(x)?'':x.toLocaleDateString('tr-TR'); };
 
