@@ -331,6 +331,7 @@
         <div class="field" id="f-ref-type-wrap" style="display:none">
           <label>Paylaşım Türü</label>
           <select id="f-ref-type" onchange="toggleRefType(this.value)">
+            <option value="">— Seçiniz —</option>
             <option value="ofis">Ofis içi (danışman)</option>
             <option value="dis">Farklı emlak firması</option>
           </select>
@@ -678,9 +679,7 @@ function toggleSharedAdvisor(val){
   const firmWrap = document.getElementById('f-ref-firm-wrap');
   if(val === 'Evet'){
     typeWrap.style.display = 'block';
-    const t = document.getElementById('f-ref-type').value || 'ofis';
-    document.getElementById('f-ref-type').value = t;
-    toggleRefType(t);
+    toggleRefType(document.getElementById('f-ref-type').value);
   } else {
     typeWrap.style.display = 'none';
     partnerWrap.style.display = 'none';
@@ -694,7 +693,13 @@ function toggleRefType(val){
   const partnerWrap = document.getElementById('f-ref-partner-wrap');
   const firmWrap = document.getElementById('f-ref-firm-wrap');
   const sel = document.getElementById('f-ref');
-  if(val === 'dis'){
+  if(val === ''){
+    // Henüz seçilmedi → iki alan da gizli
+    partnerWrap.style.display = 'none';
+    firmWrap.style.display = 'none';
+    sel.value = '';
+    const firm = document.getElementById('f-ref-firm'); if(firm) firm.value = '';
+  } else if(val === 'dis'){
     // Farklı emlak firması → firma adı kutusu
     partnerWrap.style.display = 'none';
     firmWrap.style.display = 'block';
@@ -1078,7 +1083,7 @@ function resetForm(){
   ['f-date','f-amount','f-hb-owner','f-hb-buyer','f-address','f-deposit','f-owner-name','f-owner-phone','f-owner-email','f-buyer-name','f-buyer-phone','f-buyer-email','f-notes'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=''});
   document.getElementById('f-date').value=new Date().toISOString().split('T')[0];
   document.getElementById('f-ref-shared').value='Hayır'; document.getElementById('f-taraf').value=''; document.getElementById('f-ref').value=''; document.getElementById('f-ref-partner-wrap').style.display='none';
-  { const t=document.getElementById('f-ref-type'); if(t) t.value='ofis'; const fw=document.getElementById('f-ref-firm'); if(fw) fw.value=''; const tw=document.getElementById('f-ref-type-wrap'); if(tw) tw.style.display='none'; const ftw=document.getElementById('f-ref-firm-wrap'); if(ftw) ftw.style.display='none'; }
+  { const t=document.getElementById('f-ref-type'); if(t) t.value=''; const fw=document.getElementById('f-ref-firm'); if(fw) fw.value=''; const tw=document.getElementById('f-ref-type-wrap'); if(tw) tw.style.display='none'; const ftw=document.getElementById('f-ref-firm-wrap'); if(ftw) ftw.style.display='none'; }
   document.getElementById('f-review').value='Hayır';
   setType('Satılık');
   DOC_TYPES.forEach(t=>removeFile({stopPropagation:()=>{}},t));
@@ -1120,7 +1125,9 @@ async function submitForm(){
   // Paylaşımlı kapanış detayları
   if(document.getElementById('f-ref-shared').value==='Evet'){
     const refType=document.getElementById('f-ref-type').value;
-    if(refType==='dis'){
+    if(!refType){
+      errors.push('• Paylaşım türü (ofis içi / farklı firma)');
+    } else if(refType==='dis'){
       if(!(document.getElementById('f-ref-firm').value||'').trim()) errors.push('• Ortak emlak firması adı');
     } else {
       if(!document.getElementById('f-ref').value) errors.push('• Ortak danışman seçimi');
