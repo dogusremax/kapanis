@@ -1267,6 +1267,14 @@ async function showRecordDetail(id){
   }
   if(!r) return;
   const row=(label,val)=> (val&&val!=='Yok'&&val!=='0'&&val!==0) ? `<div style="display:flex;justify-content:space-between;gap:14px;padding:9px 0;border-bottom:1px solid var(--border)"><span style="color:var(--text2);font-size:13px;flex-shrink:0">${label}</span><span style="font-weight:500;font-size:13px;text-align:right;word-break:break-word">${val}</span></div>` : '';
+  // Paylaşım bilgisini oku: 'Yok' → Hayır; 'Co-op: Ad' → ofis içi; 'Co-op (dış): Firma' → dış firma
+  const refDisp=(()=>{
+    const v=String(r.ref||'').trim();
+    if(!v || v==='Yok') return 'Hayır';
+    if(v.indexOf('Co-op (dış)')===0){ const i=v.indexOf(':'); const f=i>-1?v.slice(i+1).trim():''; return 'Evet — Dış firma'+(f?': '+f:''); }
+    if(v.indexOf('Co-op:')===0) return 'Evet — Ofis içi: '+v.slice(6).trim();
+    return 'Evet — '+v;
+  })();
   const money=v=> v?fmt(v)+' ₺':'';
   document.getElementById('rec-detail-body').innerHTML = `
     <div style="background:var(--accent);color:#fff;padding:18px 20px;position:sticky;top:0">
@@ -1281,7 +1289,7 @@ async function showRecordDetail(id){
       ${row('Alıcı/Kiracıdan HB', money(r.hbBuyer))}
       ${row('Toplam HB', money(r.totalHB))}
       ${row('Kapora', money(r.deposit))}
-      ${row('Referral / Co-op', r.ref)}
+      ${row('Paylaşımlı Kapanış', refDisp)}
       <div style="margin-top:16px;font-weight:600;font-size:13px;color:var(--text2);margin-bottom:2px">👤 Mülk Sahibi</div>
       ${row('Ad Soyad', r.ownerName)}
       ${row('Telefon', r.ownerPhone)}
@@ -1322,6 +1330,33 @@ function editRecord(id){
   const advOptions=ADVISOR_NAMES.map(a=>`<option value="${esc(a)}" ${a===r.advisor?'selected':''}>${a}</option>`).join('');
   const typeOptions=['Satılık','Kiralık','Devir'].map(t=>`<option value="${t}" ${t===r.type?'selected':''}>${t}</option>`).join('');
   const inpStyle='width:100%;box-sizing:border-box;padding:8px 10px;border:1px solid var(--border);border-radius:7px;font-size:14px;font-family:Arial';
+  // Mevcut ref değerini paylaşım alanlarına çöz
+  const refP=(()=>{
+    const v=String(r.ref||'').trim();
+    if(!v || v==='Yok') return {shared:'Hayır',type:'',partner:'',firm:''};
+    if(v.indexOf('Co-op (dış)')===0){ const i=v.indexOf(':'); return {shared:'Evet',type:'dis',partner:'',firm:i>-1?v.slice(i+1).trim():''}; }
+    if(v.indexOf('Co-op:')===0) return {shared:'Evet',type:'ofis',partner:v.slice(6).trim(),firm:''};
+    return {shared:'Evet',type:'dis',partner:'',firm:v};
+  })();
+  const partnerList = (ADVISOR_NAMES.includes(refP.partner)||!refP.partner) ? ADVISOR_NAMES : [refP.partner].concat(ADVISOR_NAMES);
+  const partnerOptions='<option value="">— Seçiniz —</option>'+partnerList.map(a=>`<option value="${esc(a)}" ${a===refP.partner?'selected':''}>${a}</option>`).join('');
+  const refBlock=`
+      <div style="font-weight:600;font-size:13px;color:var(--text2);margin:14px 0 6px">🤝 Paylaşım</div>
+      <div style="margin-bottom:10px"><label style="display:block;font-size:12px;color:var(--text2);margin-bottom:3px">Paylaşımlı Kapanış</label>
+        <select id="edit-ref-shared" onchange="editToggleShared(this.value)" style="${inpStyle}">
+          <option value="Hayır" ${refP.shared==='Hayır'?'selected':''}>Hayır</option>
+          <option value="Evet" ${refP.shared==='Evet'?'selected':''}>Evet</option>
+        </select></div>
+      <div style="margin-bottom:10px;display:${refP.shared==='Evet'?'block':'none'}" id="edit-ref-type-wrap"><label style="display:block;font-size:12px;color:var(--text2);margin-bottom:3px">Paylaşım Türü</label>
+        <select id="edit-ref-type" onchange="editToggleRefType(this.value)" style="${inpStyle}">
+          <option value="" ${refP.type===''?'selected':''}>— Seçiniz —</option>
+          <option value="ofis" ${refP.type==='ofis'?'selected':''}>Ofis içi (danışman)</option>
+          <option value="dis" ${refP.type==='dis'?'selected':''}>Farklı emlak firması</option>
+        </select></div>
+      <div style="margin-bottom:10px;display:${refP.shared==='Evet'&&refP.type==='ofis'?'block':'none'}" id="edit-ref-partner-wrap"><label style="display:block;font-size:12px;color:var(--text2);margin-bottom:3px">Ortak Danışman</label>
+        <select id="edit-ref-partner" style="${inpStyle}">${partnerOptions}</select></div>
+      <div style="margin-bottom:10px;display:${refP.shared==='Evet'&&refP.type==='dis'?'block':'none'}" id="edit-ref-firm-wrap"><label style="display:block;font-size:12px;color:var(--text2);margin-bottom:3px">Emlak Firması</label>
+        <input id="edit-ref-firm" type="text" value="${esc(refP.firm)}" style="${inpStyle}"></div>`;
   const fld=(label,fid,val,type='text',extra='')=>`<div style="margin-bottom:10px;${extra}"><label style="display:block;font-size:12px;color:var(--text2);margin-bottom:3px">${label}</label><input id="${fid}" type="${type}" value="${esc(val)}" style="${inpStyle}"></div>`;
   const docRow=(t)=>{
     const cur = t==='tapu'?r.tapuLink : t==='kontrat'?r.kontratLink : r.faturaLink;
@@ -1339,6 +1374,7 @@ function editRecord(id){
       ${fld('Adres','edit-address',r.address)}
       <div style="display:flex;gap:10px">${fld('İşlem Tutarı (₺)','edit-amount',num(r.amount),'number','flex:1')}${fld('Kapora (₺)','edit-deposit',num(r.deposit),'number','flex:1')}</div>
       <div style="display:flex;gap:10px">${fld('Mülk Sah. HB (₺)','edit-hbOwner',num(r.hbOwner),'number','flex:1')}${fld('Alıcı/Kir. HB (₺)','edit-hbBuyer',num(r.hbBuyer),'number','flex:1')}</div>
+      ${refBlock}
       <div style="font-weight:600;font-size:13px;color:var(--text2);margin:14px 0 6px">👤 Mülk Sahibi</div>
       ${fld('Ad Soyad','edit-ownerName',r.ownerName)}${fld('Telefon','edit-ownerPhone',r.ownerPhone)}${fld('E-posta','edit-ownerEmail',r.ownerEmail)}
       <div style="font-weight:600;font-size:13px;color:var(--text2);margin:14px 0 6px">👤 Alıcı / Kiracı</div>
@@ -1352,6 +1388,28 @@ function editRecord(id){
       <button id="edit-save-btn" onclick="saveRecordEdit('${r.id}')" style="background:var(--green);color:#fff;border:none;border-radius:8px;padding:9px 22px;font-size:14px;font-weight:600;cursor:pointer">Kaydet</button>
     </div>`;
   const c=document.getElementById('rec-detail-card'); if(c) c.scrollTop=0;
+}
+
+// Düzenleme kartındaki paylaşım alanlarını göster/gizle
+function editToggleShared(val){
+  const tw=document.getElementById('edit-ref-type-wrap');
+  const pw=document.getElementById('edit-ref-partner-wrap');
+  const fw=document.getElementById('edit-ref-firm-wrap');
+  if(val==='Evet'){
+    tw.style.display='block';
+    editToggleRefType(document.getElementById('edit-ref-type').value);
+  } else {
+    tw.style.display='none'; pw.style.display='none'; fw.style.display='none';
+    document.getElementById('edit-ref-partner').value='';
+    document.getElementById('edit-ref-firm').value='';
+  }
+}
+function editToggleRefType(val){
+  const pw=document.getElementById('edit-ref-partner-wrap');
+  const fw=document.getElementById('edit-ref-firm-wrap');
+  if(val==='ofis'){ pw.style.display='block'; fw.style.display='none'; document.getElementById('edit-ref-firm').value=''; }
+  else if(val==='dis'){ pw.style.display='none'; fw.style.display='block'; document.getElementById('edit-ref-partner').value=''; }
+  else { pw.style.display='none'; fw.style.display='none'; }
 }
 
 // Düzenlenen kaydı Drive + Sheets + localStorage'a yazar
@@ -1381,6 +1439,20 @@ async function saveRecordEdit(id){
   const ownerOk = gv('edit-ownerName') && eOp && eOe;
   const buyerOk = gv('edit-buyerName') && eBp && eBe;
   if(!ownerOk && !buyerOk) eErrors.push('• En az bir tarafın müşteri bilgileri (ad + telefon + e-posta) eksiksiz olmalı');
+  // Paylaşım kontrolleri — ana formla aynı kurallar
+  const eShared=gv('edit-ref-shared');
+  const eRefType=gv('edit-ref-type');
+  let refNew='Yok';
+  if(eShared==='Evet'){
+    if(!eRefType){ eErrors.push('• Paylaşım türü (ofis içi / farklı firma)'); }
+    else if(eRefType==='dis'){
+      const f=gv('edit-ref-firm');
+      if(!f) eErrors.push('• Ortak emlak firması adı'); else refNew='Co-op (dış): '+f;
+    } else {
+      const p=gv('edit-ref-partner');
+      if(!p) eErrors.push('• Ortak danışman seçimi'); else refNew='Co-op: '+p;
+    }
+  }
   if(eErrors.length>0){alert('Lütfen aşağıdaki alanları kontrol edin:\n\n'+eErrors.join('\n'));return;}
   const btn=document.getElementById('edit-save-btn');
   if(btn){btn.disabled=true;btn.innerHTML='<span class="spinner" style="margin-right:6px;border-top-color:#fff"></span>Kaydediliyor...';}
@@ -1406,6 +1478,7 @@ async function saveRecordEdit(id){
     id:old.id, advisor, type:gv('edit-type'), date:dateNew,
     address:gv('edit-address'), amount:gn('edit-amount'), deposit:gn('edit-deposit'),
     hbOwner, hbBuyer, totalHB:hbOwner+hbBuyer,
+    ref:refNew,
     ownerName:gv('edit-ownerName'), ownerPhone:gv('edit-ownerPhone'), ownerEmail:gv('edit-ownerEmail'),
     buyerName:gv('edit-buyerName'), buyerPhone:gv('edit-buyerPhone'), buyerEmail:gv('edit-buyerEmail'),
     notes:gv('edit-notes'),
