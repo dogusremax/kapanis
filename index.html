@@ -1357,7 +1357,13 @@ function editRecord(id){
         <select id="edit-ref-partner" style="${inpStyle}">${partnerOptions}</select></div>
       <div style="margin-bottom:10px;display:${refP.shared==='Evet'&&refP.type==='dis'?'block':'none'}" id="edit-ref-firm-wrap"><label style="display:block;font-size:12px;color:var(--text2);margin-bottom:3px">Emlak Firması</label>
         <input id="edit-ref-firm" type="text" value="${esc(refP.firm)}" style="${inpStyle}"></div>`;
-  const fld=(label,fid,val,type='text',extra='')=>`<div style="margin-bottom:10px;${extra}"><label style="display:block;font-size:12px;color:var(--text2);margin-bottom:3px">${label}</label><input id="${fid}" type="${type}" value="${esc(val)}" style="${inpStyle}"></div>`;
+  const fld=(label,fid,val,type='text',extra='',attrs='')=>`<div style="margin-bottom:10px;${extra}"><label style="display:block;font-size:12px;color:var(--text2);margin-bottom:3px">${label}</label><input id="${fid}" type="${type}" value="${esc(val)}" ${attrs} style="${inpStyle}"></div>`;
+  // Ön dolum formatları: kayıtlı ham telefonu maskeye, isimleri baş harfi büyüğe çevir
+  const phoneFmt=(v)=>{let d=String(v||'').replace(/\D/g,''); if(!d) return ''; if(d.length===10&&d[0]==='5') d='0'+d; if(d.length>11) d=d.slice(0,11); if(d.length!==11) return String(v||''); return d[0]+' ('+d.slice(1,4)+') '+d.slice(4,7)+' '+d.slice(7,9)+' '+d.slice(9);};
+  const nameFmt=(v)=>String(v||'').replace(/(?:^|\s)\S/g,c=>c.toLocaleUpperCase('tr-TR'));
+  const nameAttrs='oninput="capitalizeWords(this)" placeholder="Ad Soyad"';
+  const phoneAttrs='oninput="formatPhone(this)" maxlength="17" inputmode="numeric" placeholder="0 (5XX) XXX XX XX"';
+  const mailAttrs='oninput="validateEmail(this)" inputmode="email" placeholder="ornek@mail.com"';
   const docRow=(t)=>{
     const cur = t==='tapu'?r.tapuLink : t==='kontrat'?r.kontratLink : r.faturaLink;
     const durum = cur?'<span style="color:var(--green);font-weight:600">✓ yüklü</span>':'<span style="color:#b00">yok</span>';
@@ -1376,9 +1382,9 @@ function editRecord(id){
       <div style="display:flex;gap:10px">${fld('Mülk Sah. HB (₺)','edit-hbOwner',num(r.hbOwner),'number','flex:1')}${fld('Alıcı/Kir. HB (₺)','edit-hbBuyer',num(r.hbBuyer),'number','flex:1')}</div>
       ${refBlock}
       <div style="font-weight:600;font-size:13px;color:var(--text2);margin:14px 0 6px">👤 Mülk Sahibi</div>
-      ${fld('Ad Soyad','edit-ownerName',r.ownerName)}${fld('Telefon','edit-ownerPhone',r.ownerPhone)}${fld('E-posta','edit-ownerEmail',r.ownerEmail)}
+      ${fld('Ad Soyad','edit-ownerName',nameFmt(r.ownerName),'text','',nameAttrs)}${fld('Telefon','edit-ownerPhone',phoneFmt(r.ownerPhone),'text','',phoneAttrs)}${fld('E-posta','edit-ownerEmail',r.ownerEmail,'text','',mailAttrs)}
       <div style="font-weight:600;font-size:13px;color:var(--text2);margin:14px 0 6px">👤 Alıcı / Kiracı</div>
-      ${fld('Ad Soyad','edit-buyerName',r.buyerName)}${fld('Telefon','edit-buyerPhone',r.buyerPhone)}${fld('E-posta','edit-buyerEmail',r.buyerEmail)}
+      ${fld('Ad Soyad','edit-buyerName',nameFmt(r.buyerName),'text','',nameAttrs)}${fld('Telefon','edit-buyerPhone',phoneFmt(r.buyerPhone),'text','',phoneAttrs)}${fld('E-posta','edit-buyerEmail',r.buyerEmail,'text','',mailAttrs)}
       ${fld('Notlar','edit-notes',r.notes)}
       <div style="font-weight:600;font-size:13px;color:var(--text2);margin:14px 0 6px">📎 Evraklar</div>
       ${docRow('tapu')}${docRow('kontrat')}${docRow('fatura')}
