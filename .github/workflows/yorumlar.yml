@@ -1,0 +1,36 @@
+name: Yorumları Güncelle
+
+on:
+  schedule:
+    - cron: '0 4 * * *'   # her gün 07:00 (TR)
+  workflow_dispatch: {}     # elle çalıştırma butonu
+
+permissions:
+  contents: write
+
+jobs:
+  yorumlar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Playwright kur
+        run: |
+          npm init -y > /dev/null
+          npm install playwright > /dev/null
+          npx playwright install --with-deps chromium
+
+      - name: Yorumları çek
+        run: node scripts/yorumCek.mjs
+
+      - name: Değişiklikleri kaydet
+        run: |
+          git config user.name "yorum-bot"
+          git config user.email "actions@github.com"
+          git add yorumlar.json
+          git diff --cached --quiet || git commit -m "Yorumlar güncellendi [otomatik]"
+          git push
