@@ -25,7 +25,15 @@ jobs:
           npx playwright install --with-deps chromium
 
       - name: Yorumları çek
-        run: node scripts/yorumCek.mjs
+        run: |
+          DOSYA=$(find . -iname "yorumCek.mjs*" -not -path "./node_modules/*" | head -1)
+          if [ -z "$DOSYA" ]; then
+            echo "HATA: yorumCek.mjs repoda yok. Add file > Create new file ile ekleyin."
+            exit 1
+          fi
+          echo "Script bulundu: $DOSYA"
+          cp "$DOSYA" /tmp/yorumCek.mjs
+          node /tmp/yorumCek.mjs
 
       - name: Değişiklikleri kaydet
         run: |
