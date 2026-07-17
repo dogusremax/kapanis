@@ -1,4 +1,4 @@
-/** RE/MAX DOĞUŞ — Yorum Toplayıcı v4 (sekme tıklama + sayfalama + zengin teşhis) */
+/** RE/MAX DOĞUŞ — Yorum Toplayıcı v5 (sekme tıklama + sayfalama + zengin teşhis) */
 import fs from 'fs';
 
 const OFIS_URL = 'https://remax.com.tr/tr/ofis/detay/dogus';
@@ -108,6 +108,15 @@ async function ana() {
   }
 
   const page = await context.newPage();
+  let commentIstek = null; // sitenin yorum API çağrısını yakala
+  page.on('request', req => {
+    try {
+      if (req.url().includes('/api/Employee/Comment') && !commentIstek) {
+        commentIstek = { url: req.url(), method: req.method(), postData: req.postData() || '' };
+        debug.notlar.push('Comment API yakalandı: ' + req.method() + ' ' + req.url().slice(0, 120));
+      }
+    } catch {}
+  });
   try {
     console.log('>>', OFIS_URL);
     await page.goto(OFIS_URL, { waitUntil: 'domcontentloaded', timeout: 60000 });
@@ -165,6 +174,45 @@ async function ana() {
     const t1 = [];
     metinYorumAv(toplananMetin, t1);
     for (const j of jsonHavuzu) jsonYorumAv(j.veri, t1);
+
+    // ===== API TEKRARI: yakalanan Comment isteğini sayfa sayfa çağır =====
+    if (commentIstek) {
+      try {
+        let govde = null;
+        try { govde = commentIstek.postData ? JSON.parse(commentIstek.postData) : null; } catch {}
+        debug.notlar.push('Comment isteği gövdesi: ' + (commentIstek.postData || '(boş)').slice(0, 200));
+        const sayfaAnahtari = govde ? Object.keys(govde).find(k => /page|index|skip/i.test(k)) : null;
+        let oncekiToplam = -1;
+        for (let s = 0; s < 40; s++) {
+          let cevap;
+          if (commentIstek.method === 'POST') {
+            const g2 = govde ? { ...govde } : {};
+            if (sayfaAnahtari) g2[sayfaAnahtari] = /skip/i.test(sayfaAnahtari) ? s * 20 : (/index/i.test(sayfaAnahtari) ? s : s + 1);
+            cevap = await context.request.post(commentIstek.url, { data: g2, headers: { 'content-type': 'application/json' } }).catch(() => null);
+          } else {
+            const u = new URL(commentIstek.url);
+            const pk = [...u.searchParams.keys()].find(k => /page|index|skip/i.test(k));
+            if (pk) u.searchParams.set(pk, String(/skip/i.test(pk) ? s * 20 : s + 1));
+            else u.searchParams.set('page', String(s + 1));
+            cevap = await context.request.get(u.toString()).catch(() => null);
+          }
+          if (!cevap || !cevap.ok()) { debug.notlar.push('API sayfa ' + s + ': cevap yok/başarısız'); break; }
+          const veri = await cevap.json().catch(() => null);
+          if (!veri) break;
+          const once = t1.length;
+          jsonYorumAv(veri, t1);
+          if (s === 0) debug.notlar.push('API ilk sayfa yeni kayıt: ' + (t1.length - once));
+          if (t1.length === once) break;              // yeni kayıt gelmedi -> bitti
+          if (t1.length === oncekiToplam) break;
+          oncekiToplam = t1.length;
+          if (!sayfaAnahtari && commentIstek.method === 'POST') break; // sayfalanamıyor
+        }
+        debug.notlar.push('API tekrarı sonrası ham: ' + t1.length);
+      } catch (e) { debug.hatalar.push('API tekrarı: ' + e.message); }
+    } else {
+      debug.notlar.push('Comment API isteği yakalanamadı');
+    }
+
     for (const y of t1) hamYorumlar.push({ kaynakAd: null, ...y });
     console.log('Yorum sekmesinden ham yorum:', t1.length);
     debug.notlar.push('yorum sekmesi ham: ' + t1.length + ' | json cevap: ' + jsonHavuzu.length);
