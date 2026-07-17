@@ -1,4 +1,4 @@
-/** RE/MAX DOĞUŞ — Yorum Toplayıcı v3 (sekme tıklama + sayfalama + zengin teşhis) */
+/** RE/MAX DOĞUŞ — Yorum Toplayıcı v4 (sekme tıklama + sayfalama + zengin teşhis) */
 import fs from 'fs';
 
 const OFIS_URL = 'https://remax.com.tr/tr/ofis/detay/dogus';
@@ -35,33 +35,39 @@ function jsonYorumAv(dugum, topla, derinlik = 0) {
   for (const k of keys) jsonYorumAv(dugum[k], topla, derinlik + 1);
 }
 
-/* Görünür metinden yorum avı: eski "Puan:" deseni + tarih çıpalı blok ayrıştırma */
+/* Görünür metinden yorum avı — remax.com.tr dizilişi:
+   [Baş harfler: "YE"] / [tarih: 16/07/2026] / [Müşteri adı] / [yorum metni...] / [kriter etiketi satırı] */
+const KRITER = /Bölge Hakimliği|Sektör Bilgisi|Araçlar ve Teknoloji|Düzenli Bilgilendirme|Profesyonellik|Güvenirlik|İletişim Becerisi/;
 function metinYorumAv(metin, topla) {
   let m;
   const rePuan = /([^\n]{30,1500}?)\s*\/\s*Puan:\s*(\d)/g;
   while ((m = rePuan.exec(metin)) !== null) {
     topla.push({ musteri: '', tarih: '', puan: Number(m[2]), yorum: m[1].replace(/\s+/g, ' ').trim() });
   }
-  // Tarih çıpalı: "Ad Soyad" satırı + tarih satırı + metin blokları
   const satirlar = metin.split('\n').map(s => s.trim()).filter(Boolean);
+  const tarihMi = s => /^\d{1,2}[./]\d{1,2}[./]\d{4}$/.test(s) || /(gün|hafta|ay|yıl)\s+önce$/.test(s);
+  const basHarfMi = s => /^[A-ZÇĞİÖŞÜ]{1,3}$/.test(s);
   for (let i = 0; i < satirlar.length; i++) {
-    const tarihMi = /^\d{1,2}[./]\d{1,2}[./]\d{4}$/.test(satirlar[i]) || /(gün|hafta|ay|yıl)\s+önce$/.test(satirlar[i]);
-    if (!tarihMi) continue;
-    // İsim: tarihten önceki kısa satır
-    let isim = '';
-    for (let g = i - 1; g >= Math.max(0, i - 3); g--) {
-      if (satirlar[g].length >= 3 && satirlar[g].length <= 40 && !/\d/.test(satirlar[g])) { isim = satirlar[g]; break; }
+    if (!tarihMi(satirlar[i])) continue;
+    // İsim: tarihten SONRAKİ kısa satır (kriter/baş harf değilse)
+    let isim = '', basla = i + 1;
+    if (basla < satirlar.length) {
+      const aday = satirlar[basla];
+      if (aday.length >= 3 && aday.length <= 45 && !KRITER.test(aday) && !basHarfMi(aday) && !tarihMi(aday) && !/\d{3,}/.test(aday)) {
+        isim = aday; basla++;
+      }
     }
-    // Metin: tarihten sonraki uzun satırlar
+    // Gövde: kriter satırına, baş harfe veya yeni tarihe kadar
     let govde = [];
-    for (let g = i + 1; g < Math.min(satirlar.length, i + 8); g++) {
+    for (let g = basla; g < Math.min(satirlar.length, basla + 10); g++) {
       const s = satirlar[g];
-      if (/^\d{1,2}[./]\d{1,2}[./]\d{4}$/.test(s) || /(gün|hafta|ay|yıl)\s+önce$/.test(s)) break;
-      if (s.length > 35) govde.push(s);
-      else if (govde.length) break;
+      if (tarihMi(s) || basHarfMi(s) || KRITER.test(s)) break;
+      if (s.length > 25) govde.push(s);
     }
     if (govde.length) {
-      topla.push({ musteri: isim, tarih: satirlar[i], puan: null, yorum: govde.join(' ').replace(/\s+/g, ' ').slice(0, 1500) });
+      let yorum = govde.join(' ').replace(/\s+/g, ' ').trim();
+      yorum = yorum.replace(new RegExp('(' + KRITER.source + ')[,\\s]*', 'g'), '').trim();
+      if (yorum.length > 25) topla.push({ musteri: isim, tarih: satirlar[i], puan: null, yorum: yorum.slice(0, 1500) });
     }
   }
 }
@@ -110,6 +116,28 @@ async function ana() {
     // ===== 1) MÜŞTERİ YORUMLARI SEKMESİ =====
     const tik = await tabTikla(page, 'Müşteri Yorumları');
     debug.notlar.push('yorum sekmesi tıklandı: ' + tik);
+
+    // Önce "daha fazla göster" tarzı butonu doyana kadar tıkla
+    let oncekiUzunluk = 0;
+    for (let d = 0; d < 60; d++) {
+      for (let i = 0; i < 4; i++) { await page.mouse.wheel(0, 2000).catch(() => {}); await page.waitForTimeout(250); }
+      let tiklandi = false;
+      for (const desen of [/daha fazla/i, /devamını/i, /tümünü/i, /göster/i, /load more/i]) {
+        try {
+          const b = page.locator('button, a, div[role="button"]').filter({ hasText: desen }).first();
+          if (await b.isVisible({ timeout: 400 }).catch(() => false)) {
+            await b.click({ timeout: 2000 }).catch(() => {});
+            await page.waitForTimeout(1600);
+            tiklandi = true; break;
+          }
+        } catch {}
+      }
+      const su = (await page.evaluate(() => document.body.innerText.length).catch(() => 0));
+      if (!tiklandi && su === oncekiUzunluk) break;
+      if (su === oncekiUzunluk && d > 5) break;
+      oncekiUzunluk = su;
+    }
+    debug.notlar.push('daha-fazla sonrası metin uzunluğu: ' + oncekiUzunluk);
 
     let toplananMetin = '';
     for (let sayfaNo = 1; sayfaNo <= 40; sayfaNo++) {
