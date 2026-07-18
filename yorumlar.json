@@ -1,5 +1,5 @@
 {
-  "guncelleme": "17.07.2026 15:34:29",
+  "guncelleme": "18.07.2026 08:57:35",
   "ozet": [
     {
       "ad": "Umut Tokkuş",
@@ -1024,6 +1024,7 @@
       "yorum sekmesi tıklandı: true",
       "daha-fazla sonrası metin uzunluğu: 31270",
       "yorum sayfalaması 1. sayfada bitti",
+      "Comment API isteği yakalanamadı",
       "yorum sekmesi ham: 99 | json cevap: 3",
       "ekip linki: 11"
     ],
