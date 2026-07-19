@@ -1,4 +1,4 @@
-/** RE/MAX DOĞUŞ — Yorum Toplayıcı v8 (sekme tıklama + sayfalama + zengin teşhis) */
+/** RE/MAX DOĞUŞ — Yorum Toplayıcı v10 (sekme tıklama + sayfalama + zengin teşhis) */
 import fs from 'fs';
 
 const OFIS_URL = 'https://remax.com.tr/tr/ofis/detay/dogus';
@@ -62,12 +62,12 @@ function metinYorumAv(metin, topla) {
     for (let g = basla; g < Math.min(satirlar.length, basla + 10); g++) {
       const s = satirlar[g];
       if (tarihMi(s) || basHarfMi(s) || KRITER.test(s)) break;
-      if (s.length > 25) govde.push(s);
+      if (s.length > 15) govde.push(s);
     }
     if (govde.length) {
       let yorum = govde.join(' ').replace(/\s+/g, ' ').trim();
       yorum = yorum.replace(new RegExp('(' + KRITER.source + ')[,\\s]*', 'g'), '').trim();
-      if (yorum.length > 25) topla.push({ musteri: isim, tarih: satirlar[i], puan: null, yorum: yorum.slice(0, 1500) });
+      if (yorum.length > 12) topla.push({ musteri: isim, tarih: satirlar[i], puan: null, yorum: yorum.slice(0, 1500) });
     }
   }
 }
@@ -255,20 +255,74 @@ async function ana() {
           if (su === pOnceki && d > 4) break;
           pOnceki = su;
         }
-        const metin = await p2.evaluate(() => document.body.innerText).catch(() => '');
+        // Profil içi SAYFALAMA: Sonraki / › / sayfa numaraları — metni biriktir
+        let profilMetin = await p2.evaluate(() => document.body.innerText).catch(() => '');
+        for (let sayfaNo = 1; sayfaNo <= 30; sayfaNo++) {
+          let ilerledi = false;
+          for (const desen of [/^Sonraki$/i, /^›$/, /^>$/, new RegExp('^' + (sayfaNo + 1) + '$')]) {
+            try {
+              const b = p2.locator('button, a').filter({ hasText: desen }).first();
+              if (await b.isVisible({ timeout: 500 }).catch(() => false)) {
+                await b.click({ timeout: 2000 }); await p2.waitForTimeout(1800); ilerledi = true; break;
+              }
+            } catch {}
+          }
+          if (!ilerledi) break;
+          for (let i = 0; i < 3; i++) { await p2.mouse.wheel(0, 1800).catch(() => {}); await p2.waitForTimeout(250); }
+          profilMetin += '\n' + (await p2.evaluate(() => document.body.innerText).catch(() => ''));
+        }
+        const slugOn = (link.match(/\/danisman\/\d+\/([a-z0-9-]+)/) || [])[1] || '';
+        // Hedef: sitedeki net yorum sayısı
+        const syIlk = profilMetin.match(/([\d.,]+)\s*Müşteri Yorumu/);
+        const hedef = syIlk ? Number(syIlk[1].replace(/[.,]/g, '')) : null;
+
+        const benzersizSay = (liste) => {
+          const g = new Set();
+          for (const y of liste) g.add(((y.musteri || '') + '|' + (y.tarih || '') + '|' + (y.yorum || '').slice(0, 40))
+            .toLocaleLowerCase('tr').replace(/[^a-zçğıöşü0-9|]+/g, ''));
+          return g.size;
+        };
+        const ayikla = (metinT) => {
+          const t = [];
+          metinYorumAv(metinT, t);
+          for (const j of jsonHavuzu.slice(oncekiJson)) jsonYorumAv(j.veri, t);
+          return t;
+        };
+
+        let t = ayikla(profilMetin);
+        // MUTABAKAT: hedefe ulaşana kadar ek turlar (daha fazla + sonraki sayfa)
+        let duraganTur = 0;
+        for (let tur = 0; hedef && benzersizSay(t) < hedef && tur < 20 && duraganTur < 3; tur++) {
+          const onceSayi = benzersizSay(t);
+          for (let i = 0; i < 4; i++) { await p2.mouse.wheel(0, 2000).catch(() => {}); await p2.waitForTimeout(250); }
+          for (const desen of [/daha fazla/i, /devamını/i, /tümünü/i, /göster/i, /^Sonraki$/i, /^›$/]) {
+            try {
+              const b = p2.locator('button, a, div[role="button"]').filter({ hasText: desen }).first();
+              if (await b.isVisible({ timeout: 400 }).catch(() => false)) {
+                await b.click({ timeout: 2000 }).catch(() => {});
+                await p2.waitForTimeout(1500);
+                break;
+              }
+            } catch {}
+          }
+          profilMetin += '\n' + (await p2.evaluate(() => document.body.innerText).catch(() => ''));
+          t = ayikla(profilMetin);
+          duraganTur = benzersizSay(t) === onceSayi ? duraganTur + 1 : 0;
+        }
+        const metin = profilMetin;
         await p2.close();
 
-        const slug = (link.match(/\/danisman\/\d+\/([a-z0-9-]+)/) || [])[1] || '';
-        const sahibi = DANISMANLAR.find(ad => slug.includes(norm(ad))) ||
-                       DANISMANLAR.find(ad => metin.includes(ad)) || null;
-        if (!sahibi) { debug.notlar.push('profil eşleşmedi (eski danışman olabilir): ' + slug); continue; }
-        const sy = metin.match(/([\d.,]+)\s*Müşteri Yorumu/);
-        if (sahibi && sy) sayilar[sahibi] = Number(sy[1].replace(/[.,]/g, ''));
-        const t = [];
-        metinYorumAv(metin, t);
-        for (const j of jsonHavuzu.slice(oncekiJson)) jsonYorumAv(j.veri, t);
+        const sahibi = DANISMANLAR.find(ad => slugOn.includes(norm(ad))) ||
+                       DANISMANLAR.find(ad => norm(metin).includes(norm(ad))) || null;
+        if (!sahibi) { debug.notlar.push('profil eşleşmedi (eski danışman olabilir): ' + slugOn); continue; }
+        if (hedef !== null) sayilar[sahibi] = hedef;
         for (const y of t) hamYorumlar.push({ kaynakAd: sahibi, ...y });
-        console.log('Profil:', sahibi || slug, '| sayı:', sy ? sy[1] : '-', '| ham:', t.length);
+
+        const toplanan = benzersizSay(t);
+        const durum = hedef === null ? 'siteSayısıOkunamadı' : (toplanan >= hedef ? 'TAM ✓' : 'EKSİK ' + (hedef - toplanan));
+        debug.notlar.push('PROFİL ' + sahibi + ': toplanan=' + toplanan + ' | siteHedef=' + (hedef ?? '-') + ' | ' + durum +
+          ' | metinUz=' + metin.length + ' | yorumBaşlığıVar=' + (/Müşteri Yorum/i.test(metin) ? 'E' : 'H'));
+        console.log('Profil:', sahibi, '| hedef:', hedef, '| toplanan:', toplanan, '|', durum);
       } catch (e) { debug.hatalar.push('profil ' + link.slice(-30) + ': ' + e.message); }
     }
   } catch (e) {
@@ -319,7 +373,7 @@ const anahtarla = y => ((y.musteri || '') + '|' + (y.yorum || ''))
   .toLocaleLowerCase('tr').replace(/[^a-zçğıöşü0-9]+/g, '').slice(0, 80);
 for (const y of hamYorumlar) {
   const anahtar = anahtarla(y);
-  if (anahtar.length < 20 || gorulen.has(anahtar) || y.yorum.length < 25) continue;
+  if (anahtar.length < 12 || gorulen.has(anahtar) || y.yorum.length < 12) continue;
   gorulen.add(anahtar);
   yorumlar.push({
     ad: kime(y),
