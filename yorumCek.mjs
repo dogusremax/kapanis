@@ -314,8 +314,18 @@ async function ana() {
         debug.notlar.push(`profil çöz: id=${(link.match(/\/(?:danisman|agent)\/(\d+)/)||[])[1]||'?'} slug="${slug}" baslik="${basAd}" -> ${sahibi || 'EŞLEŞMEDİ'}`);
         if (!sahibi) { debug.notlar.push('profil eşleşmedi (eski danışman olabilir): ' + slug + ' | baslik: ' + basAd); continue; }
 
-        const sy = metin.match(/([\d.,]+)\s*Müşteri Yorumu/);
-        const siteSay = sy ? Number(sy[1].replace(/[.,]/g, '')) : null;
+        // Rozet sayısı: farklı düzenlerde gelebilir; birden çok deseni dene.
+        const syDesenler = [
+          /([\d.,]+)\s*Müşteri Yorumu/i,
+          /Müşteri Yorum(?:u|ları)\s*\(?\s*([\d.,]+)\s*\)?/i,
+          /Yorumlar\s*\(?\s*([\d.,]+)\s*\)?/i,
+          /([\d.,]+)\s*yorum/i
+        ];
+        let siteSay = null;
+        for (const re of syDesenler) {
+          const mm = metin.match(re);
+          if (mm) { siteSay = Number(mm[1].replace(/[.,]/g, '')); break; }
+        }
         if (siteSay != null) sayilar[sahibi] = siteSay;
 
         // KAYNAK ÖNCELİĞİ: bu profilin izole JSON'undan yorumları al (yapısal, güvenilir).
@@ -336,9 +346,10 @@ async function ana() {
         const benzersiz = [];
         for (const y of profilYorumlari) {
           if (!y.yorum || y.yorum.length < 25) continue;
+          // İmza: tam yorum metni + müşteri + tarih. Kesme yok -> iki farklı yorum yanlışlıkla birleşmez.
           const imza = y.id
             ? 'id:' + y.id
-            : (norm(y.musteri || '') + '|' + norm(y.yorum)).replace(/[^a-z0-9|]+/g, '').slice(0, 120);
+            : (norm(y.musteri || '') + '|' + norm(y.tarih || '') + '|' + norm(y.yorum)).replace(/[^a-z0-9|]+/g, '');
           if (imza.length < 6 || profilGorulen.has(imza)) continue;
           profilGorulen.add(imza);
           benzersiz.push(y);
@@ -376,7 +387,7 @@ const anahtarla = y => {
   const kim = (y.kaynakAd || 'Ofis');
   const cekirdek = y.id
     ? 'id:' + y.id
-    : ((y.musteri || '') + '|' + (y.yorum || '')).toLocaleLowerCase('tr').replace(/[^a-zçğıöşü0-9]+/g, '').slice(0, 100);
+    : ((y.musteri || '') + '|' + (y.tarih || '') + '|' + (y.yorum || '')).toLocaleLowerCase('tr').replace(/[^a-zçğıöşü0-9]+/g, '');
   return kim + '::' + cekirdek;
 };
 for (const y of hamYorumlar) {
