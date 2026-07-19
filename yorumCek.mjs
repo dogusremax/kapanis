@@ -1,4 +1,4 @@
-/** RE/MAX DOĞUŞ — Yorum Toplayıcı v10 (sekme tıklama + sayfalama + zengin teşhis) */
+/** RE/MAX DOĞUŞ — Yorum Toplayıcı v8 (sekme tıklama + sayfalama + zengin teşhis) */
 import fs from 'fs';
 
 const OFIS_URL = 'https://remax.com.tr/tr/ofis/detay/dogus';
@@ -24,7 +24,10 @@ function jsonYorumAv(dugum, topla, derinlik = 0) {
   if (yorumK && isimK) {
     const tarihK = keys.find(k => /date|tarih|created/i.test(k));
     const puanK  = keys.find(k => /rate|rating|puan|score|star/i.test(k) && (typeof dugum[k] === 'number' || /^\d$/.test(String(dugum[k]))));
+    // Benzersiz kimlik: siteden gelen id/guid varsa en güvenilir tekilleştirme anahtarıdır.
+    const idK = keys.find(k => /^(id|guid|uuid|commentid|reviewid|_id)$/i.test(k) && (typeof dugum[k] === 'string' || typeof dugum[k] === 'number'));
     topla.push({
+      id: idK ? String(dugum[idK]) : '',
       musteri: String(dugum[isimK]).trim(),
       tarih: tarihK ? String(dugum[tarihK]).slice(0, 10) : '',
       puan: puanK ? Number(dugum[puanK]) : null,
@@ -42,7 +45,7 @@ function metinYorumAv(metin, topla) {
   let m;
   const rePuan = /([^\n]{30,1500}?)\s*\/\s*Puan:\s*(\d)/g;
   while ((m = rePuan.exec(metin)) !== null) {
-    topla.push({ musteri: '', tarih: '', puan: Number(m[2]), yorum: m[1].replace(/\s+/g, ' ').trim() });
+    topla.push({ id: '', musteri: '', tarih: '', puan: Number(m[2]), yorum: m[1].replace(/\s+/g, ' ').trim() });
   }
   const satirlar = metin.split('\n').map(s => s.trim()).filter(Boolean);
   const tarihMi = s => /^\d{1,2}[./]\d{1,2}[./]\d{4}$/.test(s) || /(gün|hafta|ay|yıl)\s+önce$/.test(s);
@@ -62,12 +65,12 @@ function metinYorumAv(metin, topla) {
     for (let g = basla; g < Math.min(satirlar.length, basla + 10); g++) {
       const s = satirlar[g];
       if (tarihMi(s) || basHarfMi(s) || KRITER.test(s)) break;
-      if (s.length > 15) govde.push(s);
+      if (s.length > 25) govde.push(s);
     }
     if (govde.length) {
       let yorum = govde.join(' ').replace(/\s+/g, ' ').trim();
       yorum = yorum.replace(new RegExp('(' + KRITER.source + ')[,\\s]*', 'g'), '').trim();
-      if (yorum.length > 12) topla.push({ musteri: isim, tarih: satirlar[i], puan: null, yorum: yorum.slice(0, 1500) });
+      if (yorum.length > 25) topla.push({ id: '', musteri: isim, tarih: satirlar[i], puan: null, yorum: yorum.slice(0, 1500) });
     }
   }
 }
@@ -213,9 +216,10 @@ async function ana() {
       debug.notlar.push('Comment API isteği yakalanamadı');
     }
 
-    for (const y of t1) hamYorumlar.push({ kaynakAd: null, ...y });
-    console.log('Yorum sekmesinden ham yorum:', t1.length);
-    debug.notlar.push('yorum sekmesi ham: ' + t1.length + ' | json cevap: ' + jsonHavuzu.length);
+    // NOT: Ofis sekmesinden toplanan yorumlar (t1) artık hamYorumlar'a EKLENMİYOR.
+    // Puanlama danışman bazlı; her yorum yalnızca kendi danışmanının profilinden bir kez toplanır.
+    // Bu döngünün tek amacı Comment API şablonunu (commentIstek) yakalamaktı; o yakalandı.
+    debug.notlar.push('yorum sekmesi ham (yalnızca teşhis, eklenmedi): ' + t1.length + ' | json cevap: ' + jsonHavuzu.length);
 
     // ===== 2) EKİBİMİZ SEKMESİ -> danışman linkleri =====
     await tabTikla(page, 'Ekibimiz');
@@ -255,74 +259,70 @@ async function ana() {
           if (su === pOnceki && d > 4) break;
           pOnceki = su;
         }
-        // Profil içi SAYFALAMA: Sonraki / › / sayfa numaraları — metni biriktir
-        let profilMetin = await p2.evaluate(() => document.body.innerText).catch(() => '');
-        for (let sayfaNo = 1; sayfaNo <= 30; sayfaNo++) {
-          let ilerledi = false;
-          for (const desen of [/^Sonraki$/i, /^›$/, /^>$/, new RegExp('^' + (sayfaNo + 1) + '$')]) {
-            try {
-              const b = p2.locator('button, a').filter({ hasText: desen }).first();
-              if (await b.isVisible({ timeout: 500 }).catch(() => false)) {
-                await b.click({ timeout: 2000 }); await p2.waitForTimeout(1800); ilerledi = true; break;
-              }
-            } catch {}
-          }
-          if (!ilerledi) break;
-          for (let i = 0; i < 3; i++) { await p2.mouse.wheel(0, 1800).catch(() => {}); await p2.waitForTimeout(250); }
-          profilMetin += '\n' + (await p2.evaluate(() => document.body.innerText).catch(() => ''));
-        }
-        const slugOn = (link.match(/\/danisman\/\d+\/([a-z0-9-]+)/) || [])[1] || '';
-        // Hedef: sitedeki net yorum sayısı
-        const syIlk = profilMetin.match(/([\d.,]+)\s*Müşteri Yorumu/);
-        const hedef = syIlk ? Number(syIlk[1].replace(/[.,]/g, '')) : null;
-
-        const benzersizSay = (liste) => {
-          const g = new Set();
-          for (const y of liste) g.add(((y.musteri || '') + '|' + (y.tarih || '') + '|' + (y.yorum || '').slice(0, 40))
-            .toLocaleLowerCase('tr').replace(/[^a-zçğıöşü0-9|]+/g, ''));
-          return g.size;
-        };
-        const ayikla = (metinT) => {
-          const t = [];
-          metinYorumAv(metinT, t);
-          for (const j of jsonHavuzu.slice(oncekiJson)) jsonYorumAv(j.veri, t);
-          return t;
-        };
-
-        let t = ayikla(profilMetin);
-        // MUTABAKAT: hedefe ulaşana kadar ek turlar (daha fazla + sonraki sayfa)
-        let duraganTur = 0;
-        for (let tur = 0; hedef && benzersizSay(t) < hedef && tur < 20 && duraganTur < 3; tur++) {
-          const onceSayi = benzersizSay(t);
-          for (let i = 0; i < 4; i++) { await p2.mouse.wheel(0, 2000).catch(() => {}); await p2.waitForTimeout(250); }
-          for (const desen of [/daha fazla/i, /devamını/i, /tümünü/i, /göster/i, /^Sonraki$/i, /^›$/]) {
-            try {
-              const b = p2.locator('button, a, div[role="button"]').filter({ hasText: desen }).first();
-              if (await b.isVisible({ timeout: 400 }).catch(() => false)) {
-                await b.click({ timeout: 2000 }).catch(() => {});
-                await p2.waitForTimeout(1500);
-                break;
-              }
-            } catch {}
-          }
-          profilMetin += '\n' + (await p2.evaluate(() => document.body.innerText).catch(() => ''));
-          t = ayikla(profilMetin);
-          duraganTur = benzersizSay(t) === onceSayi ? duraganTur + 1 : 0;
-        }
-        const metin = profilMetin;
+        // Son "daha fazla" sonrası gelen yorum API cevabının jsonHavuzu'na oturması için bekle.
+        await p2.waitForTimeout(1500);
+        const metin = await p2.evaluate(() => document.body.innerText).catch(() => '');
         await p2.close();
 
-        const sahibi = DANISMANLAR.find(ad => slugOn.includes(norm(ad))) ||
-                       DANISMANLAR.find(ad => norm(metin).includes(norm(ad))) || null;
-        if (!sahibi) { debug.notlar.push('profil eşleşmedi (eski danışman olabilir): ' + slugOn); continue; }
-        if (hedef !== null) sayilar[sahibi] = hedef;
-        for (const y of t) hamYorumlar.push({ kaynakAd: sahibi, ...y });
+        const slug = (link.match(/\/danisman\/\d+\/([a-z0-9-]+)/) || [])[1] || '';
+        // Slug'ı normalize et: "irem-aleyna-tetik" gibi tireli gelir; ad ise boşlukludur.
+        // norm(ad) "irem aleyna tetik" verdiği için slug.includes(...) ASLA eşleşmez -> tümünü tireli karşılaştır.
+        const slugNorm = norm(slug).replace(/[^a-z0-9]+/g, '-');
+        // Ad parçalarının HEPSİ slug'da geçmeli (tek eşleşme garantisi; yanlış danışmana atama olmaz).
+        const slugEslesenler = DANISMANLAR.filter(ad => {
+          const parcalar = norm(ad).split(' ').filter(Boolean);
+          return parcalar.every(p => slugNorm.includes(p));
+        });
+        // Öncelik slug: tam ve tek eşleşme varsa onu al. Slug hiç eşleşmezse (eski/farklı slug),
+        // metinde TAM AD geçen ve slug'la çelişmeyen tek danışmana düş; birden fazla aday varsa atama yapma.
+        let sahibi = null;
+        if (slugEslesenler.length === 1) {
+          sahibi = slugEslesenler[0];
+        } else if (slugEslesenler.length === 0) {
+          const metinAdaylar = DANISMANLAR.filter(ad => metin.includes(ad));
+          if (metinAdaylar.length === 1) sahibi = metinAdaylar[0];
+          else debug.notlar.push('profil metin-fallback belirsiz (' + metinAdaylar.length + ' aday): ' + slug);
+        } else {
+          debug.notlar.push('slug birden fazla danışmana uydu: ' + slug + ' -> ' + slugEslesenler.join(', '));
+        }
+        if (!sahibi) { debug.notlar.push('profil eşleşmedi (eski danışman olabilir): ' + slug); continue; }
+        const sy = metin.match(/([\d.,]+)\s*Müşteri Yorumu/);
+        const siteSay = sy ? Number(sy[1].replace(/[.,]/g, '')) : null;
+        if (sahibi && siteSay != null) sayilar[sahibi] = siteSay;
 
-        const toplanan = benzersizSay(t);
-        const durum = hedef === null ? 'siteSayısıOkunamadı' : (toplanan >= hedef ? 'TAM ✓' : 'EKSİK ' + (hedef - toplanan));
-        debug.notlar.push('PROFİL ' + sahibi + ': toplanan=' + toplanan + ' | siteHedef=' + (hedef ?? '-') + ' | ' + durum +
-          ' | metinUz=' + metin.length + ' | yorumBaşlığıVar=' + (/Müşteri Yorum/i.test(metin) ? 'E' : 'H'));
-        console.log('Profil:', sahibi, '| hedef:', hedef, '| toplanan:', toplanan, '|', durum);
+        // KAYNAK ÖNCELİĞİ: Bu profilde yakalanan JSON/API yorumlarını al (yapısal, güvenilir).
+        // JSON hiç yorum vermezse görünür metne düş (yedek).
+        const jsonAdaylar = [];
+        for (const j of jsonHavuzu.slice(oncekiJson)) jsonYorumAv(j.veri, jsonAdaylar);
+        let profilYorumlari = jsonAdaylar;
+        let kaynak = 'json';
+        if (profilYorumlari.length === 0) {
+          const metinAdaylar = [];
+          metinYorumAv(metin, metinAdaylar);
+          profilYorumlari = metinAdaylar;
+          kaynak = 'metin';
+        }
+
+        // PROFİL İÇİ TEKİLLEŞTİRME: aynı yorum API sayfalamasında iki kez gelebilir.
+        // Anahtar: id varsa id; yoksa müşteri+yorum imzası.
+        const profilGorulen = new Set();
+        const benzersiz = [];
+        for (const y of profilYorumlari) {
+          if (!y.yorum || y.yorum.length < 25) continue;
+          const imza = y.id
+            ? 'id:' + y.id
+            : (norm(y.musteri || '') + '|' + norm(y.yorum)).replace(/[^a-z0-9|]+/g, '').slice(0, 120);
+          if (imza.length < 6 || profilGorulen.has(imza)) continue;
+          profilGorulen.add(imza);
+          benzersiz.push(y);
+        }
+        for (const y of benzersiz) hamYorumlar.push({ kaynakAd: sahibi, ...y });
+
+        // Sayı denetimi: toplanan ile remax rozeti tutuyor mu?
+        if (siteSay != null && benzersiz.length !== siteSay) {
+          debug.notlar.push(`SAYI FARKI ${sahibi}: remax=${siteSay}, toplanan=${benzersiz.length} (kaynak:${kaynak})`);
+        }
+        console.log('Profil:', sahibi || slug, '| site:', siteSay ?? '-', '| toplanan:', benzersiz.length, '| kaynak:', kaynak);
       } catch (e) { debug.hatalar.push('profil ' + link.slice(-30) + ': ' + e.message); }
     }
   } catch (e) {
@@ -333,31 +333,6 @@ async function ana() {
 
 try { await ana(); } catch (e) { debug.hatalar.push('genel: ' + (e && e.message || e)); }
 
-/* GÜVENLİ EŞLEŞTİRME:
-   - Yalnızca saygı kalıplarıyla eşleşir: "Umut Bey", "Evşen hanım", "Ayşegül Alpay" (tam ad)
-   - Çıplak kelime eşleşmez ("umut ediyoruz" Umut Bey'e GİTMEZ; müşteri soyadı danışmana GİTMEZ)
-   - Metinde açıkça isim geçiyorsa o kazanır (ilk anılan); geçmiyorsa yorumun bulunduğu profil sahibi;
-     o da yoksa 'Ofis'. */
-function metinEsle(yorumMetni) {
-  const m = ' ' + yorumMetni.toLocaleLowerCase('tr') + ' ';
-  let enIyi = null, enKucukIdx = Infinity;
-  for (const ad of DANISMANLAR) {
-    const k = ad.toLocaleLowerCase('tr');
-    const parca = k.split(' ');
-    const ilk = parca[0], son = parca[parca.length - 1];
-    const desenler = [
-      k,                              // tam ad: "ayşegül alpay"
-      ilk + ' hanım', ilk + ' hanim', ilk + ' bey',
-      son + ' hanım', son + ' bey',
-      ilk + ' hanımefendi', ilk + ' beyefendi'
-    ];
-    for (const d of desenler) {
-      const i = m.indexOf(d);
-      if (i > -1 && i < enKucukIdx) { enIyi = ad; enKucukIdx = i; break; }
-    }
-  }
-  return enIyi;
-}
 /* EŞLEŞTİRME KURALI (broker kararı):
    Yorum hangi danışmanın remax.com.tr profil sayfasında yayınlanıyorsa O DANIŞMANA aittir.
    Metin içinde geçen isimlere BAKILMAZ (bir yorumda birden fazla kişi anılabilir, yanıltır).
@@ -369,11 +344,18 @@ function kime(y) {
 const gorulen = new Set();
 const yorumlar = [];
 hamYorumlar.sort((a, b) => (b.kaynakAd ? 1 : 0) - (a.kaynakAd ? 1 : 0)); // profil kaynaklılar önce
-const anahtarla = y => ((y.musteri || '') + '|' + (y.yorum || ''))
-  .toLocaleLowerCase('tr').replace(/[^a-zçğıöşü0-9]+/g, '').slice(0, 80);
+// Anahtar danışman bazlı: iki farklı danışmanda aynı müşteri adı/metni yanlışlıkla elenmesin.
+const anahtarla = y => {
+  const kim = (y.kaynakAd || 'Ofis');
+  const cekirdek = y.id
+    ? 'id:' + y.id
+    : ((y.musteri || '') + '|' + (y.yorum || '')).toLocaleLowerCase('tr').replace(/[^a-zçğıöşü0-9]+/g, '').slice(0, 100);
+  return kim + '::' + cekirdek;
+};
 for (const y of hamYorumlar) {
   const anahtar = anahtarla(y);
-  if (anahtar.length < 12 || gorulen.has(anahtar) || y.yorum.length < 12) continue;
+  const kimlikGecerli = y.id ? true : anahtar.length >= 24; // id yoksa yeterli imza uzunluğu iste
+  if (!kimlikGecerli || gorulen.has(anahtar) || !y.yorum || y.yorum.length < 25) continue;
   gorulen.add(anahtar);
   yorumlar.push({
     ad: kime(y),
@@ -384,11 +366,25 @@ for (const y of hamYorumlar) {
 }
 
 debug.jsonUrller = [...new Set(debug.jsonUrller)].slice(0, 40);
+// Sayı denetimi özeti: toplanan ile remax rozeti tutuyor mu?
+const denetim = DANISMANLAR.map(ad => {
+  const toplanan = yorumlar.filter(y => y.ad === ad).length;
+  const site = sayilar[ad] ?? null;
+  return { ad, toplanan, site, tutuyor: site == null ? null : toplanan === site };
+});
+const uyumsuz = denetim.filter(d => d.tutuyor === false);
 const cikti = {
   guncelleme: new Date().toLocaleString('tr-TR', { timeZone: 'Europe/Istanbul' }),
   ozet: DANISMANLAR.map(ad => ({ ad, yorumSayisi: yorumlar.filter(y => y.ad === ad).length, siteSayisi: sayilar[ad] ?? null })),
+  sayiDenetimi: { tumUyumlu: uyumsuz.length === 0, uyumsuz, detay: denetim },
   yorumlar,
   debug
 };
 fs.writeFileSync('yorumlar.json', JSON.stringify(cikti, null, 2));
 console.log('BİTTİ — toplam yorum:', yorumlar.length, '| hata:', debug.hatalar.length);
+if (uyumsuz.length) {
+  console.log('⚠ SAYI FARKI olan danışmanlar:');
+  for (const d of uyumsuz) console.log(`   ${d.ad}: remax=${d.site}, toplanan=${d.toplanan}`);
+} else {
+  console.log('✓ Tüm danışmanlarda toplanan sayı remax ile bire bir tutuyor.');
+}
