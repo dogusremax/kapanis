@@ -309,9 +309,12 @@ async function ana() {
           }
           return en;
         };
-        // Öncelik: başlık > h1 > slug (tümü tireli/boşluklu farkına dayanıklı)
-        let sahibi = skorla(basAd) || skorla(h1Ad) || skorla(slugNorm.replace(/-/g, ' '));
-        debug.notlar.push(`profil çöz: id=${(link.match(/\/(?:danisman|agent)\/(\d+)/)||[])[1]||'?'} slug="${slug}" baslik="${basAd}" -> ${sahibi || 'EŞLEŞMEDİ'}`);
+        // ÖNCELİK: slug (URL'den gelir -> BAŞKA danışmanın adı olamaz, en güvenilir).
+        // Sonra sayfa başlığı (sunucudan gelen tam ad). h1 KULLANILMAZ: sayfadaki ilk
+        // başlık çoğu zaman "diğer danışmanlar" bölümündeki KOMŞU danışmandır (İrem'in
+        // sayfasında Gamze'nin adını kapıp yanlış atıyordu — İrem/Gamze bug'ının kök nedeni).
+        let sahibi = skorla(slugNorm.replace(/-/g, ' ')) || skorla(basAd);
+        debug.notlar.push(`profil çöz: id=${(link.match(/\/(?:danisman|agent)\/(\d+)/)||[])[1]||'?'} slug="${slug}" baslik="${basAd}" h1="${h1Ad}" -> ${sahibi || 'EŞLEŞMEDİ'}`);
         if (!sahibi) { debug.notlar.push('profil eşleşmedi (eski danışman olabilir): ' + slug + ' | baslik: ' + basAd); continue; }
 
         // Rozet sayısı: farklı düzenlerde gelebilir; birden çok deseni dene.
