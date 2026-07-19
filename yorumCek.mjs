@@ -225,19 +225,38 @@ async function ana() {
     await tabTikla(page, 'Ekibimiz');
     for (let i = 0; i < 5; i++) { await page.mouse.wheel(0, 1500).catch(() => {}); await page.waitForTimeout(300); }
     const linkler = await page.evaluate(() =>
-      Array.from(document.querySelectorAll('a[href*="/danisman/"]')).map(a => a.href)
+      Array.from(document.querySelectorAll('a[href*="/danisman/"], a[href*="/agent/"]')).map(a => a.href)
     ).catch(() => []);
-    const ekip = [...new Set(linkler)].filter(u => /\/danisman\/\d+\//.test(u)).slice(0, 15);
-    console.log('Ekip linki:', ekip.length);
-    debug.notlar.push('ekip linki: ' + ekip.length);
+    // ID formatı "35392" veya "35392-801" olabilir. Aynı danışmanı iki kez işlememek için
+    // numerik ID'nin ilk parçasına (35392) göre tekilleştir.
+    const ekipHam = [...new Set(linkler)].filter(u => /\/(danisman|agent)\/[\d-]+\//.test(u));
+    const ekipMap = new Map();
+    for (const u of ekipHam) {
+      const idm = u.match(/\/(?:danisman|agent)\/(\d+)/);
+      const id = idm ? idm[1] : u;
+      if (!ekipMap.has(id)) ekipMap.set(id, u); // ilk görüleni tut
+    }
+    const ekip = [...ekipMap.values()].slice(0, 20);
+    console.log('Ekip linki:', ekip.length, '(ham:', ekipHam.length + ')');
+    debug.notlar.push('ekip linki: ' + ekip.length + ' (ham: ' + ekipHam.length + ', tekil ID: ' + ekipMap.size + ')');
 
-    // ===== 3) PROFİLLER: yorum sayısı + varsa metinler =====
+    // ===== 3) PROFİLLER: her danışmanın kendi sayfasından, izole şekilde =====
     for (const link of ekip) {
       try {
-        const oncekiJson = jsonHavuzu.length;
         const p2 = await context.newPage();
+        // ÇAPRAZ BULAŞMA ÖNLEME: JSON cevaplarını SADECE bu sayfaya bağlı dinle,
+        // ortak havuza değil. Böylece bir profilin geç gelen cevabı diğerine yazılmaz.
+        const p2Json = [];
+        p2.on('response', async (res) => {
+          try {
+            if (!(res.headers()['content-type'] || '').includes('json')) return;
+            const veri = await res.json().catch(() => null);
+            if (veri) p2Json.push({ url: res.url(), veri });
+          } catch {}
+        });
+
         await p2.goto(link, { waitUntil: 'domcontentloaded', timeout: 45000 });
-        await p2.waitForTimeout(3500);
+        await p2.waitForTimeout(3000);
         await tabTikla(p2, 'Müşteri Yorumları').catch(() => {});
         // "daha fazla göster" doyana kadar tıkla — danışmanın TÜM yorumları gelsin
         let pOnceki = 0;
@@ -259,41 +278,50 @@ async function ana() {
           if (su === pOnceki && d > 4) break;
           pOnceki = su;
         }
-        // Son "daha fazla" sonrası gelen yorum API cevabının jsonHavuzu'na oturması için bekle.
-        await p2.waitForTimeout(1500);
-        const metin = await p2.evaluate(() => document.body.innerText).catch(() => '');
+        // Tüm yorum API cevaplarının inmesini garanti et (son sayfa kaçmasın).
+        await p2.waitForLoadState('networkidle', { timeout: 8000 }).catch(() => {});
+        await p2.waitForTimeout(1200);
+        const sayfa = await p2.evaluate(() => ({
+          metin: document.body.innerText,
+          baslik: document.title || '',
+          h1: (document.querySelector('h1,h2')?.innerText || '')
+        })).catch(() => ({ metin: '', baslik: '', h1: '' }));
         await p2.close();
+        const metin = sayfa.metin || '';
 
-        const slug = (link.match(/\/danisman\/\d+\/([a-z0-9-]+)/) || [])[1] || '';
-        // Slug'ı normalize et: "irem-aleyna-tetik" gibi tireli gelir; ad ise boşlukludur.
-        // norm(ad) "irem aleyna tetik" verdiği için slug.includes(...) ASLA eşleşmez -> tümünü tireli karşılaştır.
+        // ===== SAHİBİ BELİRLEME (KESİN): sayfa başlığı danışmanın tam adıyla başlar =====
+        // Örn: "İrem Aleyna Tetik - RE/MAX Doğuş - Gayrimenkul Danışmanı ..."
+        const basAd = (sayfa.baslik.split(/[-|]/)[0] || '').trim();
+        const h1Ad = (sayfa.h1.split(/[-|]/)[0] || '').trim();
+        const slug = (link.match(/\/(?:danisman|agent)\/[\d-]+\/([a-z0-9-]+)/) || [])[1] || '';
         const slugNorm = norm(slug).replace(/[^a-z0-9]+/g, '-');
-        // Ad parçalarının HEPSİ slug'da geçmeli (tek eşleşme garantisi; yanlış danışmana atama olmaz).
-        const slugEslesenler = DANISMANLAR.filter(ad => {
-          const parcalar = norm(ad).split(' ').filter(Boolean);
-          return parcalar.every(p => slugNorm.includes(p));
-        });
-        // Öncelik slug: tam ve tek eşleşme varsa onu al. Slug hiç eşleşmezse (eski/farklı slug),
-        // metinde TAM AD geçen ve slug'la çelişmeyen tek danışmana düş; birden fazla aday varsa atama yapma.
-        let sahibi = null;
-        if (slugEslesenler.length === 1) {
-          sahibi = slugEslesenler[0];
-        } else if (slugEslesenler.length === 0) {
-          const metinAdaylar = DANISMANLAR.filter(ad => metin.includes(ad));
-          if (metinAdaylar.length === 1) sahibi = metinAdaylar[0];
-          else debug.notlar.push('profil metin-fallback belirsiz (' + metinAdaylar.length + ' aday): ' + slug);
-        } else {
-          debug.notlar.push('slug birden fazla danışmana uydu: ' + slug + ' -> ' + slugEslesenler.join(', '));
-        }
-        if (!sahibi) { debug.notlar.push('profil eşleşmedi (eski danışman olabilir): ' + slug); continue; }
+
+        // Her aday kaynağı için roster ile eşleştir; skorla (ad parçası sayısı).
+        const skorla = (kaynakMetin) => {
+          const km = norm(kaynakMetin || '');
+          let en = null, enSkor = 0;
+          for (const ad of DANISMANLAR) {
+            const parcalar = norm(ad).split(' ').filter(Boolean);
+            const varOlan = parcalar.filter(p => km.includes(p)).length;
+            // İlk + son ad şart (orta ad düşebilir): en az 2 parça veya tek parçalıysa 1
+            const yeter = parcalar.length >= 2 ? varOlan >= 2 : varOlan >= 1;
+            if (yeter && varOlan > enSkor) { enSkor = varOlan; en = ad; }
+          }
+          return en;
+        };
+        // Öncelik: başlık > h1 > slug (tümü tireli/boşluklu farkına dayanıklı)
+        let sahibi = skorla(basAd) || skorla(h1Ad) || skorla(slugNorm.replace(/-/g, ' '));
+        debug.notlar.push(`profil çöz: id=${(link.match(/\/(?:danisman|agent)\/(\d+)/)||[])[1]||'?'} slug="${slug}" baslik="${basAd}" -> ${sahibi || 'EŞLEŞMEDİ'}`);
+        if (!sahibi) { debug.notlar.push('profil eşleşmedi (eski danışman olabilir): ' + slug + ' | baslik: ' + basAd); continue; }
+
         const sy = metin.match(/([\d.,]+)\s*Müşteri Yorumu/);
         const siteSay = sy ? Number(sy[1].replace(/[.,]/g, '')) : null;
-        if (sahibi && siteSay != null) sayilar[sahibi] = siteSay;
+        if (siteSay != null) sayilar[sahibi] = siteSay;
 
-        // KAYNAK ÖNCELİĞİ: Bu profilde yakalanan JSON/API yorumlarını al (yapısal, güvenilir).
+        // KAYNAK ÖNCELİĞİ: bu profilin izole JSON'undan yorumları al (yapısal, güvenilir).
         // JSON hiç yorum vermezse görünür metne düş (yedek).
         const jsonAdaylar = [];
-        for (const j of jsonHavuzu.slice(oncekiJson)) jsonYorumAv(j.veri, jsonAdaylar);
+        for (const j of p2Json) jsonYorumAv(j.veri, jsonAdaylar);
         let profilYorumlari = jsonAdaylar;
         let kaynak = 'json';
         if (profilYorumlari.length === 0) {
@@ -304,7 +332,6 @@ async function ana() {
         }
 
         // PROFİL İÇİ TEKİLLEŞTİRME: aynı yorum API sayfalamasında iki kez gelebilir.
-        // Anahtar: id varsa id; yoksa müşteri+yorum imzası.
         const profilGorulen = new Set();
         const benzersiz = [];
         for (const y of profilYorumlari) {
@@ -320,9 +347,9 @@ async function ana() {
 
         // Sayı denetimi: toplanan ile remax rozeti tutuyor mu?
         if (siteSay != null && benzersiz.length !== siteSay) {
-          debug.notlar.push(`SAYI FARKI ${sahibi}: remax=${siteSay}, toplanan=${benzersiz.length} (kaynak:${kaynak})`);
+          debug.notlar.push(`SAYI FARKI ${sahibi}: remax=${siteSay}, toplanan=${benzersiz.length} (kaynak:${kaynak}, jsonCevap:${p2Json.length})`);
         }
-        console.log('Profil:', sahibi || slug, '| site:', siteSay ?? '-', '| toplanan:', benzersiz.length, '| kaynak:', kaynak);
+        console.log('Profil:', sahibi, '| site:', siteSay ?? '-', '| toplanan:', benzersiz.length, '| kaynak:', kaynak);
       } catch (e) { debug.hatalar.push('profil ' + link.slice(-30) + ': ' + e.message); }
     }
   } catch (e) {
