@@ -1,4 +1,4 @@
-/** RE/MAX DOĞUŞ — Yorum Toplayıcı v5 (sekme tıklama + sayfalama + zengin teşhis) */
+/** RE/MAX DOĞUŞ — Yorum Toplayıcı v6 (sekme tıklama + sayfalama + zengin teşhis) */
 import fs from 'fs';
 
 const OFIS_URL = 'https://remax.com.tr/tr/ofis/detay/dogus';
@@ -259,21 +259,41 @@ async function ana() {
 
 try { await ana(); } catch (e) { debug.hatalar.push('genel: ' + (e && e.message || e)); }
 
-function kime(y) {
-  if (y.kaynakAd) return y.kaynakAd;
-  const m = ' ' + (y.yorum + ' ' + y.musteri).toLocaleLowerCase('tr') + ' ';
-  let tam = null, kismi = null;
+/* GÜVENLİ EŞLEŞTİRME:
+   - Yalnızca saygı kalıplarıyla eşleşir: "Umut Bey", "Evşen hanım", "Ayşegül Alpay" (tam ad)
+   - Çıplak kelime eşleşmez ("umut ediyoruz" Umut Bey'e GİTMEZ; müşteri soyadı danışmana GİTMEZ)
+   - Metinde açıkça isim geçiyorsa o kazanır (ilk anılan); geçmiyorsa yorumun bulunduğu profil sahibi;
+     o da yoksa 'Ofis'. */
+function metinEsle(yorumMetni) {
+  const m = ' ' + yorumMetni.toLocaleLowerCase('tr') + ' ';
+  let enIyi = null, enKucukIdx = Infinity;
   for (const ad of DANISMANLAR) {
     const k = ad.toLocaleLowerCase('tr');
-    if (m.includes(k)) { tam = ad; break; }
     const parca = k.split(' ');
-    if (m.includes(' ' + parca[0] + ' ') || m.includes(' ' + parca[parca.length - 1] + ' ')) kismi = kismi || ad;
+    const ilk = parca[0], son = parca[parca.length - 1];
+    const desenler = [
+      k,                              // tam ad: "ayşegül alpay"
+      ilk + ' hanım', ilk + ' hanim', ilk + ' bey',
+      son + ' hanım', son + ' bey',
+      ilk + ' hanımefendi', ilk + ' beyefendi'
+    ];
+    for (const d of desenler) {
+      const i = m.indexOf(d);
+      if (i > -1 && i < enKucukIdx) { enIyi = ad; enKucukIdx = i; break; }
+    }
   }
-  return tam || kismi || 'Ofis';
+  return enIyi;
+}
+function kime(y) {
+  const acikIsim = metinEsle(y.yorum || '');
+  if (acikIsim) return acikIsim;      // metinde açık isim -> her şeyi ezer
+  if (y.kaynakAd) return y.kaynakAd;  // danışmanın kendi profil sayfasından geldi
+  return 'Ofis';
 }
 
 const gorulen = new Set();
 const yorumlar = [];
+hamYorumlar.sort((a, b) => (b.kaynakAd ? 1 : 0) - (a.kaynakAd ? 1 : 0)); // profil kaynaklılar önce
 for (const y of hamYorumlar) {
   const anahtar = (y.yorum || '').slice(0, 90);
   if (!anahtar || gorulen.has(anahtar) || y.yorum.length < 25) continue;
