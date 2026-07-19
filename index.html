@@ -576,7 +576,6 @@
       <div class="nav-tab active" onclick="showTab('overview')">Genel Bakış</div>
       <div class="nav-tab" onclick="showTab('records')">Tüm Kayıtlar</div>
       <div class="nav-tab" onclick="showTab('tracking')">Takip</div>
-      <div class="nav-tab" onclick="showTab('reviews')">Yorumlar</div>
       <div class="nav-tab" onclick="showTab('leaderboard')">Sıralama</div>
     </div>
     <div id="tab-overview">
@@ -606,13 +605,6 @@
           <tbody id="records-tbody"></tbody>
         </table></div>
         <div id="records-summary"></div>
-      </div>
-    </div>
-    <div id="tab-reviews" style="display:none">
-      <div class="card">
-        <div class="card-header"><span class="card-title">Müşteri Yorumları</span><span style="font-size:11px;color:var(--text3)" id="reviews-rating"></span></div>
-        <div id="reviews-list"><div class="empty">Yükleniyor...</div></div>
-        <div id="remax-reviews"></div>
       </div>
     </div>
     <div id="tab-leaderboard" style="display:none">
@@ -1999,9 +1991,9 @@ async function deleteRecord(id){
 }
 
 function showTab(tab){
-  ['overview','records','tracking','reviews','leaderboard','expenses'].forEach(t=>{document.getElementById('tab-'+t).style.display=t===tab?'block':'none'});
-  document.querySelectorAll('.nav-tab').forEach((el,i)=>el.classList.toggle('active',['overview','records','tracking','reviews','leaderboard','expenses'][i]===tab));
-  if(tab==='records')renderRecords(); else if(tab==='reviews')loadReviews(); else if(tab==='leaderboard')setLbQuarter(lbQuarter); else if(tab==='expenses')renderExpenses(); else renderDashboard();
+  ['overview','records','tracking','leaderboard','expenses'].forEach(t=>{const el=document.getElementById('tab-'+t); if(el) el.style.display=t===tab?'block':'none';});
+  document.querySelectorAll('.nav-tab').forEach((el,i)=>el.classList.toggle('active',['overview','records','tracking','leaderboard','expenses'][i]===tab));
+  if(tab==='records')renderRecords(); else if(tab==='leaderboard')setLbQuarter(lbQuarter); else if(tab==='expenses')renderExpenses(); else renderDashboard();
 }
 
 const MOTIVASYON = [
@@ -2487,65 +2479,6 @@ function showAdvisorQuarterDetail(name){
   document.getElementById('rec-detail-overlay').style.display='block';
   const _card=document.getElementById('rec-detail-card'); _card.scrollTop=0;
   requestAnimationFrame(()=>{ _card.style.transform='translateX(0)'; });
-}
-
-async function loadReviews(){
-  const el = document.getElementById('reviews-list');
-  if(el) el.innerHTML = '';
-  loadRemaxReviews();
-}
-
-// ================= REMAX.COM.TR MÜŞTERİ YORUMLARI =================
-let remaxYorumFiltre = '';
-let remaxYorumVeri = null; // {ozet:[], yorumlar:[]}
-
-function escY(s){return String(s==null?'':s).replace(/[<>&"]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]))}
-
-async function loadRemaxReviews(){
-  const el = document.getElementById('remax-reviews');
-  if(!el) return;
-  if(!remaxYorumVeri){
-    el.innerHTML = '<div class="empty">remax.com.tr yorumları yükleniyor…</div>';
-    try{
-      const r = await fetch('yorumlar.json?v='+Date.now(), {cache:'no-store'});
-      if(!r.ok) throw new Error('yorumlar.json bulunamadı — GitHub Actions ilk çalışmasını bekliyor olabilir');
-      const v = await r.json();
-      remaxYorumVeri = { ozet: v.ozet||[], yorumlar: v.yorumlar||[], guncelleme: v.guncelleme||'' };
-    }catch(e){
-      el.innerHTML = '<div style="padding:14px;border:1px dashed var(--border2);border-radius:12px;font-size:12px;color:var(--text3)">remax.com.tr yorumları henüz hazır değil: '+escY(e.message||e)+'</div>';
-      return;
-    }
-  }
-  renderRemaxReviews();
-}
-
-function setRemaxYorumFiltre(ad){ remaxYorumFiltre = ad; renderRemaxReviews(); }
-
-function renderRemaxReviews(){
-  const el = document.getElementById('remax-reviews');
-  const v = remaxYorumVeri; if(!el || !v) return;
-  const ozet = v.ozet.filter(o=>o.yorumSayisi!=='' && o.yorumSayisi!==null).sort((a,b)=>(b.yorumSayisi||0)-(a.yorumSayisi||0));
-  const toplam = ozet.reduce((t,o)=>t+(Number(o.yorumSayisi)||0),0);
-  const sonG = v.guncelleme || (ozet.length && ozet[0].guncelleme ? ozet[0].guncelleme : '');
-  const yorumlar = v.yorumlar.filter(y=>!remaxYorumFiltre || y.ad===remaxYorumFiltre);
-
-  const rr = document.getElementById('reviews-rating');
-  if(rr) rr.textContent = `🎈 remax.com.tr · ${toplam} yorum` + (sonG ? ' · '+sonG : '');
-  el.innerHTML = `
-    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px">
-      <button onclick="setRemaxYorumFiltre('')" style="padding:5px 11px;border-radius:999px;border:1px solid ${remaxYorumFiltre===''?'var(--accent)':'var(--border)'};background:${remaxYorumFiltre===''?'var(--accent-bg)':'#fff'};font-size:11.5px;cursor:pointer;color:var(--text)">Tümü</button>
-      ${ozet.map(o=>`<button onclick="setRemaxYorumFiltre('${escY(o.ad)}')" style="padding:5px 11px;border-radius:999px;border:1px solid ${remaxYorumFiltre===o.ad?'var(--accent)':'var(--border)'};background:${remaxYorumFiltre===o.ad?'var(--accent-bg)':'#fff'};font-size:11.5px;cursor:pointer;color:var(--text)">${escY(o.ad.split(' ')[0])} <b>${o.yorumSayisi}</b></button>`).join('')}
-    </div>
-    ${yorumlar.length ? yorumlar.slice(0,40).map(y=>`
-      <div style="padding:11px 13px;border:1px solid var(--border);border-radius:12px;background:var(--surface);margin-bottom:8px">
-        <div style="display:flex;justify-content:space-between;gap:8px;margin-bottom:5px;flex-wrap:wrap">
-          <span style="font-weight:600;font-size:12.5px">${escY(y.musteri||'Müşteri')}</span>
-          <span style="font-size:10.5px;color:var(--text3)">${escY(y.ad.split(' ')[0])}${y.tarih?' · '+escY(y.tarih):''}</span>
-        </div>
-        <div style="font-size:12px;color:var(--text2);line-height:1.55">${escY(y.yorum)}</div>
-      </div>`).join('')
-    : '<div style="padding:12px;font-size:12px;color:var(--text3);text-align:center">Bu filtrede yorum bulunamadı.</div>'}
-  `;
 }
 
 buildAdvisorGrid();
