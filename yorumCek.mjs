@@ -1,4 +1,4 @@
-/** RE/MAX DOĞUŞ — Yorum Toplayıcı v6 (sekme tıklama + sayfalama + zengin teşhis) */
+/** RE/MAX DOĞUŞ — Yorum Toplayıcı v8 (sekme tıklama + sayfalama + zengin teşhis) */
 import fs from 'fs';
 
 const OFIS_URL = 'https://remax.com.tr/tr/ofis/detay/dogus';
@@ -235,13 +235,33 @@ async function ana() {
         await p2.goto(link, { waitUntil: 'domcontentloaded', timeout: 45000 });
         await p2.waitForTimeout(3500);
         await tabTikla(p2, 'Müşteri Yorumları').catch(() => {});
-        for (let i = 0; i < 8; i++) { await p2.mouse.wheel(0, 1600).catch(() => {}); await p2.waitForTimeout(300); }
+        // "daha fazla göster" doyana kadar tıkla — danışmanın TÜM yorumları gelsin
+        let pOnceki = 0;
+        for (let d = 0; d < 50; d++) {
+          for (let i = 0; i < 4; i++) { await p2.mouse.wheel(0, 1800).catch(() => {}); await p2.waitForTimeout(250); }
+          let tik = false;
+          for (const desen of [/daha fazla/i, /devamını/i, /tümünü/i, /göster/i, /load more/i]) {
+            try {
+              const b = p2.locator('button, a, div[role="button"]').filter({ hasText: desen }).first();
+              if (await b.isVisible({ timeout: 400 }).catch(() => false)) {
+                await b.click({ timeout: 2000 }).catch(() => {});
+                await p2.waitForTimeout(1400);
+                tik = true; break;
+              }
+            } catch {}
+          }
+          const su = await p2.evaluate(() => document.body.innerText.length).catch(() => 0);
+          if (!tik && su === pOnceki) break;
+          if (su === pOnceki && d > 4) break;
+          pOnceki = su;
+        }
         const metin = await p2.evaluate(() => document.body.innerText).catch(() => '');
         await p2.close();
 
         const slug = (link.match(/\/danisman\/\d+\/([a-z0-9-]+)/) || [])[1] || '';
-        const sahibi = DANISMANLAR.find(ad => slug.includes(norm(ad).replace(/[^a-z0-9]+/g, '-'))) ||
+        const sahibi = DANISMANLAR.find(ad => slug.includes(norm(ad))) ||
                        DANISMANLAR.find(ad => metin.includes(ad)) || null;
+        if (!sahibi) { debug.notlar.push('profil eşleşmedi (eski danışman olabilir): ' + slug); continue; }
         const sy = metin.match(/([\d.,]+)\s*Müşteri Yorumu/);
         if (sahibi && sy) sayilar[sahibi] = Number(sy[1].replace(/[.,]/g, ''));
         const t = [];
@@ -284,19 +304,22 @@ function metinEsle(yorumMetni) {
   }
   return enIyi;
 }
+/* EŞLEŞTİRME KURALI (broker kararı):
+   Yorum hangi danışmanın remax.com.tr profil sayfasında yayınlanıyorsa O DANIŞMANA aittir.
+   Metin içinde geçen isimlere BAKILMAZ (bir yorumda birden fazla kişi anılabilir, yanıltır).
+   Profil dışından (ofis sayfası) gelen yorumlar "Ofis" olarak kaydedilir. */
 function kime(y) {
-  const acikIsim = metinEsle(y.yorum || '');
-  if (acikIsim) return acikIsim;      // metinde açık isim -> her şeyi ezer
-  if (y.kaynakAd) return y.kaynakAd;  // danışmanın kendi profil sayfasından geldi
-  return 'Ofis';
+  return y.kaynakAd || 'Ofis';
 }
 
 const gorulen = new Set();
 const yorumlar = [];
 hamYorumlar.sort((a, b) => (b.kaynakAd ? 1 : 0) - (a.kaynakAd ? 1 : 0)); // profil kaynaklılar önce
+const anahtarla = y => ((y.musteri || '') + '|' + (y.yorum || ''))
+  .toLocaleLowerCase('tr').replace(/[^a-zçğıöşü0-9]+/g, '').slice(0, 80);
 for (const y of hamYorumlar) {
-  const anahtar = (y.yorum || '').slice(0, 90);
-  if (!anahtar || gorulen.has(anahtar) || y.yorum.length < 25) continue;
+  const anahtar = anahtarla(y);
+  if (anahtar.length < 20 || gorulen.has(anahtar) || y.yorum.length < 25) continue;
   gorulen.add(anahtar);
   yorumlar.push({
     ad: kime(y),
@@ -309,7 +332,7 @@ for (const y of hamYorumlar) {
 debug.jsonUrller = [...new Set(debug.jsonUrller)].slice(0, 40);
 const cikti = {
   guncelleme: new Date().toLocaleString('tr-TR', { timeZone: 'Europe/Istanbul' }),
-  ozet: DANISMANLAR.map(ad => ({ ad, yorumSayisi: sayilar[ad] ?? yorumlar.filter(y => y.ad === ad).length })),
+  ozet: DANISMANLAR.map(ad => ({ ad, yorumSayisi: yorumlar.filter(y => y.ad === ad).length, siteSayisi: sayilar[ad] ?? null })),
   yorumlar,
   debug
 };
