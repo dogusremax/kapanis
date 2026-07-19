@@ -259,26 +259,8 @@ async function ana() {
         await p2.close();
 
         const slug = (link.match(/\/danisman\/\d+\/([a-z0-9-]+)/) || [])[1] || '';
-        // Slug'ı normalize et: "irem-aleyna-tetik" gibi tireli gelir; ad ise boşlukludur.
-        // norm(ad) "irem aleyna tetik" verdiği için slug.includes(...) ASLA eşleşmez -> tümünü tireli karşılaştır.
-        const slugNorm = norm(slug).replace(/[^a-z0-9]+/g, '-');
-        // Ad parçalarının HEPSİ slug'da geçmeli (tek eşleşme garantisi; yanlış danışmana atama olmaz).
-        const slugEslesenler = DANISMANLAR.filter(ad => {
-          const parcalar = norm(ad).split(' ').filter(Boolean);
-          return parcalar.every(p => slugNorm.includes(p));
-        });
-        // Öncelik slug: tam ve tek eşleşme varsa onu al. Slug hiç eşleşmezse (eski/farklı slug),
-        // metinde TAM AD geçen ve slug'la çelişmeyen tek danışmana düş; birden fazla aday varsa atama yapma.
-        let sahibi = null;
-        if (slugEslesenler.length === 1) {
-          sahibi = slugEslesenler[0];
-        } else if (slugEslesenler.length === 0) {
-          const metinAdaylar = DANISMANLAR.filter(ad => metin.includes(ad));
-          if (metinAdaylar.length === 1) sahibi = metinAdaylar[0];
-          else debug.notlar.push('profil metin-fallback belirsiz (' + metinAdaylar.length + ' aday): ' + slug);
-        } else {
-          debug.notlar.push('slug birden fazla danışmana uydu: ' + slug + ' -> ' + slugEslesenler.join(', '));
-        }
+        const sahibi = DANISMANLAR.find(ad => slug.includes(norm(ad))) ||
+                       DANISMANLAR.find(ad => metin.includes(ad)) || null;
         if (!sahibi) { debug.notlar.push('profil eşleşmedi (eski danışman olabilir): ' + slug); continue; }
         const sy = metin.match(/([\d.,]+)\s*Müşteri Yorumu/);
         if (sahibi && sy) sayilar[sahibi] = Number(sy[1].replace(/[.,]/g, ''));
