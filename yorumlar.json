@@ -1,5 +1,5 @@
 {
-  "guncelleme": "19.07.2026 21:02:15",
+  "guncelleme": "19.07.2026 21:08:31",
   "ozet": [
     {
       "ad": "Umut Tokkuş",
@@ -1040,8 +1040,8 @@
       "profil eşleşmedi (eski danışman olabilir): leman-ozlem-ozgur"
     ],
     "jsonUrller": [
-      "https://maps.googleapis.com/maps/api/mapsjs/gen_204?csp_test=true",
       "https://remax.com.tr/api/setcookie",
+      "https://maps.googleapis.com/maps/api/mapsjs/gen_204?csp_test=true",
       "https://remaxsiteapi.remax.com.tr/api/Common/GetPropertyCategoryTree",
       "https://remaxsiteapi.remax.com.tr/api/Employee/Comment"
     ],
