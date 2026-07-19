@@ -1,5 +1,5 @@
 {
-  "guncelleme": "19.07.2026 21:08:31",
+  "guncelleme": "19.07.2026 21:30:18",
   "ozet": [
     {
       "ad": "Umut Tokkuş",
@@ -496,7 +496,7 @@
       "ad": "Umut Tokkuş",
       "musteri": "Mehmet Karakaya",
       "tarih": "03/02/2022",
-      "yorum": "Umut Bey ve eşi Makbule hanımla 10 yılı aşkın bir süredir çalışıyorum.Dürüst ve profesyonel çalışmalarından çok memnunum. Tavsiye ediyorum. Binlerce özel portföyleri kaçırmayın! RE/MAX ile Satalım Kiralayalım"
+      "yorum": "Umut Bey ve eşi Makbule hanımla 10 yılı aşkın bir süredir çalışıyorum.Dürüst ve profesyonel çalışmalarından çok memnunum. Tavsiye ediyorum. Mobil Uygulamamızı Binlerce özel portföyleri kaçırmayın! RE/MAX Bana Ev Bulur RE/MAX ile Satalım Kiralayalım API Erişim Talebi"
     },
     {
       "ad": "Ayşegül Alpay",
@@ -604,7 +604,7 @@
       "ad": "Ayşegül Alpay",
       "musteri": "Nihal Dilşen",
       "tarih": "29/11/2024",
-      "yorum": "Şirketimizin yeni Mağaza arayışında, beklentilerimizi karşılayan yerin bulunmasına Ayşegül Hanım vesile olmuştur, kendisine ve ofisinize teşekkür ederiz. Binlerce özel portföyleri kaçırmayın! RE/MAX ile Satalım Kiralayalım"
+      "yorum": "Şirketimizin yeni Mağaza arayışında, beklentilerimizi karşılayan yerin bulunmasına Ayşegül Hanım vesile olmuştur, kendisine ve ofisinize teşekkür ederiz. Mobil Uygulamamızı Binlerce özel portföyleri kaçırmayın! RE/MAX Bana Ev Bulur RE/MAX ile Satalım Kiralayalım API Erişim Talebi"
     },
     {
       "ad": "Evşen Özazman",
@@ -706,7 +706,7 @@
       "ad": "Gamze Yetkin",
       "musteri": "Yusuf Oruç Turan",
       "tarih": "10/04/2025",
-      "yorum": "İlgi alakalarından dolayı İrem hanım ve Gamze hanım'a çok teşekkür ederim her şey planlandığı gibi mükemmel bir şekilde gitti alım satımda başvuracağım tek adres bundan sonra. Binlerce özel portföyleri kaçırmayın! RE/MAX ile Satalım Kiralayalım"
+      "yorum": "İlgi alakalarından dolayı İrem hanım ve Gamze hanım'a çok teşekkür ederim her şey planlandığı gibi mükemmel bir şekilde gitti alım satımda başvuracağım tek adres bundan sonra. Mobil Uygulamamızı Binlerce özel portföyleri kaçırmayın! RE/MAX Bana Ev Bulur RE/MAX ile Satalım Kiralayalım API Erişim Talebi"
     },
     {
       "ad": "Gizem Gök",
@@ -820,7 +820,7 @@
       "ad": "Gamze Yetkin",
       "musteri": "Seher Kılıç",
       "tarih": "29/05/2024",
-      "yorum": "Görüşmemiz sonrasında işlemi hızlı ve sorunsuz şekilde sonuçlandırdık. Teşekkür ediyorum Binlerce özel portföyleri kaçırmayın! RE/MAX ile Satalım Kiralayalım"
+      "yorum": "Görüşmemiz sonrasında işlemi hızlı ve sorunsuz şekilde sonuçlandırdık. Teşekkür ediyorum Mobil Uygulamamızı Binlerce özel portföyleri kaçırmayın! RE/MAX Bana Ev Bulur RE/MAX ile Satalım Kiralayalım API Erişim Talebi"
     },
     {
       "ad": "Özlem Varol",
@@ -1024,7 +1024,7 @@
       "ad": "Ofis",
       "musteri": "A******* A*******",
       "tarih": "15/03/2024",
-      "yorum": "Kendisi gayet düzgün iletişim kuran şuana kadar gorusmelerim de isteğimi anlamak üzerine bana yardımcı olmuş tek emlak temsilcisi. Kendisine ilgisi alakası için çok çok teşekkür ediyorum. Ayrıca kiralama sonrasında da sorunlarınız olursa telefon acmamazlik gibi bir durumla karsilasmayacaginiz, kesinlikle her konuda yardımcı olan biridir. Binlerce özel portföyleri kaçırmayın! RE/MAX ile Satalım Kiralayalım"
+      "yorum": "Kendisi gayet düzgün iletişim kuran şuana kadar gorusmelerim de isteğimi anlamak üzerine bana yardımcı olmuş tek emlak temsilcisi. Kendisine ilgisi alakası için çok çok teşekkür ediyorum. Ayrıca kiralama sonrasında da sorunlarınız olursa telefon acmamazlik gibi bir durumla karsilasmayacaginiz, kesinlikle her konuda yardımcı olan biridir. Mobil Uygulamamızı Binlerce özel portföyleri kaçırmayın! RE/MAX Bana Ev Bulur RE/MAX ile Satalım Kiralayalım API Erişim Talebi"
     }
   ],
   "debug": {
@@ -1037,7 +1037,16 @@
       "yorum sekmesi ham: 99 | json cevap: 3",
       "ekip linki: 11",
       "profil eşleşmedi (eski danışman olabilir): makbule-tokkus",
-      "profil eşleşmedi (eski danışman olabilir): leman-ozlem-ozgur"
+      "PROFİL Umut Tokkuş: toplanan=75 | siteHedef=- | siteSayısıOkunamadı | metinUz=18439 | yorumBaşlığıVar=E",
+      "PROFİL Ayşegül Alpay: toplanan=18 | siteHedef=- | siteSayısıOkunamadı | metinUz=5820 | yorumBaşlığıVar=E",
+      "PROFİL Aysun Yılmaz: toplanan=0 | siteHedef=- | siteSayısıOkunamadı | metinUz=1569 | yorumBaşlığıVar=H",
+      "PROFİL Evşen Özazman: toplanan=3 | siteHedef=- | siteSayısıOkunamadı | metinUz=2397 | yorumBaşlığıVar=E",
+      "PROFİL Gamze Yetkin: toplanan=14 | siteHedef=- | siteSayısıOkunamadı | metinUz=7007 | yorumBaşlığıVar=E",
+      "PROFİL Gizem Gök: toplanan=1 | siteHedef=- | siteSayısıOkunamadı | metinUz=1548 | yorumBaşlığıVar=E",
+      "PROFİL Gamze Yetkin: toplanan=19 | siteHedef=- | siteSayısıOkunamadı | metinUz=8092 | yorumBaşlığıVar=E",
+      "profil eşleşmedi (eski danışman olabilir): leman-ozlem-ozgur",
+      "PROFİL Orhan Özazman: toplanan=0 | siteHedef=- | siteSayısıOkunamadı | metinUz=1643 | yorumBaşlığıVar=H",
+      "PROFİL Özlem Varol: toplanan=1 | siteHedef=- | siteSayısıOkunamadı | metinUz=1602 | yorumBaşlığıVar=E"
     ],
     "jsonUrller": [
       "https://remax.com.tr/api/setcookie",
