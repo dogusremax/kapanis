@@ -1,15 +1,15 @@
 {
-  "guncelleme": "19.07.2026 21:30:18",
+  "guncelleme": "20.07.2026 09:39:07",
   "ozet": [
     {
       "ad": "Umut Tokkuş",
       "yorumSayisi": 75,
-      "siteSayisi": null
+      "siteSayisi": 76
     },
     {
       "ad": "Ayşegül Alpay",
       "yorumSayisi": 18,
-      "siteSayisi": null
+      "siteSayisi": 18
     },
     {
       "ad": "Aysun Yılmaz",
@@ -19,22 +19,22 @@
     {
       "ad": "Evşen Özazman",
       "yorumSayisi": 3,
-      "siteSayisi": null
+      "siteSayisi": 3
     },
     {
       "ad": "Gamze Yetkin",
       "yorumSayisi": 14,
-      "siteSayisi": null
+      "siteSayisi": 14
     },
     {
       "ad": "Gizem Gök",
       "yorumSayisi": 1,
-      "siteSayisi": null
+      "siteSayisi": 1
     },
     {
       "ad": "İrem Aleyna Tetik",
-      "yorumSayisi": 18,
-      "siteSayisi": null
+      "yorumSayisi": 19,
+      "siteSayisi": 19
     },
     {
       "ad": "Orhan Özazman",
@@ -44,9 +44,76 @@
     {
       "ad": "Özlem Varol",
       "yorumSayisi": 1,
-      "siteSayisi": null
+      "siteSayisi": 1
     }
   ],
+  "sayiDenetimi": {
+    "tumUyumlu": false,
+    "uyumsuz": [
+      {
+        "ad": "Umut Tokkuş",
+        "toplanan": 75,
+        "site": 76,
+        "tutuyor": false
+      }
+    ],
+    "detay": [
+      {
+        "ad": "Umut Tokkuş",
+        "toplanan": 75,
+        "site": 76,
+        "tutuyor": false
+      },
+      {
+        "ad": "Ayşegül Alpay",
+        "toplanan": 18,
+        "site": 18,
+        "tutuyor": true
+      },
+      {
+        "ad": "Aysun Yılmaz",
+        "toplanan": 0,
+        "site": null,
+        "tutuyor": null
+      },
+      {
+        "ad": "Evşen Özazman",
+        "toplanan": 3,
+        "site": 3,
+        "tutuyor": true
+      },
+      {
+        "ad": "Gamze Yetkin",
+        "toplanan": 14,
+        "site": 14,
+        "tutuyor": true
+      },
+      {
+        "ad": "Gizem Gök",
+        "toplanan": 1,
+        "site": 1,
+        "tutuyor": true
+      },
+      {
+        "ad": "İrem Aleyna Tetik",
+        "toplanan": 19,
+        "site": 19,
+        "tutuyor": true
+      },
+      {
+        "ad": "Orhan Özazman",
+        "toplanan": 0,
+        "site": null,
+        "tutuyor": null
+      },
+      {
+        "ad": "Özlem Varol",
+        "toplanan": 1,
+        "site": 1,
+        "tutuyor": true
+      }
+    ]
+  },
   "yorumlar": [
     {
       "ad": "Umut Tokkuş",
@@ -496,7 +563,7 @@
       "ad": "Umut Tokkuş",
       "musteri": "Mehmet Karakaya",
       "tarih": "03/02/2022",
-      "yorum": "Umut Bey ve eşi Makbule hanımla 10 yılı aşkın bir süredir çalışıyorum.Dürüst ve profesyonel çalışmalarından çok memnunum. Tavsiye ediyorum. Mobil Uygulamamızı Binlerce özel portföyleri kaçırmayın! RE/MAX Bana Ev Bulur RE/MAX ile Satalım Kiralayalım API Erişim Talebi"
+      "yorum": "Umut Bey ve eşi Makbule hanımla 10 yılı aşkın bir süredir çalışıyorum.Dürüst ve profesyonel çalışmalarından çok memnunum. Tavsiye ediyorum. Binlerce özel portföyleri kaçırmayın! RE/MAX ile Satalım Kiralayalım"
     },
     {
       "ad": "Ayşegül Alpay",
@@ -604,7 +671,7 @@
       "ad": "Ayşegül Alpay",
       "musteri": "Nihal Dilşen",
       "tarih": "29/11/2024",
-      "yorum": "Şirketimizin yeni Mağaza arayışında, beklentilerimizi karşılayan yerin bulunmasına Ayşegül Hanım vesile olmuştur, kendisine ve ofisinize teşekkür ederiz. Mobil Uygulamamızı Binlerce özel portföyleri kaçırmayın! RE/MAX Bana Ev Bulur RE/MAX ile Satalım Kiralayalım API Erişim Talebi"
+      "yorum": "Şirketimizin yeni Mağaza arayışında, beklentilerimizi karşılayan yerin bulunmasına Ayşegül Hanım vesile olmuştur, kendisine ve ofisinize teşekkür ederiz. Binlerce özel portföyleri kaçırmayın! RE/MAX ile Satalım Kiralayalım"
     },
     {
       "ad": "Evşen Özazman",
@@ -706,7 +773,7 @@
       "ad": "Gamze Yetkin",
       "musteri": "Yusuf Oruç Turan",
       "tarih": "10/04/2025",
-      "yorum": "İlgi alakalarından dolayı İrem hanım ve Gamze hanım'a çok teşekkür ederim her şey planlandığı gibi mükemmel bir şekilde gitti alım satımda başvuracağım tek adres bundan sonra. Mobil Uygulamamızı Binlerce özel portföyleri kaçırmayın! RE/MAX Bana Ev Bulur RE/MAX ile Satalım Kiralayalım API Erişim Talebi"
+      "yorum": "İlgi alakalarından dolayı İrem hanım ve Gamze hanım'a çok teşekkür ederim her şey planlandığı gibi mükemmel bir şekilde gitti alım satımda başvuracağım tek adres bundan sonra. Binlerce özel portföyleri kaçırmayın! RE/MAX ile Satalım Kiralayalım"
     },
     {
       "ad": "Gizem Gök",
@@ -749,6 +816,12 @@
       "musteri": "Tolga Molla",
       "tarih": "10/09/2025",
       "yorum": "Konut alım sürecime en başından beri şeffaf ve son derece profesyonel destek oldular. İşlerini hakkını vererek yapan insanlar. Her sorumla ilgilendiler. Açık bir alan bırakmadan güvenle de süreci tamamladık. Sonrasında da destek olma konusunda çok cömertler. Bu süreçte yanımda olan İrem Hanım’a, Makbule Hanım’a ve Umut Bey’e çok teşekkür ederim."
+    },
+    {
+      "ad": "İrem Aleyna Tetik",
+      "musteri": "Süha Oğuzertem",
+      "tarih": "15/05/2025",
+      "yorum": "Hayatın belli bir merhalesinden sonra insan, artık her ilişkide güveni, her alışverişte samimiyeti ve her karşılaşmada nezaketi arar olur. Hele ki söz konusu, yıllar boyu emek verip sahip olunan bir yuvanın devriyse, işin içinde sadece maddi değil, fazlasıyla manevi bir yük vardır. İşte tam da bu noktada karşıma çıkan İrem Tetik ve Gamze Yetkin Hanımefendiler, bugüne dek karşılaştığım nadir profesyoneller arasında kendilerine zarif bir yer edindiler. Eyüpsultan’da bulunan dairemin satış sürecinde gösterdikleri titizlik, yalnızca mesleki yeterliliklerinin değil, aynı zamanda insanî duyarlılıklarının da göstergesiydi. Temizlikten fotoğraf ve video çekimlerine, ilânın hazırlanmasından alıcılarla kurulan iletişime kadar her adımı öylesine özenle ve incelikle yürüttüler ki, insan kendini bir emlak sürecinin değil de, güvenli ellerin rehberliğinde yürütülen bir dostluk yolculuğunun içinde hissediyor. İşlerini layıkıyla yapmanın ötesine geçip, benimle her daim iletişim hâlinde oldular. Sürecin sonuna yaklaşırken, evimi son bir kez görmemi sağlama nezaketini dahi gösterdiler. Neşe Hanım’ın da sürece dâhil oluşuyla bu birliktelik daha da güçlendi. Belediye işlemlerinden tutun, noter evraklarına, tapu devrine kadar her ayrıntıyı benim adıma büyük bir sorumlulukla yürüttüler. Geçirdiğim kaza nedeniyle bizzat bulunamadığım tapu sürecinde, kendilerine vermiş olduğum vekaletin ne denli doğru bir karar olduğunu bir kez daha idrak ettim. Zira bu ekip, bana tek bir zahmet dahi vermeden her şe"
     },
     {
       "ad": "İrem Aleyna Tetik",
@@ -820,211 +893,13 @@
       "ad": "İrem Aleyna Tetik",
       "musteri": "Seher Kılıç",
       "tarih": "29/05/2024",
-      "yorum": "Görüşmemiz sonrasında işlemi hızlı ve sorunsuz şekilde sonuçlandırdık. Teşekkür ediyorum Mobil Uygulamamızı Binlerce özel portföyleri kaçırmayın! RE/MAX Bana Ev Bulur RE/MAX ile Satalım Kiralayalım API Erişim Talebi"
+      "yorum": "Görüşmemiz sonrasında işlemi hızlı ve sorunsuz şekilde sonuçlandırdık. Teşekkür ediyorum Binlerce özel portföyleri kaçırmayın! RE/MAX ile Satalım Kiralayalım"
     },
     {
       "ad": "Özlem Varol",
       "musteri": "Yalçin Ersari",
       "tarih": "16/07/2026",
       "yorum": "RE/MAX fikirtepeden Özlem Varol hanım çok çok ilgili bir çalışan ,emeği ilgisi güler yüzlü kişiliği ve kısa süredeki dönüşü ile bize çok çok yardımcı oldu kendisine çok teşekkür ediyoruz başarılarının devamını diliyoruz"
-    },
-    {
-      "ad": "Ofis",
-      "musteri": "Melike Buket",
-      "tarih": "10/04/2025",
-      "yorum": "Cihan beyin yardımları için teşekkürler."
-    },
-    {
-      "ad": "Ofis",
-      "musteri": "Tuğçe Özerkan",
-      "tarih": "10/04/2025",
-      "yorum": "Cihan bey'e destekleri için teşekkür ederim 🙏🏻"
-    },
-    {
-      "ad": "Ofis",
-      "musteri": "H.süha Yetiṣ",
-      "tarih": "28/02/2025",
-      "yorum": "Elif Hanım RE/MAX Doğuṣ emlak gurubunu bir tavsiye üzerine müracat edip Yalova Armutlu'daki arsamı hiç sorunsuz ve Bürokratik engellere takılmadan Elif Yiğit hanımın yüksek tecrübe ve bilgisiyle rahatlıkla sattım. Çok memnun kaldım. Bundan sonraki alım satımlarımı mutlaka RE/MAX ve bilhassa Elif Yiğit Hanım'a baş vurarak yürüteceğim. Kendisine ve kadrosuna çok teşekkür ederim. Herkese tavsiye ederim."
-    },
-    {
-      "ad": "Ofis",
-      "musteri": "Pınar İnceoğlu",
-      "tarih": "10/02/2025",
-      "yorum": "Ailemizin emlak danışmanı🥰 O kadar güvenilir, iyi niyetli, çözüm odaklı ki asla pişman olmazsınız. Bir numara.Çok seviyorum seni."
-    },
-    {
-      "ad": "Ofis",
-      "musteri": "Harun Günay",
-      "tarih": "04/02/2025",
-      "yorum": "Elf Hanima ilgisi icin tesekkür ederiz. Ekibin tümü güleryüzlü sicakkanli insanlardan olusuyor. Basarili calismalar dilerim."
-    },
-    {
-      "ad": "Ofis",
-      "musteri": "Gökhan Çelebi",
-      "tarih": "04/02/2025",
-      "yorum": "Elif hanim araciligryla evimizi kiraladik. Tum sürecte gok igiliydi, Ne zaman arasak en kisa surede problemlerimizi cozume kavusturdu. Kendisine pok tesekkur edivorum"
-    },
-    {
-      "ad": "Ofis",
-      "musteri": "Bekir Güleç",
-      "tarih": "04/02/2025",
-      "yorum": "Elif Hanim ile satis sürecimiz tam istedigimiz gibi hizli ve eksiksiz ilerledi. Satis sürecinden çok memnun kaldik tesekkür ederim."
-    },
-    {
-      "ad": "Ofis",
-      "musteri": "Mutlu Ermiş",
-      "tarih": "02/02/2025",
-      "yorum": "Elif Hn. ile daha önceden tecrübe ettiğimiz satınalma ve kiralama süreçlerimizden sonra bir kiralama sürecimizi daha son derece profesyonel, her iki taraf için çözüm odaklı, memnuniyet içinde tamamladık. Kendisine teşekkür eder başarılar dileriz."
-    },
-    {
-      "ad": "Ofis",
-      "musteri": "Alp Eren Aydın",
-      "tarih": "13/01/2025",
-      "yorum": "Tesekkürler Elif Hanim. Çok sade, problemsiz ve ayni zamanda premium bir deneyim için tercih edilmesi gereken bir emlak ofisi."
-    },
-    {
-      "ad": "Ofis",
-      "musteri": "Umut Arslan",
-      "tarih": "10/01/2025",
-      "yorum": "Ev kiralama ve bu işlemlere hızlı ve kesin çözüm ürettikleri için RE/MAX Doğuş'a ve Danışmanları Elif hanıma çok teşekkür ederim."
-    },
-    {
-      "ad": "Ofis",
-      "musteri": "Sevinç Yarbay",
-      "tarih": "10/01/2025",
-      "yorum": "Evimi kiralama sürecinde Elif Yigit ve Remax Dogus ekibinden aldigim hizmetten son derece memnun kaldim. Elif Hanim, profesyonelligi ve isine olan bagliligiyla sürecin her asamasinda yanimdaydi. Sehir disinda olmama ragmen tüm süreci büyük bir titizlikle yöneterek, islerimi kolaylastirdi. iletisim konusundaki hizl, sabri ve her detayi benimle paylasmasi güvenimi kazandi. Zaman yönetimindeki bagarisi sayesinde kiralama islemleri hizli ve sorunsuz bir sekilde tamamlandi. Dürüstlügü ve seffafligi, beni dogru bilgilendirmesi ve her adimda çözüm odakli yaklasimi gerçekten takdire sayandi. Ayrica ihtiyaçlarimi dogru analiz ederek hem bana hem de kiraci adaylarina uygun önerilerde bulunmasi isini ne kadar iyi yaptiginin bir göstergesiydi. Elif Hanim'in güler yüzlü, sabirli ve anlayisli tavri bu süregte en büyük destekçim oldu. Remax Dogus ile calismak benim için büyük bir sansti ve Elif Hanim'i herkese gönül rahatligiyla tavsiye ederim!"
-    },
-    {
-      "ad": "Ofis",
-      "musteri": "Umut Arslan",
-      "tarih": "02/01/2025",
-      "yorum": "Ev kiralama ve bu işlemlere hızlı ve kesin çözüm ürettikleri için RE/MAX Doğuş ofisine ve danışmanları Elif hanım'a çok teşekkür ederim"
-    },
-    {
-      "ad": "Ofis",
-      "musteri": "Barış Şükür",
-      "tarih": "15/12/2024",
-      "yorum": "Elif Hanım ile ilk kez dairemize kiracı bulmak için çalıştık. Bu süreçte gösterdiği özenli ve özverili çalışması nedeni ile dairemizin satışında da kendisi ile çalışmak istedik. Çok kısa bir süre içinde kendisi dairemize alıcı buldu ve en ufak bir aksama dahi olmaksızın satış işlemimizi tamamladı. Yatırım amaçlı başka bir konut projesinde de kendisinden hizmet alıyoruz ve çok memnunuz. Bundan sonra da her zaman kendisi ile çalışmak isteriz. Çok teşekkür ederiz Elif Hanım."
-    },
-    {
-      "ad": "Ofis",
-      "musteri": "Yaşar Zengin",
-      "tarih": "15/12/2024",
-      "yorum": "Ne zaman arasam hızlıca ulaştığım, kafamızda ki tüm sorulara doğru cevaplar ve doğru yönlendirmeler ile bizi rahatlatan , güler yüzü ve cana yakınlığı ile güven veren Danışmanımız Elif Hanım'a çok teşekkür ederiz."
-    },
-    {
-      "ad": "Ofis",
-      "musteri": "Hande Deniz",
-      "tarih": "15/12/2024",
-      "yorum": "Elif Hanım her şeyle o kadar bilgili ve ilgiliydi ki, tamamen her şeyi ona bıraktık diyebiliriz. Bu sayede kısa sürede çok düzgün ve tam istediğimiz gibi bir aileye kiraladık evimizi. Her şey için çok teşekkür ederiz, bundan sonraki tüm emlak işlerimizde Elif Hanım'layız."
-    },
-    {
-      "ad": "Ofis",
-      "musteri": "N******* B*******",
-      "tarih": "15/12/2024",
-      "yorum": "Elif hanım desteğiniz için çok teşekkürler ediyoruz. Hem hızlı hem de sorunsuz süreç için ellerinize sağlık diyorum. Keyifli kişiliğiniz size çok fazla güzellik getirsin."
-    },
-    {
-      "ad": "Ofis",
-      "musteri": "Esra Tan Kalmukoğlu",
-      "tarih": "04/11/2024",
-      "yorum": "Güler yüzü, tatlı dili bir yana sektördeki profesyonelliği tartışılmaz. Ev arayışım sürecimdeki yüce sabrı, dürüstlüğü ve tüm detaylarıyla beni bilgilendirmesi sayesinde doğru kararı verdim. Şunu net olarak söyleyebilirim ki Elif hanım olmasaydı hayalimdeki eve kavuşamazdım. Kendisiyle çalışmak büyük bir ayrıcalık. 10 üzerinden 10 10 10"
-    },
-    {
-      "ad": "Ofis",
-      "musteri": "Ş******* Ü*******",
-      "tarih": "20/10/2024",
-      "yorum": "Ev arama sürecimizde tamam her şey bitti ev bulamıyoruz dediğimiz noktada karşımıza harika enerjisi ve güler yüzü ile Elif hanım çıktı. Süreç boyunca her iki tarafa güven vermesi, çözüm odaklı olması ve aklımızdaki her detayı cevaplandırması,yardımları ve desteği için teşekkür ediyoruz. Sizinle çalışmak çok güzeldi."
-    },
-    {
-      "ad": "Ofis",
-      "musteri": "Ceren Deniz",
-      "tarih": "29/08/2024",
-      "yorum": "Evimizin satış ve sonrasında yeni ev arayışımızda candan ve hızlı desteğiyle işlerimizi çok kolay bir şekilde hallettik. Yardımı ve desteği için teşekkür ederim."
-    },
-    {
-      "ad": "Ofis",
-      "musteri": "Aydın Öfkeli",
-      "tarih": "23/08/2024",
-      "yorum": "Elif hanım evimizin kiraya verilmesi süreci on çok iyi yönettiniz.Hızlı ve düzgün bir şekilde çözüme ulaştınız. Nezaketiniz ve sabırlı davranışınız için teşekkürlerimizi sunarız…"
-    },
-    {
-      "ad": "Ofis",
-      "musteri": "Mehmet Selim Yavuz",
-      "tarih": "31/07/2024",
-      "yorum": "Elif Hanım evimizi kiralama sürecinin en başından itibaren çok yardımcı oldu. Detaylı bir şekilde rapor verdi, birden fazla opsiyonla yaklaştı. Çok hızlı bir şekilde düzgün bir kiracı bulmamızı sağladı. Sunduğu hizmet RE/MAX'tan beklediğimiz hizmet kalitesinin bile üzerinde bir kaliteye sahip. Kendisine çok teşekkür ediyorum."
-    },
-    {
-      "ad": "Ofis",
-      "musteri": "Enis Varol",
-      "tarih": "22/07/2024",
-      "yorum": "Elif hanım evi bulma ve tutma aşamasında bize son derece destek ve yardımcı oldu. Her zaman güler yüzlü ve de anlayışla yaklaştı bu süreçte aklımızda hiçbir soru işareti bırakmadan net tavırlar sergiledi. Emlak danışmanlığı almak istediğimizde değişmeyen tek adresimiz olacak kendisi. Bize gösterdiği yardımlar için kendisine çok teşekkür ederiz."
-    },
-    {
-      "ad": "Ofis",
-      "musteri": "Asena Uytun",
-      "tarih": "20/07/2024",
-      "yorum": "Ozan bey işinin ehli ve nezaketiyle beni kendine hayran bıraktıran, çok çalışkan ve başarılı bir emlak danışmanı. Kendisine bize yaptığı servisler için çok teşekkür ederim. Bir daha ihtiyaç olduğunda tekrar mutlaka Ozan beyi tercih edeceğim. Samimiyeti ve güzel yüzüyle yaptığı işlerde kendisine başarılar dilerim."
-    },
-    {
-      "ad": "Ofis",
-      "musteri": "S******* K*******",
-      "tarih": "16/07/2024",
-      "yorum": "Ozan bey beni çok iyi dinleyerek ve analiz ederek sadece bana uyabilecek portföyleri sunarak bu süreçte bizi hiç yormamıştır. Daireleri gezdirirken de verdiği pozitif enerjiyle daire turunu keyifli hale getirmiştir. Daire ve siteyle ilgili verdiği cevaplar hatta bizim sormamamıza rağmen verdiği ekstra bilgilerle daire ve civarla ilgili önemli bilgiler edinmemizi sağlamıştır. Daireyi kiraladıktan sonra da desteğine devam ederek, herhangi bir problemimizde yardımcı olmaktadır. Verdiği hızlı hizmet,çok doğru bilgilendirmeleri ve mükemmel enerjisi için ona teşekkür ederim. Bir dahaki emlak aramamda ilk danışacağım kişi kendisi olacaktır."
-    },
-    {
-      "ad": "Ofis",
-      "musteri": "Ahmet Serkan Gözükara",
-      "tarih": "05/07/2024",
-      "yorum": "Elif hanım tam bir profesyonel gibi süreci yönetti. Öngörülen fiyata öngörülen zamanda dairemizi sattı ve yeni daire almamız için en büyük etkeni çözmüş oldu. Şeffaf ve sürekli-düzenli bilgilendirme yaparak süreçteki motivasyonumuzu yüksek tuttu. Bu tarz süreçlerde güven en önemli unsur. Kendisine teşekkür ediyoruz."
-    },
-    {
-      "ad": "Ofis",
-      "musteri": "Menekşe Tosun",
-      "tarih": "14/05/2024",
-      "yorum": "Elif Hanım samimi güler yüzü ve çözüm odaklı yaklaşımıyla evimizi kiraya verirken gösterdiği hassasiyet sayesinde muhteşem ötesi muhteşemdi. Güvenimiz tam.. Artık tek emlakçımız..."
-    },
-    {
-      "ad": "Ofis",
-      "musteri": "K******* D*******",
-      "tarih": "06/05/2024",
-      "yorum": "Elif hanım ile görüştüğümüz ilk andan itibaren enerjisi ve samimiyeti ile içimiz rahat ilerledik. Özenli, profesyonel çalışması ve iyi iletişimi ile güven içinde bir süreç yürüttük. Teşekkür ederiz."
-    },
-    {
-      "ad": "Ofis",
-      "musteri": "A******* Ö*******",
-      "tarih": "24/04/2024",
-      "yorum": "Dairemizin kiraya verilme süresinde Burcu hanımın yaklaşımı, Profesyonel çalışması, ışe hakimiyeti ve Güvenliliği takdire şayandır. Kısa sürede kiracımızın bulunmasından memnuniyet duyduk. Burcu hanıma emeklerinden dolayı teşekkür ediyoruz."
-    },
-    {
-      "ad": "Ofis",
-      "musteri": "Funda Ergin",
-      "tarih": "17/04/2024",
-      "yorum": "Burcu Hanım ile birlikte uzun süren ev arayışı stresim sona erdi. Kendisi hem güler yüzlü hem de işinde profesyonel bir insan. Aylarca kiralık ev aradım Burcu Hanımla ertesi gün anahtarım elimdeydi. Teşekkürü borç bilirim."
-    },
-    {
-      "ad": "Ofis",
-      "musteri": "D******* K*******",
-      "tarih": "08/04/2024",
-      "yorum": "Elif Hanım hem insaniyet hem de iş hayatı bakımından muhteşem birisi. Her konuda destek oldu, sadece süreç içerisinde değil uzun vadede de destekçi ve sorunlara çözüm odaklı yaklaşan, becerikli, dürüst biri. Gözünüz kapalı güvenebilirsiniz. Bundan sonra başka işlerimizde de çalışmaya devam edeceğiz. Çok teşekkürler Elif Hanım, sizinle çalışmak çok güzel bir deneyim oldu."
-    },
-    {
-      "ad": "Ofis",
-      "musteri": "Nurgün Sargın",
-      "tarih": "22/03/2024",
-      "yorum": "Can Bey çok yardımcı, güleryüzlü ve sonuç odaklı bir hizmet verdi. Kendisine teşekkür ediyoruz."
-    },
-    {
-      "ad": "Ofis",
-      "musteri": "Ayşe Eminoğlu",
-      "tarih": "15/03/2024",
-      "yorum": "Elif Hanım' a satınalma aşamamızda kurumsalca yaklaşımı, ilgi alakası ve her türlü desteği için teşekkür ediyorum. Başarıları daim olsun."
-    },
-    {
-      "ad": "Ofis",
-      "musteri": "A******* A*******",
-      "tarih": "15/03/2024",
-      "yorum": "Kendisi gayet düzgün iletişim kuran şuana kadar gorusmelerim de isteğimi anlamak üzerine bana yardımcı olmuş tek emlak temsilcisi. Kendisine ilgisi alakası için çok çok teşekkür ediyorum. Ayrıca kiralama sonrasında da sorunlarınız olursa telefon acmamazlik gibi bir durumla karsilasmayacaginiz, kesinlikle her konuda yardımcı olan biridir. Mobil Uygulamamızı Binlerce özel portföyleri kaçırmayın! RE/MAX Bana Ev Bulur RE/MAX ile Satalım Kiralayalım API Erişim Talebi"
     }
   ],
   "debug": {
@@ -1034,20 +909,22 @@
       "daha-fazla sonrası metin uzunluğu: 31270",
       "yorum sayfalaması 1. sayfada bitti",
       "Comment API isteği yakalanamadı",
-      "yorum sekmesi ham: 99 | json cevap: 3",
-      "ekip linki: 11",
-      "profil eşleşmedi (eski danışman olabilir): makbule-tokkus",
-      "PROFİL Umut Tokkuş: toplanan=75 | siteHedef=- | siteSayısıOkunamadı | metinUz=18439 | yorumBaşlığıVar=E",
-      "PROFİL Ayşegül Alpay: toplanan=18 | siteHedef=- | siteSayısıOkunamadı | metinUz=5820 | yorumBaşlığıVar=E",
-      "PROFİL Aysun Yılmaz: toplanan=0 | siteHedef=- | siteSayısıOkunamadı | metinUz=1569 | yorumBaşlığıVar=H",
-      "PROFİL Evşen Özazman: toplanan=3 | siteHedef=- | siteSayısıOkunamadı | metinUz=2397 | yorumBaşlığıVar=E",
-      "PROFİL Gamze Yetkin: toplanan=14 | siteHedef=- | siteSayısıOkunamadı | metinUz=7007 | yorumBaşlığıVar=E",
-      "PROFİL Gizem Gök: toplanan=1 | siteHedef=- | siteSayısıOkunamadı | metinUz=1548 | yorumBaşlığıVar=E",
-      "PROFİL Gamze Yetkin: toplanan=19 | siteHedef=- | siteSayısıOkunamadı | metinUz=8092 | yorumBaşlığıVar=E",
-      "profil eşleşmedi (eski danışman olabilir): leman-ozlem-ozgur",
-      "PROFİL Orhan Özazman: toplanan=0 | siteHedef=- | siteSayısıOkunamadı | metinUz=1643 | yorumBaşlığıVar=H",
-      "PROFİL Özlem Varol: toplanan=1 | siteHedef=- | siteSayısıOkunamadı | metinUz=1602 | yorumBaşlığıVar=E",
-      "MANUEL DÜZELTME: Gamze profiline yanlış atanan 18 İrem yorumu İrem Aleyna Tetik e taşındı (profil-kaynağı sırasına göre: ilk 14 Gamze, son 18 İrem)."
+      "yorum sekmesi ham (yalnızca teşhis, eklenmedi): 99 | json cevap: 3",
+      "ekip linki: 11 (ham: 11, tekil ID: 11)",
+      "profil çöz: id=28250 slug=\"makbule-tokkus\" baslik=\"Makbule Tokkuş\" h1=\"\" -> EŞLEŞMEDİ",
+      "profil eşleşmedi (eski danışman olabilir): makbule-tokkus | baslik: Makbule Tokkuş",
+      "profil çöz: id=28251 slug=\"umut-tokkus\" baslik=\"Umut Tokkuş\" h1=\"Toplam Yorum Sayısı\" -> Umut Tokkuş",
+      "SAYI FARKI Umut Tokkuş: remax=76, toplanan=75 (kaynak:metin, jsonCevap:3)",
+      "profil çöz: id=40213 slug=\"aysegul-alpay\" baslik=\"Ayşegül Alpay\" h1=\"Toplam Yorum Sayısı\" -> Ayşegül Alpay",
+      "profil çöz: id=47386 slug=\"aysun-yilmaz\" baslik=\"Aysun Yılmaz\" h1=\"\" -> Aysun Yılmaz",
+      "profil çöz: id=54267 slug=\"evsen-ozazman\" baslik=\"Evşen Özazman\" h1=\"Toplam Yorum Sayısı\" -> Evşen Özazman",
+      "profil çöz: id=41709 slug=\"gamze-yetkin\" baslik=\"Gamze Yetkin\" h1=\"Toplam Yorum Sayısı\" -> Gamze Yetkin",
+      "profil çöz: id=48933 slug=\"gizem-gok\" baslik=\"Gizem Gök\" h1=\"Toplam Yorum Sayısı\" -> Gizem Gök",
+      "profil çöz: id=35392 slug=\"irem-aleyna-tetik\" baslik=\"İrem Aleyna Tetik\" h1=\"Toplam Yorum Sayısı\" -> İrem Aleyna Tetik",
+      "profil çöz: id=46773 slug=\"leman-ozlem-ozgur\" baslik=\"Leman Özlem Özgür\" h1=\"\" -> EŞLEŞMEDİ",
+      "profil eşleşmedi (eski danışman olabilir): leman-ozlem-ozgur | baslik: Leman Özlem Özgür",
+      "profil çöz: id=47387 slug=\"orhan-ozazman\" baslik=\"Orhan Özazman\" h1=\"\" -> Orhan Özazman",
+      "profil çöz: id=46769 slug=\"ozlem-varol\" baslik=\"Özlem Varol\" h1=\"Toplam Yorum Sayısı\" -> Özlem Varol"
     ],
     "jsonUrller": [
       "https://remax.com.tr/api/setcookie",
