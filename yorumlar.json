@@ -1,5 +1,5 @@
 {
-  "guncelleme": "21.07.2026 09:22:56",
+  "guncelleme": "22.07.2026 09:21:57",
   "ozet": [
     {
       "ad": "Umut Tokkuş",
@@ -927,12 +927,12 @@
       "daha-fazla sonrası metin uzunluğu: 30691",
       "yorum sayfalaması 1. sayfada bitti",
       "Comment API isteği yakalanamadı",
-      "yorum sekmesi ham (yalnızca teşhis, eklenmedi): 100 | json cevap: 3",
+      "yorum sekmesi ham (yalnızca teşhis, eklenmedi): 100 | json cevap: 2",
       "ekip linki: 11 (ham: 11, tekil ID: 11)",
       "profil çöz: id=28250 slug=\"makbule-tokkus\" baslik=\"Makbule Tokkuş\" h1=\"\" -> EŞLEŞMEDİ",
       "profil eşleşmedi (eski danışman olabilir): makbule-tokkus | baslik: Makbule Tokkuş",
       "profil çöz: id=28251 slug=\"umut-tokkus\" baslik=\"Umut Tokkuş\" h1=\"Toplam Yorum Sayısı\" -> Umut Tokkuş",
-      "SAYI FARKI Umut Tokkuş: remax=76, toplanan=75 (kaynak:metin, jsonCevap:3)",
+      "SAYI FARKI Umut Tokkuş: remax=76, toplanan=75 (kaynak:metin, jsonCevap:2)",
       "profil çöz: id=40213 slug=\"aysegul-alpay\" baslik=\"Ayşegül Alpay\" h1=\"Toplam Yorum Sayısı\" -> Ayşegül Alpay",
       "profil çöz: id=47386 slug=\"aysun-yilmaz\" baslik=\"Aysun Yılmaz\" h1=\"\" -> Aysun Yılmaz",
       "profil çöz: id=54267 slug=\"evsen-ozazman\" baslik=\"Evşen Özazman\" h1=\"Toplam Yorum Sayısı\" -> Evşen Özazman",
@@ -946,7 +946,6 @@
     ],
     "jsonUrller": [
       "https://remax.com.tr/api/setcookie",
-      "https://maps.googleapis.com/maps/api/mapsjs/gen_204?csp_test=true",
       "https://remaxsiteapi.remax.com.tr/api/Common/GetPropertyCategoryTree",
       "https://remaxsiteapi.remax.com.tr/api/Employee/Comment"
     ],
