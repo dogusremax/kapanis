@@ -1,5 +1,5 @@
 {
-  "guncelleme": "30.07.2026 09:17:51",
+  "guncelleme": "31.07.2026 09:38:28",
   "ozet": [
     {
       "ad": "Umut Tokkuş",
@@ -8,8 +8,8 @@
     },
     {
       "ad": "Ayşegül Alpay",
-      "yorumSayisi": 20,
-      "siteSayisi": 20
+      "yorumSayisi": 21,
+      "siteSayisi": 21
     },
     {
       "ad": "Aysun Yılmaz",
@@ -66,8 +66,8 @@
       },
       {
         "ad": "Ayşegül Alpay",
-        "toplanan": 20,
-        "site": 20,
+        "toplanan": 21,
+        "site": 21,
         "tutuyor": true
       },
       {
@@ -567,6 +567,12 @@
     },
     {
       "ad": "Ayşegül Alpay",
+      "musteri": "Hicran Çelik",
+      "tarih": "29/07/2026",
+      "yorum": "Evimin satış sürecinde, Ayşegül hanımın sabrını bana aktarmış olduğu müşteri bilgilerini, deneyiminle verdiği pozitif enerjisini, güler yüzüyle umudumu yükseltmesiyle keyifli ve başarılı bir şatış süreci yaşadık.Dostlarıma , yakınlarıma kendisiyle çalışmayı tavsiye edebilirim .🙏🥰Her şey için çok teşekkür ederim, Ayşegül Alpay hanım başarılarınız daim olsun"
+    },
+    {
+      "ad": "Ayşegül Alpay",
       "musteri": "Hatice Kubatoğlu",
       "tarih": "19/07/2026",
       "yorum": "Ayşegül Alpay Çabalarınız için çok teşekkürler"
@@ -924,7 +930,7 @@
     "hatalar": [],
     "notlar": [
       "yorum sekmesi tıklandı: true",
-      "daha-fazla sonrası metin uzunluğu: 30691",
+      "daha-fazla sonrası metin uzunluğu: 31009",
       "yorum sayfalaması 1. sayfada bitti",
       "Comment API isteği yakalanamadı",
       "yorum sekmesi ham (yalnızca teşhis, eklenmedi): 100 | json cevap: 2",
@@ -949,6 +955,6 @@
       "https://remaxsiteapi.remax.com.tr/api/Common/GetPropertyCategoryTree",
       "https://remaxsiteapi.remax.com.tr/api/Employee/Comment"
     ],
-    "yorumSekmesiOrnek": "Toplam Yorum Sayısı\n\n232\n\nGenel Puan Durumu\n\n5.0\n\nDüzenli Bilgilendirme\nProfesyonellik\nGüvenirlik\nİletişim Becerisi\nHK\n19/07/2026\nHatice Kubatoğlu\nAyşegül Alpay Çabalarınız için çok teşekkürler\nBölge Hakimliği\nGÇ\n19/07/2026\nGülseren Çaliş\nÇalışkanlığı, güler yüzlü ve yakın ilgisi ile işimizi kolayca halletmemizi sağlayan Ayşegül Alpay hanıma teşekkür ederiz.\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\nAÖ\n17/07/2026\nAhmet Önal\nİrem hanıma süreç boyunca göstermiş olduğu destek ve ilgi için teşekkür ederiz.\nAraçlar ve Teknoloji, Sektör Bilgisi, Bölge Hakimliği\nYE\n16/07/2026\nYalçin Ersari\nRE/MAX fikirtepeden Özlem Varol hanım çok çok ilgili bir çalışan ,emeği ilgisi güler yüzlü kişiliği ve kısa süredeki dönüşü ile bize çok çok yardımcı oldu kendisine çok teşekkür ediyoruz başarılarının devamını diliyoruz\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\nAU\n16/07/2026\nArda Unul\nİlgi ve alakaları için İrem hanıma ve Gamze hanıma teşekkür ederim 🌟\nAraçlar ve Teknoloji, Sektör Bilgisi, Bölge Hakimliği\nRB\n16/07/2026\nRıza Balta\nİlk andan son adıma kadar çok kaliteli ve nazik bir işbirliği oldu. Sayın Ayşegül Alpay hanımefendiye çok teşekkür ederim.\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\nIG\n11/07/2026\nIbrahim Gündoğdu\nEvşen hanıma ilgi ve alakası için çok teşekkür ederiz çok güler yüzlü çok anlayışlı bir insan.\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\nMK\n09/07/2026\nMerve Kondu\nKiralama sürecimizde Evşen hanım bizlere çok yardımcı oldu, çok güleryüzlü ve samimi birisi. Bizler çok memnun kaldık:)\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\nEI\n09/07/2026\nEsra Ilgat\nKiralama sürecimiz için Evşen Hanım'la çalıştık ve süreç boyunca kendisiyle çalıştığımız için kendimizi çok şanslı hissettik. Evimizi kendi mülkü gibi sahiplenerek, her daim güler yüzle ve müthiş bir iletişim becerisiyle hızlı şekilde kiralama sürecini tamamladı. Ne zaman arasak ulaşabildik, bizim sormamıza bile gerek kalmadan sürekli bilgi akışı sağladı ve yaklaşımı çok detaycıydı. Daha fiyat analizi sürecinde sunduğu rapordan ne kadar titiz olduğunu anlamıştık zaten. Kiracı adaylarıyla görüşme sürecini de aynı titizlikle yürüttü. İlk kez mal sahibini kendi fikrine ikna etmeye çalışmak yerine onun ne düşündüğünü, ne hissettiğini bu kadar önemseyen bir gayrimenkul uzmanıyla çalıştık. Nezaketiniz, profesyonelliğiniz ve iş bitirme hızınız için çok teşekkür ederiz.\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\nAG\n11/06/2026\nAyşe Afra Gürüzlük Uçar\nGamze hanıma ilgisi ve destekleri için çok teşekkür ederiz. Güler yüzlülüğü ve samimiyeti sayesinde çok güzel bir anlaşma süreci gerçekleştik. Her şey için çok teşekkür ederiz 🤍\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\nUE\n11/06/2026\nUlaş Ergenç\nGamze Hanım’ın profesyonel yaklaşımı ve konudaki desteği için teşekkür ederim.\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\nKP\n13/05/2026\nKarina Pravdziva\nSüreç boyunca gösterdiği profesyonel yaklaşım ve titiz ilgisi için Gamze hanıma teşekkür ederim. Doğru lokasyon, doğru yönlendirme sayesinde iş yerimi hızlı ve sorunsuz şekilde kiraladım🙏🏻\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\nCN\n13/05/2026\nChrom Nails\nGamze Hanım’a çok teşekkür ediyorum ❤️ iş yeri kiralama konusunda hızlı, ilgili ve çözüm odaklıydı. İş yeri ararken en önemli şey doğru yönlendirme ve güven. Bu konuda gerçekten çok yardımcı oldu, çok memnun kaldım, sayesinde tam istediğim yeri buldum\nSektör Bilgisi, Bölge Hakimliği, Araçlar ve Teknoloji\nAA\n04/05/2026\nAhmet Aykin\nRE/MAX emlak konusunda en ciddi kurulardan birisidir çalışanlara ve Ayşegül Alpay hanıma 10 tam puan veriyor teşekkür ediyorum.\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\nSA\n04/05/2026\nSerhat Aykın\nYeni Fikirtepe RE/MAX doğuş tan almış olduğum hizmetten son derece memnun kaldım. Süreç boyunca profesyonel, hızlı ve çözüm odaklı yaklaşımları sayesinde tüm işlemlerim sorunsuz şekilde tamamlandı. İhtiyaçlarımı doğru anlayarak en uygun seçenekleri sunmaları güven vericiydi. Güler yüzlü ve ilgili ekipleri için teşekkür eder, gayrimenkul konusunda hizmet almak isteyen herkese gönül rahatlığıyla tavsiye ederim. AYŞEGÜL ALPAYA ÇOK TESEKKUR EDERİM\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\nBE\n04/05/2026\nBetül Erhan\nÇok memnun kaldım Aysegül Alpay hanım ı bana güler yüzle kiralama konusunda çok yardımcı oldu. Teşekkür ederim\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\nKG\n04/05/2026\nKaya Gülşen\nGizem Gök Hn. Umut Bey Makbule Hn tanıştığımıza ço"
+    "yorumSekmesiOrnek": "Toplam Yorum Sayısı\n\n233\n\nGenel Puan Durumu\n\n5.0\n\nDüzenli Bilgilendirme\nProfesyonellik\nGüvenirlik\nİletişim Becerisi\nHÇ\n29/07/2026\nHicran Çelik\nEvimin satış sürecinde, Ayşegül hanımın sabrını bana aktarmış olduğu müşteri bilgilerini, deneyiminle verdiği pozitif enerjisini, güler yüzüyle umudumu yükseltmesiyle keyifli ve başarılı bir şatış süreci yaşadık.Dostlarıma , yakınlarıma kendisiyle çalışmayı tavsiye edebilirim .🙏🥰Her şey için çok teşekkür ederim, Ayşegül Alpay hanım başarılarınız daim olsun\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\nHK\n19/07/2026\nHatice Kubatoğlu\nAyşegül Alpay Çabalarınız için çok teşekkürler\nBölge Hakimliği\nGÇ\n19/07/2026\nGülseren Çaliş\nÇalışkanlığı, güler yüzlü ve yakın ilgisi ile işimizi kolayca halletmemizi sağlayan Ayşegül Alpay hanıma teşekkür ederiz.\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\nAÖ\n17/07/2026\nAhmet Önal\nİrem hanıma süreç boyunca göstermiş olduğu destek ve ilgi için teşekkür ederiz.\nAraçlar ve Teknoloji, Sektör Bilgisi, Bölge Hakimliği\nYE\n16/07/2026\nYalçin Ersari\nRE/MAX fikirtepeden Özlem Varol hanım çok çok ilgili bir çalışan ,emeği ilgisi güler yüzlü kişiliği ve kısa süredeki dönüşü ile bize çok çok yardımcı oldu kendisine çok teşekkür ediyoruz başarılarının devamını diliyoruz\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\nAU\n16/07/2026\nArda Unul\nİlgi ve alakaları için İrem hanıma ve Gamze hanıma teşekkür ederim 🌟\nAraçlar ve Teknoloji, Sektör Bilgisi, Bölge Hakimliği\nRB\n16/07/2026\nRıza Balta\nİlk andan son adıma kadar çok kaliteli ve nazik bir işbirliği oldu. Sayın Ayşegül Alpay hanımefendiye çok teşekkür ederim.\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\nIG\n11/07/2026\nIbrahim Gündoğdu\nEvşen hanıma ilgi ve alakası için çok teşekkür ederiz çok güler yüzlü çok anlayışlı bir insan.\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\nMK\n09/07/2026\nMerve Kondu\nKiralama sürecimizde Evşen hanım bizlere çok yardımcı oldu, çok güleryüzlü ve samimi birisi. Bizler çok memnun kaldık:)\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\nEI\n09/07/2026\nEsra Ilgat\nKiralama sürecimiz için Evşen Hanım'la çalıştık ve süreç boyunca kendisiyle çalıştığımız için kendimizi çok şanslı hissettik. Evimizi kendi mülkü gibi sahiplenerek, her daim güler yüzle ve müthiş bir iletişim becerisiyle hızlı şekilde kiralama sürecini tamamladı. Ne zaman arasak ulaşabildik, bizim sormamıza bile gerek kalmadan sürekli bilgi akışı sağladı ve yaklaşımı çok detaycıydı. Daha fiyat analizi sürecinde sunduğu rapordan ne kadar titiz olduğunu anlamıştık zaten. Kiracı adaylarıyla görüşme sürecini de aynı titizlikle yürüttü. İlk kez mal sahibini kendi fikrine ikna etmeye çalışmak yerine onun ne düşündüğünü, ne hissettiğini bu kadar önemseyen bir gayrimenkul uzmanıyla çalıştık. Nezaketiniz, profesyonelliğiniz ve iş bitirme hızınız için çok teşekkür ederiz.\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\nAG\n11/06/2026\nAyşe Afra Gürüzlük Uçar\nGamze hanıma ilgisi ve destekleri için çok teşekkür ederiz. Güler yüzlülüğü ve samimiyeti sayesinde çok güzel bir anlaşma süreci gerçekleştik. Her şey için çok teşekkür ederiz 🤍\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\nUE\n11/06/2026\nUlaş Ergenç\nGamze Hanım’ın profesyonel yaklaşımı ve konudaki desteği için teşekkür ederim.\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\nKP\n13/05/2026\nKarina Pravdziva\nSüreç boyunca gösterdiği profesyonel yaklaşım ve titiz ilgisi için Gamze hanıma teşekkür ederim. Doğru lokasyon, doğru yönlendirme sayesinde iş yerimi hızlı ve sorunsuz şekilde kiraladım🙏🏻\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\nCN\n13/05/2026\nChrom Nails\nGamze Hanım’a çok teşekkür ediyorum ❤️ iş yeri kiralama konusunda hızlı, ilgili ve çözüm odaklıydı. İş yeri ararken en önemli şey doğru yönlendirme ve güven. Bu konuda gerçekten çok yardımcı oldu, çok memnun kaldım, sayesinde tam istediğim yeri buldum\nSektör Bilgisi, Bölge Hakimliği, Araçlar ve Teknoloji\nAA\n04/05/2026\nAhmet Aykin\nRE/MAX emlak konusunda en ciddi kurulardan birisidir çalışanlara ve Ayşegül Alpay hanıma 10 tam puan veriyor teşekkür ediyorum.\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\nSA\n04/05/2026\nSerhat Aykın\nYeni Fikirtepe RE/MAX doğuş tan almış olduğum hizmetten son derece memnun kaldım. Süreç boyunca profesyonel, hızlı ve çözüm odaklı yaklaşımları sayesinde tüm işlemlerim sorunsuz şekilde tamamlandı. İhtiyaçlarımı doğru anlayarak en uygun seçenekleri sunmaları güven vericiydi. Güler yüzlü ve ilgili ekipleri için teşekkür eder, "
   }
 }
