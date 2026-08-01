@@ -976,7 +976,7 @@ async function loadFromSheets(){
 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby3N2cq5LI99_UgjzlxIjZr7looJz88Rft-BJ9E5ZgP9-ZmUEmoXARoIm717JAmTGuD/exec';
 const YORUM_API_URL = 'https://script.google.com/macros/s/AKfycby3IgslK-Ye5GJdXZ8sYPJNwqMII-vZpjiY_83qwgxI_rErK9XS7HCMEMrKWJt7QvKmyQ/exec';
 
-async function uploadFileToDrive(file, folderId, fileName){
+async function uploadFileToDrive(file, danisman, belge, fileName){
   return new Promise((resolve)=>{
     if(APPS_SCRIPT_URL === 'BURAYA_APPS_SCRIPT_URL_YAPISTIRIN'){
       console.warn('Apps Script URL girilmedi, Drive yüklemesi atlandı');
@@ -988,9 +988,10 @@ async function uploadFileToDrive(file, folderId, fileName){
         const base64Data = e.target.result.split(',')[1];
         const mimeType = file.type || 'application/octet-stream';
         const params = new URLSearchParams();
-        params.append('action', 'uploadFile');
+        params.append('action', 'uploadKapanisBelge');
         params.append('fileName', fileName);
-        params.append('folderId', folderId);
+        params.append('danisman', danisman);
+        params.append('belge', belge);
         params.append('mimeType', mimeType);
         params.append('fileData', base64Data);
 
@@ -1002,7 +1003,6 @@ async function uploadFileToDrive(file, folderId, fileName){
         const text = await resp.text();
         let json;
         try { json = JSON.parse(text); } catch(e) { json = {}; }
-        // Apps Script linki farklı isimle dönebilir; hepsini dene
         const url = json.url || json.fileUrl || json.link || json.webViewLink
           || (json.fileId ? 'https://drive.google.com/file/d/'+json.fileId+'/view' : null)
           || (json.id ? 'https://drive.google.com/file/d/'+json.id+'/view' : null);
@@ -1606,23 +1606,21 @@ async function submitForm(){
   btn.disabled=true; btn.innerHTML='<span class="spinner" style="margin-right:6px;border-top-color:#fff"></span>Kaydediliyor...';
 
   const driveLinks={tapu:null,kontrat:null,fatura:null};
-  const folders = DRIVE_FOLDERS[currentUser.name];
   const dateStr = date.replace(/-/g,'');
+  const BELGE_MAP={tapu:'Tapu',kontrat:'Kontrat',fatura:'Ofise Kesilen Fatura'};
 
-  // Dosyaları Drive'a yükle
+  // Dosyalar Drive'a yukleniyor (dinamik: Danışman → Kapanış Formu → Tapu/Kontrat/Fatura)
   const failedDocs=[];
   for(const type of DOC_TYPES){
     const file = pendingFiles[type];
     if(!file) continue;
-    if(!folders){ setUploadStatus(type,'fail'); failedDocs.push(DOC_LABELS[type]); continue; }
     setUploadStatus(type,'uploading');
     const ext = file.name.split('.').pop();
-    // Danışmanın verdiği ismi dosya adı yap (geçersiz karakterleri temizle)
-    const verilenAd = (pendingNames[type]||'').trim().replace(/[\\\/:*?"<>|]/g,'-');
+    const verilenAd = (pendingNames[type]||'').trim().replace(/[\\\/\/:*?\"<>|]/g,'-');
     const fname = verilenAd
       ? `${verilenAd}.${ext}`
       : `${currentUser.name}_${type}_${dateStr}.${ext}`;
-    const link = await uploadFileToDrive(file, folders[type], fname);
+    const link = await uploadFileToDrive(file, currentUser.name, BELGE_MAP[type], fname);
     driveLinks[type] = link;
     setUploadStatus(type, link?'done':'fail');
     if(!link) failedDocs.push(DOC_LABELS[type]);
