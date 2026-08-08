@@ -1,14 +1,14 @@
 {
-  "guncelleme": "07.08.2026 08:28:50",
+  "guncelleme": "08.08.2026 07:46:43",
   "ozet": [
     {
       "ad": "Umut Tokkuş",
-      "yorumSayisi": 75,
+      "yorumSayisi": 1,
       "siteSayisi": 76
     },
     {
       "ad": "Ayşegül Alpay",
-      "yorumSayisi": 22,
+      "yorumSayisi": 1,
       "siteSayisi": 22
     },
     {
@@ -23,7 +23,7 @@
     },
     {
       "ad": "Gamze Yetkin",
-      "yorumSayisi": 16,
+      "yorumSayisi": 1,
       "siteSayisi": 16
     },
     {
@@ -33,7 +33,7 @@
     },
     {
       "ad": "İrem Aleyna Tetik",
-      "yorumSayisi": 22,
+      "yorumSayisi": 1,
       "siteSayisi": 22
     },
     {
@@ -52,23 +52,41 @@
     "uyumsuz": [
       {
         "ad": "Umut Tokkuş",
-        "toplanan": 75,
+        "toplanan": 1,
         "site": 76,
+        "tutuyor": false
+      },
+      {
+        "ad": "Ayşegül Alpay",
+        "toplanan": 1,
+        "site": 22,
+        "tutuyor": false
+      },
+      {
+        "ad": "Gamze Yetkin",
+        "toplanan": 1,
+        "site": 16,
+        "tutuyor": false
+      },
+      {
+        "ad": "İrem Aleyna Tetik",
+        "toplanan": 1,
+        "site": 22,
         "tutuyor": false
       }
     ],
     "detay": [
       {
         "ad": "Umut Tokkuş",
-        "toplanan": 75,
+        "toplanan": 1,
         "site": 76,
         "tutuyor": false
       },
       {
         "ad": "Ayşegül Alpay",
-        "toplanan": 22,
+        "toplanan": 1,
         "site": 22,
-        "tutuyor": true
+        "tutuyor": false
       },
       {
         "ad": "Aysun Yılmaz",
@@ -84,9 +102,9 @@
       },
       {
         "ad": "Gamze Yetkin",
-        "toplanan": 16,
+        "toplanan": 1,
         "site": 16,
-        "tutuyor": true
+        "tutuyor": false
       },
       {
         "ad": "Gizem Gök",
@@ -96,9 +114,9 @@
       },
       {
         "ad": "İrem Aleyna Tetik",
-        "toplanan": 22,
+        "toplanan": 1,
         "site": 22,
-        "tutuyor": true
+        "tutuyor": false
       },
       {
         "ad": "Orhan Özazman",
@@ -117,585 +135,15 @@
   "yorumlar": [
     {
       "ad": "Umut Tokkuş",
-      "musteri": "Özlem Mohan",
-      "tarih": "18/12/2025",
-      "yorum": "Umut beyin ilgisi, alakası, çözüm odakli olması sayesinde yıllardır almayı düşündüğünüz yazligimizi almak kısmet oldu, Hizmet kalitesinden çok memnun kaldık iyiki umut bey 👌"
-    },
-    {
-      "ad": "Umut Tokkuş",
-      "musteri": "Cengiz Özge",
-      "tarih": "15/05/2025",
-      "yorum": "Umut bey ve Makbule hanım İşlerinde tecrübeli ve uzman kişiler. Sorunsuz ve profesyonel bir şekilde işlerini yapıyorlar."
-    },
-    {
-      "ad": "Umut Tokkuş",
-      "musteri": "N******* I*******",
-      "tarih": "13/09/2024",
-      "yorum": "Hayalimdeki evi bulmamda bana yol gösteren Umut Bey'e minnettarım. Sorunsuz bir süreç yaşadım"
-    },
-    {
-      "ad": "Umut Tokkuş",
-      "musteri": "T******* Ç*******",
-      "tarih": "13/09/2024",
-      "yorum": "İlk evimi alırken bu kadar rahat olacağımı düşünmezdim. Süreci kolaylaştırdığınız için teşekkür ederim Umut Bey."
-    },
-    {
-      "ad": "Umut Tokkuş",
-      "musteri": "N******* D*******",
-      "tarih": "13/09/2024",
-      "yorum": "Satış işlemlerimde bana oldukça yardımcı oldular ve sürecin her aşamasını benimle paylaştılar. Umut Bey'e Gözüm kapalı güvenebilirim."
-    },
-    {
-      "ad": "Umut Tokkuş",
-      "musteri": "T******* N*******",
-      "tarih": "13/09/2024",
-      "yorum": "Beni yormadan süreci baştan sona yönlendirdiler. Evimi satarken hiç zorlanmadım. Teşekkürler Umut Bey"
-    },
-    {
-      "ad": "Umut Tokkuş",
-      "musteri": "A******* Y*******",
-      "tarih": "13/09/2024",
-      "yorum": "Umut Bey, bölgedeki piyasa durumunu çok iyi biliyordu ve beni doğru yönlendirdi. Kendimi güvende hissettim"
-    },
-    {
-      "ad": "Umut Tokkuş",
-      "musteri": "Z******* U*******",
-      "tarih": "12/09/2024",
-      "yorum": "Daha önce birkaç gayrimenkul danışmanıyla çalıştım ama bu ekip kadar işini bilenine rastlamadım. Her şey tam istediğim gibi ilerledi."
-    },
-    {
-      "ad": "Umut Tokkuş",
-      "musteri": "D******* G*******",
-      "tarih": "12/09/2024",
-      "yorum": "Yatırım amaçlı bir ev almayı planlıyordum, sağ olsunlar Umut Bey en uygun fırsatları bana sundu. Çok memnunum"
-    },
-    {
-      "ad": "Umut Tokkuş",
-      "musteri": "U******* Z*******",
-      "tarih": "12/09/2024",
-      "yorum": "Sürecin başından sonuna kadar hep yanımda oldular. Profesyonel ve samimi bir hizmet, tekrar çalışmak isterim"
-    },
-    {
-      "ad": "Umut Tokkuş",
-      "musteri": "G******* A*******",
-      "tarih": "12/09/2024",
-      "yorum": "Evimi kısa sürede satmayı başardılar ve tüm süreç boyunca beni bilgilendirdiler. Harika bir deneyimdi. Teşekkürler Umut Bey"
-    },
-    {
-      "ad": "Umut Tokkuş",
-      "musteri": "A******* A*******",
-      "tarih": "12/09/2024",
-      "yorum": "Umut Bey. Ev arayışımda bana sabırla yardımcı oldu ve en doğru kararı vermemde büyük katkısı oldu. Teşekkürler!"
-    },
-    {
-      "ad": "Umut Tokkuş",
-      "musteri": "G******* N*******",
-      "tarih": "12/09/2024",
-      "yorum": "İlk defa bir gayrimenkul danışmanından bu kadar ilgili ve bilgili bir hizmet aldım. Memnuniyetim en üst düzeyde"
-    },
-    {
-      "ad": "Umut Tokkuş",
-      "musteri": "Mehmet Çavuşoğlu",
-      "tarih": "02/06/2024",
-      "yorum": "Başta Umut bey olmak üzere tüm ekibine teşekkür ederim. Kendimizi güvende hissetmemiz çok kıymetliydi. Teşekkürler Doğuş ailesi."
-    },
-    {
-      "ad": "Umut Tokkuş",
-      "musteri": "Süleyman Korkmaz",
-      "tarih": "28/05/2024",
-      "yorum": "Umut Beyle Satış Sürecimiz Hızlı ve Sorunsuzdu. Donanımlı ve Çözüm Odaklı Bir Ekibe sahip."
-    },
-    {
-      "ad": "Umut Tokkuş",
-      "musteri": "Z******* U*******",
-      "tarih": "28/05/2024",
-      "yorum": "Umut bey ve ekibine çok teşekkür ediyorum. Zoru kolaya çevirme yetenekleri müthiş."
-    },
-    {
-      "ad": "Umut Tokkuş",
-      "musteri": "M******* Y*******",
-      "tarih": "28/05/2024",
-      "yorum": "Umut Bey ve Makbule Hanım Akasya Acıbadem sitesindeki dairemin satış işlemini sadece 1 haftada gerçekleştirdi. Şeffaflıkları ve işlerine hakimiyelerinden dolayı çok memnun kaldık."
-    },
-    {
-      "ad": "Umut Tokkuş",
-      "musteri": "M******* T*******",
-      "tarih": "23/05/2024",
-      "yorum": "Yıllardır gayrimenkullerimizin takibini titizlikle yapan Umut Bey teşekkür ederim. Yine yeniden sorunsuz ve kısa sürede işimiz halloldu. İyi çalışmalar dilerim."
-    },
-    {
-      "ad": "Umut Tokkuş",
-      "musteri": "S******* S*******",
-      "tarih": "23/05/2024",
-      "yorum": "Umut Bey ile iyi ki tanıştık. Gözümde büyüyen ev kiralama serüvenini inanılmaz hızlı ve sorunsuz bir şekilde çözdü. Artık ailemizin gayrimenkul danışmanı."
-    },
-    {
-      "ad": "Umut Tokkuş",
-      "musteri": "T******* Ç*******",
-      "tarih": "18/05/2024",
-      "yorum": "Gerçek anlamda işinin uzmanı ile tanışmanın gururunu yaşıyorum. Çok yordu emlak danışmaları bizi. Taki Umut Bey ile tanışana kadar. Emekleri için çok teşekkür ederim."
-    },
-    {
-      "ad": "Umut Tokkuş",
-      "musteri": "N******* İ*******",
-      "tarih": "18/05/2024",
-      "yorum": "Umut Bey ile çok uzun yıllardır çalışıyorum. Bu son işimizde de bizi şaşırtmadı. Dürüstlüğü ve şeffaflığı en büyük özelliği. Yakında tekrar görüşmek üzere Umut Bey."
-    },
-    {
-      "ad": "Umut Tokkuş",
-      "musteri": "E******* I*******",
-      "tarih": "14/02/2024",
-      "yorum": "Umut Bey ve Makbule Hanim hem satici hem alici tarafinda dairemin satisini tam bir acik sozluluk, durustluk ve titizlikle gerceklestirdiler.. Kendileriyle calismaya devam edecegim👍"
-    },
-    {
-      "ad": "Umut Tokkuş",
-      "musteri": "F******* A*******",
-      "tarih": "27/11/2023",
-      "yorum": "Umut Bey titiz ve sonuç odaklı çalışmalarınız için teşekkür ederim. Kurumsal bir firmayla çalışmaktan dolayı mutluyum."
-    },
-    {
-      "ad": "Umut Tokkuş",
-      "musteri": "C******* T*******",
-      "tarih": "27/11/2023",
-      "yorum": "Önceliğinizin müşteri olması ve ne istediğimi anlayarak hızlı bir hizmet sunmanız gerçekten harika. Sizinle çalışmaktan çok memnun kaldım. Teşekkürler Umut Bey"
-    },
-    {
-      "ad": "Umut Tokkuş",
-      "musteri": "M******* T*******",
-      "tarih": "23/11/2023",
-      "yorum": "Dairemizi çok hızlı bir şekilde iyi bir kiracıya verdiniz. Çok memnun kaldık. Her konuda bizi aydınlattınız. Teşekkür ederiz."
-    },
-    {
-      "ad": "Umut Tokkuş",
-      "musteri": "R******* S*******",
-      "tarih": "23/11/2023",
-      "yorum": "Umut Bey isteğimizi doğru anlayarak hızlı bir şekilde daireyi kiralamamıza yardımcı oldunuz. Çok memnun kaldık. Teşekkürler."
-    },
-    {
-      "ad": "Umut Tokkuş",
-      "musteri": "O******* U*******",
-      "tarih": "21/11/2023",
-      "yorum": "Başından sonuna kadar mutlu olduğumuz bir hizmet aldım. Sizin gibi tecrübeli insanlarla çalışmak büyük keyif. Teşekkürler"
-    },
-    {
-      "ad": "Umut Tokkuş",
-      "musteri": "D******* U*******",
-      "tarih": "21/11/2023",
-      "yorum": "Benim için en iyi sonuçları önermeniz ve doğru yönlendirmenizden çok memnun kaldım. Teşekkürler Umut Bey"
-    },
-    {
-      "ad": "Umut Tokkuş",
-      "musteri": "E******* E*******",
-      "tarih": "20/11/2023",
-      "yorum": "Kaliteli ve hızlı bir hizmet aldım. Umut Bey sizinle çalışmaktan çok memnun kaldım. Teşekkür ederim."
-    },
-    {
-      "ad": "Umut Tokkuş",
-      "musteri": "D******* A*******",
-      "tarih": "20/11/2023",
-      "yorum": "Kısa sürede içerisinde hızlı aksiyon alıp, karışık gözüken satış sürecini çok kolay hale getirdiler. Umut Bey ve ekibiyle çalışmak çok keyifliydi. Bize sadece tapuya eşlik etmek kaldı. Umuyoruz ki ilerleyen süreçte başka işlerde çalışacağız. Teşekkürler"
-    },
-    {
-      "ad": "Umut Tokkuş",
-      "musteri": "M******* K*******",
-      "tarih": "30/10/2023",
-      "yorum": "Umut Bey Profesyonel ve hızlı sonuç sağlayan bir hizmet sağladı. Çok memnun kaldım."
-    },
-    {
-      "ad": "Umut Tokkuş",
-      "musteri": "G******* A*******",
-      "tarih": "30/10/2023",
-      "yorum": "İçime sinen bir kiracı bulup daireyi çok hızlı ve güvenilir bir şekilde kiraya verdik. Desteğiniz için çok teşekkür ederim."
-    },
-    {
-      "ad": "Umut Tokkuş",
-      "musteri": "E******* Ş*******",
-      "tarih": "28/10/2023",
-      "yorum": "Uzun bir arayışın ardından Umut Bey ile kısa süre içerisinde istediğim evi buldum. Her şey çok açık ve hızlıydı. Teşekkürler."
-    },
-    {
-      "ad": "Umut Tokkuş",
-      "musteri": "P******* Ç*******",
-      "tarih": "28/10/2023",
-      "yorum": "Hem RE/MAX markası hem de Umut Bey'in tecrübesiyle tüm süreçler rahat bir şekilde tamamlandı. En başından ne konuştuysak, o şekilde gerçekleşti. Teşekkürler."
-    },
-    {
-      "ad": "Umut Tokkuş",
-      "musteri": "Çağlayan Şerif Bodur",
-      "tarih": "28/09/2023",
-      "yorum": "Umut beyle yapmış olduğumuz tüm satış süreci umut beyin profesyonel ilerleyişi sayesinde sorunsuz bir şekilde tamamlandı. müşteriyi iyi anlıyor ve iletişimi doğru bir şekilde kuruyor. bu kısa süreçte yapmış olduğumuz iş başarıyla sonuçlandığı için çok memnun kaldım. her şey için teşekkür ediyorum."
-    },
-    {
-      "ad": "Umut Tokkuş",
-      "musteri": "Artur Wierzba",
-      "tarih": "27/09/2023",
-      "yorum": "I totally satisfied about purchase process. he informed me in every step so everything was clear. thank you for your support."
-    },
-    {
-      "ad": "Umut Tokkuş",
-      "musteri": "Alper Temiz",
-      "tarih": "10/08/2023",
-      "yorum": "11 yıldır tüm i̇şleri̇mi̇ ti̇ti̇zli̇kle taki̇p eden , dürüst ve şeffaf yaklaşımı i̇le fark yaratan emlak danişmanimiz umut beye çok teşekkür ederim. çok daha güzel işlerde görüşmek üzere"
-    },
-    {
-      "ad": "Umut Tokkuş",
-      "musteri": "A******* U*******",
-      "tarih": "26/04/2023",
-      "yorum": "Baştan itibaren bizi aileden biri gibi görüp, tüm sürecimizi bizleri güvende hissettirerek yönettiler. Tüm ekip baştan sona profesyoneldi. Teşekkür ederiz."
-    },
-    {
-      "ad": "Umut Tokkuş",
-      "musteri": "Ümit Baki Dikbıyık",
-      "tarih": "21/04/2023",
-      "yorum": "Umut Beyin asistanı Cennet Hanıma yardımlarından dolayı çok teşekkür ederim. Çok acil ev ihtiyacımız vardı 3 gün içerisinde Cennet Hanım’ın sayesinde beğendiğimiz evi tuttuk. İlk iletişime geçtiğimiz andan itibaren bizimle çok ilgilendi ve yardımcı oldu. Kendisine ne kadar teşekkür etsem az 🙏🏼"
-    },
-    {
-      "ad": "Umut Tokkuş",
-      "musteri": "Taha Sancak",
-      "tarih": "21/04/2023",
-      "yorum": "Cennet hanım tüm süreç boyunca tamamen profesyonel ve samimi bir şekilde ilgilendi bizimle. Yaptığımız işlemleri diğer emlak çalışanlarına nispeten resmî ve belgeli tutarak güven faktörümüzü pozitif etkiledi. Ayrıca ev sahibiyle iletişim konusunda bize yardımcı olması, güleryüzlü bir şekilde bizimle ilgilenmesi ve diğer birçok konuda yardımcı olduğu için müşteri olarak çok memnun kaldık."
-    },
-    {
-      "ad": "Umut Tokkuş",
-      "musteri": "E******* B*******",
-      "tarih": "06/04/2023",
-      "yorum": "Umut bey,Makbule hanım ve ekibinin, uzun yıllardır müşterisi olarak,aldığım hizmetin kalitesi,profesyonelliği ve güvenirliliği için kendilerine teşekkür ederim, iş ilişkimiz zamanla yerini dostluğa bıraktı…Dostluğumuzun ve iş birliğimizin uzun soluklu olacağından şüphem yok.Başarılarınızın devamını dilerim…"
-    },
-    {
-      "ad": "Umut Tokkuş",
-      "musteri": "Petek Akdoğan",
-      "tarih": "16/03/2023",
-      "yorum": "Umut Bey’le 3 senedir tanışıyoruz ve çalışıyoruz, çok ilgili, konusuna çok hakim, yönlendirici, takipçi, saygılı ve samimi yaklaşımıyla bizi çok memnun etmiştir, başarılarının devamını diliyorum."
-    },
-    {
-      "ad": "Umut Tokkuş",
-      "musteri": "Melike Tepedelenli",
-      "tarih": "16/03/2023",
-      "yorum": "Hayatimda tanidigim en durust, gayrimenkullerimi 10 a katlamami saglayan Umut bey ve esi Makbule hn..herseyimle ilgilenen, evladim kadar guvendigim 2 insan-insan, bu devirde zor bulunur guvenlilikteler. Her ikisinede buradan tesekkuru borc biliyorum."
-    },
-    {
-      "ad": "Umut Tokkuş",
-      "musteri": "K******* G*******",
-      "tarih": "21/10/2022",
-      "yorum": "Umut Bey ile yaklaşık 7 senedir, gayrimenkul yatırımlarımla ilgili çalışıyoruz. Kendisi her zaman sonuç odaklı, güvenilir ve doğru hizmet vermektedir. Bu samimi ve profesyonel hizmetiniz için yürekten teşekkürlerimi iletmek isterim."
-    },
-    {
-      "ad": "Umut Tokkuş",
-      "musteri": "S******* A*******",
-      "tarih": "23/09/2022",
-      "yorum": "Bir tavsiye üzerine Remax Doğuş ofisine gittim. Umut Bey ve ekibi çok hızlı bir şekilde istediğim evi almamı sağladı. Mükemmel bir hizmet."
-    },
-    {
-      "ad": "Umut Tokkuş",
-      "musteri": "K******* B*******",
-      "tarih": "23/09/2022",
-      "yorum": "Ev arayışımda birçok kişiye danıştıktan sonra Umut Bey çok hızlı bir şekilde istediğim seçenekler üzerine çalışma yaptı. Bütün işlemleri açık ve rahat bir şekilde hallettik. Teşekkürlerimi sunuyorum"
-    },
-    {
-      "ad": "Umut Tokkuş",
-      "musteri": "G******* C*******",
-      "tarih": "23/09/2022",
-      "yorum": "Umut Bey nezaketiniz ve güler yüzlü hizmetiniz için teşekkür ederim. Sayenizde hayalimdeki eve kavuştum!"
-    },
-    {
-      "ad": "Umut Tokkuş",
-      "musteri": "S******* K*******",
-      "tarih": "23/09/2022",
-      "yorum": "Kurumsal bir markayla çalışmanın önemini bir kez daha gördüm. Umut Bey ve ekibi şahaneler. Teşekkür ederim."
-    },
-    {
-      "ad": "Umut Tokkuş",
-      "musteri": "S******* K*******",
-      "tarih": "23/09/2022",
-      "yorum": "Çok kısa sürede ihtiyacım eve çıktım. Umut Bey bütün detaylarla ilgilenerek bize yardımcı oldu. Gönül Rahatlığıyla öneririm."
-    },
-    {
-      "ad": "Umut Tokkuş",
-      "musteri": "O******* E*******",
-      "tarih": "23/09/2022",
-      "yorum": "Size ne kadar teşekkür etsem az. Keşke herkes işini sizin gibi yapsa!"
-    },
-    {
-      "ad": "Umut Tokkuş",
-      "musteri": "F******* D*******",
-      "tarih": "23/09/2022",
-      "yorum": "Evimin satılması ve yeni bir eve geçme fikri uzun zamandır beni düşündürüyordu. Umut Bey ile her şey çok kolay oldu. Teşekkürler."
-    },
-    {
-      "ad": "Umut Tokkuş",
-      "musteri": "Y******* A*******",
-      "tarih": "23/09/2022",
-      "yorum": "Uzun zamandır evimle alakalı çözülemeyen durumlar vardı. Umut Bey’in önerileri sayesinde çok karlı bir yatırım yaptım. Herhangi bir yatırım durumunda gözüm kapalı sizinle çalışmak isterim."
-    },
-    {
-      "ad": "Umut Tokkuş",
-      "musteri": "S******* P*******",
-      "tarih": "23/09/2022",
-      "yorum": "Umut Bey sizin gibi profesyonel birisiyle çalıştığım için çok mutluyum. Başarılar diliyorum."
-    },
-    {
-      "ad": "Umut Tokkuş",
-      "musteri": "B******* T*******",
-      "tarih": "23/09/2022",
-      "yorum": "Emlak piyasasıyla alakalı her konuda danışabildiğim ve doğru hizmet aldığım Umut Tokkuş, gerçekten çok kaliteli bir hizmet veriyor."
-    },
-    {
-      "ad": "Umut Tokkuş",
-      "musteri": "S******* A*******",
-      "tarih": "06/09/2022",
-      "yorum": "Umut Bey ev arayışımızda sizinle karşılaşmamız büyük bir şans oldu. Bu süreçten dolayı kafamız karışık ve yorulmuştuk. Hızlı bir şekilde tam istediğimiz evi bulduk ve bütün konularda yardımcı oldunuz. Çok memnun kaldım. Teşekkür ederim."
-    },
-    {
-      "ad": "Umut Tokkuş",
-      "musteri": "B******* M*******",
-      "tarih": "06/09/2022",
-      "yorum": "Thank you very much Mr Umut. Your service was really professional and I really satisfied in the end. I would like to work with you again in the future."
-    },
-    {
-      "ad": "Umut Tokkuş",
-      "musteri": "Ş******* Ç*******",
-      "tarih": "06/09/2022",
-      "yorum": "Remax Doğuş’tan Umut Bey’e teşekkür ederim. Benim için ulaşılabilirlik ve sorunları çözüm bulunması çok önemlidir. Umut Bey ve ekibi çok hızlı bir şekilde bizi doğru yönlendirdi. Açıkçası emlak sektörü çalışanlarına karşı fikrim değişti. Çok memnun kaldım. Keşke herkes işini sizin gibi özenli yapsa."
-    },
-    {
-      "ad": "Umut Tokkuş",
-      "musteri": "U******* O*******",
-      "tarih": "06/09/2022",
-      "yorum": "Umut Bey ve eşi Makbule Hanım çok güler yüzlü ve profesyonel bir şekilde bize yardımcı oldular. Yeni bir ev bulma süreci beni korkutuyordu ama REMAX DOĞUŞ sayesinde çok doğru bir yatırım yaptım. Her şey için çok teşekkür ederim."
-    },
-    {
-      "ad": "Umut Tokkuş",
-      "musteri": "B******* Ç*******",
-      "tarih": "06/09/2022",
-      "yorum": "Kiralık ev bulmanın çok yorucu ve zor olduğu bir dönemde istediğim evi Umut Bey sayesinde çok hızlı bir şekilde buldum. Çalıştığım için çok vaktim yoktu ve her konuda bana çözüm ürettiğiniz için çok teşekkür ederim."
-    },
-    {
-      "ad": "Umut Tokkuş",
-      "musteri": "Y******* H*******",
-      "tarih": "06/09/2022",
-      "yorum": "Umut Bey tecrübesiyle bizi hiç yormadan, kolayca istediğimiz daireyi almak konusunda çok yardımcı oldu. Karşı tarafla olan konuları hem profesyonel hem de güvenilir bir şekilde yönetti. Her aşamada iletişimdeydik. Genel olarak çok memnun kaldım. Teşekkürler"
-    },
-    {
-      "ad": "Umut Tokkuş",
-      "musteri": "Ö******* P*******",
-      "tarih": "06/09/2022",
-      "yorum": "Evimin satılmasıyla alakalı RE/MAX Doğuş ofisine gittim ve Umut Bey ile tanıştık. Profesyonel ve şeffaf bir şekilde yapacakları aksiyonları anlattı ve çok hızlı çalıştılar. Bu süreçte beni düzenli olarak bilgilendirmeleri ve süreci çok açık bir şekilde idare etmelerinden çok memnun kaldım."
-    },
-    {
-      "ad": "Umut Tokkuş",
-      "musteri": "N******* A*******",
-      "tarih": "06/09/2022",
-      "yorum": "Umut Bey her şey için çok teşekkür ederim. Sayenizde evimi çok hızlı bir şekilde kiraya verdim. Kiracı adaylarını çok düzgün seçmeniz ve bütün süreçlerde yardımcı olduğunuz için teşekkür ederim. Emlak yatırımlarımda hep sizinle çalışmak isterim"
-    },
-    {
-      "ad": "Umut Tokkuş",
-      "musteri": "N******* A*******",
-      "tarih": "06/09/2022",
-      "yorum": "Umut Bey ve Makbule Hanım’a teşekkür ederim. Çok güvenilir ve güler yüzlü bir ekibiniz var. Yatırım yapma konusunda kafam çok karıştı ve sayenizde çok doğru bir yatırım yaptım. Üstelik her şey o kadar hızlı ve kolay oldu ki sizi herkese tavsiye ediyorum. Kolaylıklar dilerim."
-    },
-    {
-      "ad": "Umut Tokkuş",
-      "musteri": "S******* Y*******",
-      "tarih": "06/09/2022",
-      "yorum": "Daha önce emlakçılarla çalışma konusunda ön yargılarım vardı. Umut Bey son derece profesyonel ve etik çalışıyor ki evimin kiralanma sürecinde çok hassas çalıştılar. Yaptıkları çalışmalar ve müşteri ziyaretleriyle alakalı bilgilendirmelerle çok kaliteli bir hizmet aldım. Size ve RE/MAX Doğuş ekibine teşekkür ederim 😊"
-    },
-    {
-      "ad": "Umut Tokkuş",
-      "musteri": "Ceyda Bulut",
-      "tarih": "28/07/2022",
-      "yorum": "Evimizi hızlıca satıp güvenle ve samimi hizmetle bize kapılarını açan remax doğuş ofisi Umut beye çok teşekkür ederiz.iyi ki yollarımız kesişti başarılarınızın devamını dilerim."
-    },
-    {
-      "ad": "Umut Tokkuş",
-      "musteri": "B******* S*******",
-      "tarih": "24/07/2022",
-      "yorum": "Çok kıymetli ve sevgili Makbule Toktuş ile 2010 yılından beri çalışıyorum. İlk tanıştığımız günden itibaren işine ve insanlara gösterdiği saygı ve özen; gece, gündüz, hafta sonu demeden, verdiği emek ve içtenlikle gülen yüzü hep daim oldu. 12 sene boyunca her türlü çözüm gerektiren durumda, Makbule hanım anında varlık gösterdi ve her iki tarafı da memnun edecek çözümler geliştirdi. Makbule hanımın zekasının, hızlı karar verme becerisinin, süregelen emeğinin ve insancıl yaklaşımlarının paha biçilmez olduğunu düşünüyorum. Kendimi Makbule hanım ve eşi Umut bey ile birlikte çalışmaktan dolayı çok şanslı sayıyor, ve daha nice yıllar bana ekspertiz, bilgi, beceri, dürüstlük ve insanlıkları ile destek olacaklarını biliyorum. Tüm emekleriniz için çok teşekkür ederim, yolunuz, bahtınız hep açık olsun. Sevgilerimle, Bihter"
-    },
-    {
-      "ad": "Umut Tokkuş",
-      "musteri": "Ayfer Ufuk Oktav",
-      "tarih": "02/04/2022",
-      "yorum": "Umut Bey ve çok sevgili eşi Makbule Hanım ev alma serüvenimizde bize yol gosterici ve adeta kendilerine alıyormus gibi tüm detaylarda bize yardımcı oldular. Karar almamızı destekleyen bilgiler ile profesyonel bir şekilde bizi yonlendirmeleri sayesinde evimizi aldık. Tüm bu sürecte yanımızda oldukları ve her sorumuza her saatte hızlı ve guvenilir bir şekilde yanıt verdikleri için çok şanslıyız. Bizi müşteri gibi değil ailenin bir parcası olarak agırladıkları için kendilerine tekrar tekrar tesekkür ediyoruz. Bu daha başlangıctı… Uzun yıllar bize destek olmaya devam edeceklerinden süphemiz yok."
-    },
-    {
-      "ad": "Umut Tokkuş",
-      "musteri": "İ******* T*******",
-      "tarih": "16/03/2022",
-      "yorum": "Bu zamanda böylesine düzgün insanların hala var olması çok güzel"
-    },
-    {
-      "ad": "Umut Tokkuş",
-      "musteri": "R******* Y*******",
-      "tarih": "21/02/2022",
-      "yorum": "Umut bey bize süreç boyunca hep çok güler yüzlü, anlayışlı ve çözüm odaklı yaklaştı. İhtiyacımız olan her konuda yardımcı oldu. Ev kiralama sürecimizi Umut bey ve eşi Makbule hanım sayesinde çok hızlı ve keyifli bir şekilde tamamladık :)"
-    },
-    {
-      "ad": "Umut Tokkuş",
-      "musteri": "Veysel Dabakoğlu",
-      "tarih": "18/02/2022",
-      "yorum": "Uzun yıllardır Umut bey ve Makbule hanim ile birlikte çalışıyorum. Kiralamada çok kısa süre içinde kiracı buldular, çok memnunum. Ayrıca kiralama sonrasındaki süreçlerde de hep güleryüzlü ve en hızlı şekilde çözümler sundular."
-    },
-    {
-      "ad": "Umut Tokkuş",
-      "musteri": "Yeşim&francesco Veratti",
-      "tarih": "16/02/2022",
-      "yorum": "Herkese merhaba , İtalyadan yazıyorum … Umut Bey ve Makbule Hanım sizleri sizden fazla düşünen , sorumluluk sahibi ve gerçekten herzaman çözüm arayan ,sorun çözen yaklaşımları ile övgüyü gerçekten de hakediyorlar.. Yurtiçinde ve bulunduğumuz ülkeden gözümüz kapalı kendilerine emanet ettik ofisimizi , evimizi ve hiçbir zaman hayalkırıklığına uğramadık … Profesyonel yaklaşımlarının da ötesinde mütevazi ve insancıl yaklaşımları herzaman güler yüzleri , sizlere işbirliğinin ötesinde birer çok iyi dostta kazandıracak . Başarılarınızın devamını diliyoruz , grazie mille ragazzi 🙏🧿"
-    },
-    {
-      "ad": "Umut Tokkuş",
-      "musteri": "Bakytbek Mukishev",
-      "tarih": "07/02/2022",
-      "yorum": "Kiralama işlemimizde tüm güleryüz ve profesyonelliğiyle bize destek olan Umut Tokkuş’a gönülden teşekkürlerlerimi sunar,başarılarının devamını en içtenliğimle dilerim."
-    },
-    {
-      "ad": "Umut Tokkuş",
-      "musteri": "Şahin Yılmaz",
-      "tarih": "03/02/2022",
-      "yorum": "Ofis kiralamamız süresince verilen son derece profösyonel, güler yüzlü ve ilgili yaklaşımınız nedeniyle teşekkür ederiz."
-    },
-    {
-      "ad": "Umut Tokkuş",
-      "musteri": "Özge Elhakim",
-      "tarih": "03/02/2022",
-      "yorum": "Sevgili emlak danismanim Umut Bey ile cok profesyonel ve uyum icinde calistik halada calismaya devam ediuoruz.Umut bey ile Akasya dan daire satin alirken bizi her asamada islerimizi takip edip bizi tapu islemleri , banka islemlerine kadar eslik edip tum islemlerimizi son derece kolaylikla tamamlanmasina yardimci oldu.. Sonrasinda evimizi kiralama konusunda da hizli bir sekilde bize iyi bir kiraci buldu bu zamanda boyle duzgun hizmet veren bir emlak danismani bulmak gercekten cok zor.. tesekkurler Umut Tokkus"
-    },
-    {
-      "ad": "Umut Tokkuş",
-      "musteri": "Mehmet Karakaya",
-      "tarih": "03/02/2022",
-      "yorum": "Umut Bey ve eşi Makbule hanımla 10 yılı aşkın bir süredir çalışıyorum.Dürüst ve profesyonel çalışmalarından çok memnunum. Tavsiye ediyorum. Binlerce özel portföyleri kaçırmayın! RE/MAX ile Satalım Kiralayalım"
+      "musteri": "2025-12-18T10:04:20.41+03:00",
+      "tarih": "2025-12-18",
+      "yorum": "2025-12-18T10:04:20.41+03:00"
     },
     {
       "ad": "Ayşegül Alpay",
-      "musteri": "Birsen Balta",
-      "tarih": "31/07/2026",
-      "yorum": "Ayşegül Alpay hanımın ilgisi ve emekleri için teşekkür ederiz."
-    },
-    {
-      "ad": "Ayşegül Alpay",
-      "musteri": "Hicran Çelik",
-      "tarih": "29/07/2026",
-      "yorum": "Evimin satış sürecinde, Ayşegül hanımın sabrını bana aktarmış olduğu müşteri bilgilerini, deneyiminle verdiği pozitif enerjisini, güler yüzüyle umudumu yükseltmesiyle keyifli ve başarılı bir şatış süreci yaşadık.Dostlarıma , yakınlarıma kendisiyle çalışmayı tavsiye edebilirim .🙏🥰Her şey için çok teşekkür ederim, Ayşegül Alpay hanım başarılarınız daim olsun"
-    },
-    {
-      "ad": "Ayşegül Alpay",
-      "musteri": "Hatice Kubatoğlu",
-      "tarih": "19/07/2026",
-      "yorum": "Ayşegül Alpay Çabalarınız için çok teşekkürler"
-    },
-    {
-      "ad": "Ayşegül Alpay",
-      "musteri": "Gülseren Çaliş",
-      "tarih": "19/07/2026",
-      "yorum": "Çalışkanlığı, güler yüzlü ve yakın ilgisi ile işimizi kolayca halletmemizi sağlayan Ayşegül Alpay hanıma teşekkür ederiz."
-    },
-    {
-      "ad": "Ayşegül Alpay",
-      "musteri": "Rıza Balta",
-      "tarih": "16/07/2026",
-      "yorum": "İlk andan son adıma kadar çok kaliteli ve nazik bir işbirliği oldu. Sayın Ayşegül Alpay hanımefendiye çok teşekkür ederim."
-    },
-    {
-      "ad": "Ayşegül Alpay",
-      "musteri": "Ercan Şenol Pehlivan",
-      "tarih": "04/05/2026",
-      "yorum": "Çok hızlı ve istediğim şartlarda evimi kiraladılar teşekkür ederim Ayşegül Alpay a teşekkür ederim."
-    },
-    {
-      "ad": "Ayşegül Alpay",
-      "musteri": "Betül Erhan",
-      "tarih": "04/05/2026",
-      "yorum": "Çok memnun kaldım Aysegül Alpay hanım ı bana güler yüzle kiralama konusunda çok yardımcı oldu. Teşekkür ederim"
-    },
-    {
-      "ad": "Ayşegül Alpay",
-      "musteri": "Serhat Aykın",
-      "tarih": "04/05/2026",
-      "yorum": "Yeni Fikirtepe RE/MAX doğuş tan almış olduğum hizmetten son derece memnun kaldım. Süreç boyunca profesyonel, hızlı ve çözüm odaklı yaklaşımları sayesinde tüm işlemlerim sorunsuz şekilde tamamlandı. İhtiyaçlarımı doğru anlayarak en uygun seçenekleri sunmaları güven vericiydi. Güler yüzlü ve ilgili ekipleri için teşekkür eder, gayrimenkul konusunda hizmet almak isteyen herkese gönül rahatlığıyla tavsiye ederim. AYŞEGÜL ALPAYA ÇOK TESEKKUR EDERİM"
-    },
-    {
-      "ad": "Ayşegül Alpay",
-      "musteri": "Ahmet Aykin",
-      "tarih": "04/05/2026",
-      "yorum": "RE/MAX emlak konusunda en ciddi kurulardan birisidir çalışanlara ve Ayşegül Alpay hanıma 10 tam puan veriyor teşekkür ediyorum."
-    },
-    {
-      "ad": "Ayşegül Alpay",
-      "musteri": "Salim Balkan",
-      "tarih": "04/02/2026",
-      "yorum": "Ev satiş ve kiralama konusunda işini ciddi düzenli mükemmel yapan uzman bir firma. Özellikle Ayşegül Hanim başta olmak üzere tüm RE/MAX Doğuş çalışanlarına teşekkürler..."
-    },
-    {
-      "ad": "Ayşegül Alpay",
-      "musteri": "K******* G*******",
-      "tarih": "03/02/2026",
-      "yorum": "Ayşegül hanım sayesinde çok keyifli bir süreç geçirdik. Sorunsuz ve hızlı bir şekilde sonuca gittik. Kendisine ve ekibine çok teşekkür ederim."
-    },
-    {
-      "ad": "Ayşegül Alpay",
-      "musteri": "A******* C*******",
-      "tarih": "03/02/2026",
-      "yorum": "Yeni evimizi Ayşegül hanım sayesinde bulabildik. Zorlu bir sürecin ardından Ayşegül hanımla çok kolay sonuca gittik. Emekleri için çok teşekkür ederiz."
-    },
-    {
-      "ad": "Ayşegül Alpay",
-      "musteri": "S******* D*******",
-      "tarih": "28/01/2026",
-      "yorum": "Ayşegül Alpay Hanım süreci en başından en sonuna kadar şeffaf bir şekilde sürdürdü. Konuya hakimiyeti ve takibi inanılmazdı.Her şey için, Doğuş ofisine ve Ayşegül Hanım’a sonsuz teşekkürler"
-    },
-    {
-      "ad": "Ayşegül Alpay",
-      "musteri": "B******* T*******",
-      "tarih": "28/01/2026",
-      "yorum": "Mülkümün doğru pazarlanmasında kuşkularım vardı. Ama sonra bir arkadaşım Ayşegül Hanım’ı önerdi. Titizliği,bilgi ve birikimi işimi çok hızlandırdı. Kendisine ve ekibine çok teşekkür ederim."
-    },
-    {
-      "ad": "Ayşegül Alpay",
-      "musteri": "Eren Özen",
-      "tarih": "08/10/2025",
-      "yorum": "Merhaba, Remax Doğuş ailesinin üyesi olan Ayşegül hanımla çalışmak benim için çok güvenli,ayrıcalıklı oldu kendisine güler yüzü içinde çok teşekkür ederim. Eline emeğine sağlık.Daha nice güzel işlerde görüşmek dileğiyle."
-    },
-    {
-      "ad": "Ayşegül Alpay",
-      "musteri": "Ebru Şahin",
-      "tarih": "21/08/2025",
-      "yorum": "Ayşegül Hanıma ilgi ve alakası güler yüzü samimiyetinden dolayı çok teşekkür ediyorum."
-    },
-    {
-      "ad": "Ayşegül Alpay",
-      "musteri": "İpek Tokgöz",
-      "tarih": "18/08/2025",
-      "yorum": "Emlak danışmanınız Ayşegül Alpay süreci baştan sona profesyonelce yönetti. Kiracı bulma süreci hızlı ve şeffaf geçti. İletişimi güçlü, her soruma zamanında ve açıklayıcı şekilde dönüş yaptı. Evimin güvenilir bir kiracıya verilmesini sağladı. Süreçten çok memnun kaldım, teşekkür ederim."
-    },
-    {
-      "ad": "Ayşegül Alpay",
-      "musteri": "Pınar Atakol",
-      "tarih": "14/04/2025",
-      "yorum": "Ayșegül Alpay Hanimefendi’den aldigimiz emlak danismanligi hizmetinden sonsuz derecede memnun kaldık. Kendisini tanimak ve is birligi icerisinde olmak buyuk bir sanstir. Her asamada kendisi ile hizli ve net iletisim kurduk, tum sorularimiza gercek ve tatmin edici cevaplar aldik. Ihtiyacimizi en iyi sekli ile tam zamanin da cevapladi kendileri. Bundan sonra da her ihtiyac duydugumuz zaman kendisi ile ilerlemeye karar verdik."
-    },
-    {
-      "ad": "Ayşegül Alpay",
-      "musteri": "Duygu Keltek",
-      "tarih": "14/04/2025",
-      "yorum": "Remax Doğuş ve Ayşegül Hanım'ın güveni ve profesyonelliği ile ev alım sürecimiz çok rahat ve sorunsuz bir şekilde gerçekleşti. Ayşegül Hanım'a ve tüm ekibe çok teşekkür ederiz.🌸"
-    },
-    {
-      "ad": "Ayşegül Alpay",
-      "musteri": "Nevin Karaalp",
-      "tarih": "10/04/2025",
-      "yorum": "Evimizin satışıyla ilgili konularda, sürecin en başından tapu işlemleri ve satışın kısa sürede tamamlanmasına kadar her aşamada Remax’tan Ayşegül Alpay’ın samimi yaklaşımları ve süreci kolaylaştırmak adına desteğini her an yanımızda hissettik. Kendisine çok teşekkür ediyoruz.."
-    },
-    {
-      "ad": "Ayşegül Alpay",
-      "musteri": "T******* A*******",
-      "tarih": "15/12/2024",
-      "yorum": "Yardımlarınızla çok kolay bir şekilde evimi aldım, teşekkür ederim"
-    },
-    {
-      "ad": "Ayşegül Alpay",
-      "musteri": "Nihal Dilşen",
-      "tarih": "29/11/2024",
-      "yorum": "Şirketimizin yeni Mağaza arayışında, beklentilerimizi karşılayan yerin bulunmasına Ayşegül Hanım vesile olmuştur, kendisine ve ofisinize teşekkür ederiz. Binlerce özel portföyleri kaçırmayın! RE/MAX ile Satalım Kiralayalım"
+      "musteri": "2026-07-31T15:27:00.1+03:00",
+      "tarih": "2026-07-31",
+      "yorum": "2026-07-31T15:27:00.1+03:00"
     },
     {
       "ad": "Evşen Özazman",
@@ -717,99 +165,9 @@
     },
     {
       "ad": "Gamze Yetkin",
-      "musteri": "Özlem Kenan",
-      "tarih": "04/08/2026",
-      "yorum": "Her şey çok hızlı ve pürüzsüz ilerledi sağ olsunlar Gamze hanım ve İrem hanım çok yardımcı oldular.Çok orta yol buluculardı iyi çalışmalar❤️❤️"
-    },
-    {
-      "ad": "Gamze Yetkin",
-      "musteri": "Arda Unul",
-      "tarih": "30/07/2026",
-      "yorum": "İlgi ve alakaları için İrem hanıma ve Gamze hanıma teşekkür ederim 🌟"
-    },
-    {
-      "ad": "Gamze Yetkin",
-      "musteri": "Ulaş Ergenç",
-      "tarih": "11/06/2026",
-      "yorum": "Gamze Hanım’ın profesyonel yaklaşımı ve konudaki desteği için teşekkür ederim."
-    },
-    {
-      "ad": "Gamze Yetkin",
-      "musteri": "Ayşe Afra Gürüzlük Uçar",
-      "tarih": "11/06/2026",
-      "yorum": "Gamze hanıma ilgisi ve destekleri için çok teşekkür ederiz. Güler yüzlülüğü ve samimiyeti sayesinde çok güzel bir anlaşma süreci gerçekleştik. Her şey için çok teşekkür ederiz 🤍"
-    },
-    {
-      "ad": "Gamze Yetkin",
-      "musteri": "Karina Pravdziva",
-      "tarih": "13/05/2026",
-      "yorum": "Süreç boyunca gösterdiği profesyonel yaklaşım ve titiz ilgisi için Gamze hanıma teşekkür ederim. Doğru lokasyon, doğru yönlendirme sayesinde iş yerimi hızlı ve sorunsuz şekilde kiraladım🙏🏻"
-    },
-    {
-      "ad": "Gamze Yetkin",
-      "musteri": "Chrom Nails",
-      "tarih": "13/05/2026",
-      "yorum": "Gamze Hanım’a çok teşekkür ediyorum ❤️ iş yeri kiralama konusunda hızlı, ilgili ve çözüm odaklıydı. İş yeri ararken en önemli şey doğru yönlendirme ve güven. Bu konuda gerçekten çok yardımcı oldu, çok memnun kaldım, sayesinde tam istediğim yeri buldum"
-    },
-    {
-      "ad": "Gamze Yetkin",
-      "musteri": "Oknur Çalışkan",
-      "tarih": "22/04/2026",
-      "yorum": "Ev kiralama sürecimizde bize yardımcı olan gayrimenkul danışmanımız Gamze hanımdan son derece memnun kaldık. Tüm süreç boyunca oldukça ilgili, sabırlı ve profesyoneldi. Güler yüzü ve çözüm odaklı yaklaşımı için kendisine çok teşekkür ederiz. Kesinlikle tavsiye ederiz."
-    },
-    {
-      "ad": "Gamze Yetkin",
-      "musteri": "Murat Ilker Şen",
-      "tarih": "10/04/2026",
-      "yorum": "Çok detaylı çalışan, dürüst bir emlak uzmanıdır."
-    },
-    {
-      "ad": "Gamze Yetkin",
-      "musteri": "Samet Memiş",
-      "tarih": "10/04/2026",
-      "yorum": "Gamze Hanım süreç boyunca gerçekten çok yardımcı oldu. Tüm sorularıma sabırla cevap verdi ve her aşamada destek oldu. Sayesinde içime sinen bir evi sorunsuz şekilde tuttum. Profesyonelliği ve ilgisi için çok teşekkür ederim, kesinlikle tavsiye ederim."
-    },
-    {
-      "ad": "Gamze Yetkin",
-      "musteri": "Soner Yilmaz",
-      "tarih": "08/02/2026",
-      "yorum": "RE/MAX Doğuş’un profesyonel ekibine, özellikle Gamze Hanım ve Umut Bey’e gönülden teşekkür ederiz. Ev sahibi ve kiracı arasında her iki tarafın da haklarını gözeten duruşları, samimi ve açık iletişimleri, çözüm odaklı yaklaşımları sayesinde süreci son derece rahat ve keyifli bir şekilde tamamladık. Sayelerinde gerçekten çok güzel bir kiralama deneyimi yaşadık. Emekleri için tekrar teşekkür ederiz."
-    },
-    {
-      "ad": "Gamze Yetkin",
-      "musteri": "Soner Yılmaz",
-      "tarih": "02/02/2026",
-      "yorum": "RE/MAX Doğuş’un profesyonel ekibine, özellikle Gamze Hanım ve Umut Bey'e gönülden teşekkür ederiz. Ev sahibi ve kiracı arasında her iki tarafın da haklarını gözeten duruşları, samimi ve açık iletişimleri, çözüm odaklı yaklaşımları sayesinde süreci son derece rahat ve keyifli bir şekilde tamamladık. Sayelerinde gerçekten çok güzel bir kiralama deneyimi yaşadık. Emekleri için tekrar teşekkür ederiz."
-    },
-    {
-      "ad": "Gamze Yetkin",
-      "musteri": "C******* S*******",
-      "tarih": "23/01/2026",
-      "yorum": "Gamze hanım çözüm odaklı pozitif enerjisi ile ve iş otoritesi ile işini severek yapantığına ve sonuna kadar takip ettiğine inanıyorum"
-    },
-    {
-      "ad": "Gamze Yetkin",
-      "musteri": "Seyfullah Kan",
-      "tarih": "20/09/2025",
-      "yorum": "Remax Doğuş ve Gamze Hanım'a evimi 1 hafta içinde kiraya verdikleri için teşekkür ederim."
-    },
-    {
-      "ad": "Gamze Yetkin",
-      "musteri": "Ömer Karaloğlu",
-      "tarih": "24/07/2025",
-      "yorum": "Her şey için Remax Doğuşa ve özellikle Gamze hanıma teşekkür ederim. Profesyonelce bütün işlemlerde aklımızda soru kalmadan yardımcı oldu ve sonuca bağladı. İyi çalışmalar ve başarılar dilerim."
-    },
-    {
-      "ad": "Gamze Yetkin",
-      "musteri": "Süha Oğuzertem",
-      "tarih": "15/05/2025",
-      "yorum": "Hayatın belli bir merhalesinden sonra insan, artık her ilişkide güveni, her alışverişte samimiyeti ve her karşılaşmada nezaketi arar olur. Hele ki söz konusu, yıllar boyu emek verip sahip olunan bir yuvanın devriyse, işin içinde sadece maddi değil, fazlasıyla manevi bir yük vardır. İşte tam da bu noktada karşıma çıkan İrem Tetik ve Gamze Yetkin Hanımefendiler, bugüne dek karşılaştığım nadir profesyoneller arasında kendilerine zarif bir yer edindiler. Eyüpsultan’da bulunan dairemin satış sürecinde gösterdikleri titizlik, yalnızca mesleki yeterliliklerinin değil, aynı zamanda insanî duyarlılıklarının da göstergesiydi. Temizlikten fotoğraf ve video çekimlerine, ilânın hazırlanmasından alıcılarla kurulan iletişime kadar her adımı öylesine özenle ve incelikle yürüttüler ki, insan kendini bir emlak sürecinin değil de, güvenli ellerin rehberliğinde yürütülen bir dostluk yolculuğunun içinde hissediyor. İşlerini layıkıyla yapmanın ötesine geçip, benimle her daim iletişim hâlinde oldular. Sürecin sonuna yaklaşırken, evimi son bir kez görmemi sağlama nezaketini dahi gösterdiler. Neşe Hanım’ın da sürece dâhil oluşuyla bu birliktelik daha da güçlendi. Belediye işlemlerinden tutun, noter evraklarına, tapu devrine kadar her ayrıntıyı benim adıma büyük bir sorumlulukla yürüttüler. Geçirdiğim kaza nedeniyle bizzat bulunamadığım tapu sürecinde, kendilerine vermiş olduğum vekaletin ne denli doğru bir karar olduğunu bir kez daha idrak ettim. Zira bu ekip, bana tek bir zahmet dahi vermeden her şe"
-    },
-    {
-      "ad": "Gamze Yetkin",
-      "musteri": "Yusuf Oruç Turan",
-      "tarih": "10/04/2025",
-      "yorum": "İlgi alakalarından dolayı İrem hanım ve Gamze hanım'a çok teşekkür ederim her şey planlandığı gibi mükemmel bir şekilde gitti alım satımda başvuracağım tek adres bundan sonra. Binlerce özel portföyleri kaçırmayın! RE/MAX ile Satalım Kiralayalım"
+      "musteri": "2026-08-04T13:37:28.717+03:00",
+      "tarih": "2026-08-04",
+      "yorum": "2026-08-04T13:37:28.717+03:00"
     },
     {
       "ad": "Gizem Gök",
@@ -819,135 +177,9 @@
     },
     {
       "ad": "İrem Aleyna Tetik",
-      "musteri": "Özlem Kenan",
-      "tarih": "04/08/2026",
-      "yorum": "Her şey çok hızlı ve pürüzsüz ilerledi sağ olsunlar Gamze hanım ve İrem hanım çok yardımcı oldular.Çok orta yol buluculardı iyi çalışmalar❤️❤️"
-    },
-    {
-      "ad": "İrem Aleyna Tetik",
-      "musteri": "Şirin Şanlı",
-      "tarih": "04/08/2026",
-      "yorum": "İrem hanım bizi dikkatle dinleyip nasıl bir yer aradığımızı anladıktan sonra ilk baktığımız evi sayesinde tuttuk ve evle ilgili her konuda bize yardımcı oldu kendisine çok çok teşekkür ediyorum"
-    },
-    {
-      "ad": "İrem Aleyna Tetik",
-      "musteri": "Ahmet Önal",
-      "tarih": "17/07/2026",
-      "yorum": "İrem hanıma süreç boyunca göstermiş olduğu destek ve ilgi için teşekkür ederiz."
-    },
-    {
-      "ad": "İrem Aleyna Tetik",
-      "musteri": "Arda Unul",
-      "tarih": "16/07/2026",
-      "yorum": "İlgi ve alakaları için İrem hanıma ve Gamze hanıma teşekkür ederim 🌟"
-    },
-    {
-      "ad": "İrem Aleyna Tetik",
-      "musteri": "Mehmet Tuzcu",
-      "tarih": "15/10/2025",
-      "yorum": "Satın aldığımız daire için ilk telefon bağlantısı kurduğumuz andan , tapumuzu aldığımız ana kadar, her aşamada bilgi akışını en doğru şekilde yapıp , stres yönetimimizde bize destek olan, güler yüz dürüst iş ahlakı para kazanmanın ikinci plana atılıp bir aile dostu desteği gibi süreci yöneten sürecin bütününde önce İrem hanıma , ilk andan son ana kadar tüm sorularımıza cevap verip kaygılarımıza yılmadan eşlik eden Umut beye ve değerli eşi Makbule hanıma hayallerimize katlı sağladıkları için sonsuz teşekkür ederiz.."
-    },
-    {
-      "ad": "İrem Aleyna Tetik",
-      "musteri": "Ahmed Savaş",
-      "tarih": "13/10/2025",
-      "yorum": "Gereksiz laf süreci yok, net sonuç aldım. Emlak piyasası için çok değerli bir özellik✌🏻"
-    },
-    {
-      "ad": "İrem Aleyna Tetik",
-      "musteri": "K******* K*******",
-      "tarih": "04/10/2025",
-      "yorum": "Satın aldığımız ticari mülkümüzün tüm işlemlerini hızlıca ve sorunsuz halleden İrem hanıma çok teşekkür ediyorum."
-    },
-    {
-      "ad": "İrem Aleyna Tetik",
-      "musteri": "Amirmasoud Saeidi",
-      "tarih": "04/10/2025",
-      "yorum": "İrem hanımefendiden aldığımız emlak danışmanlığı hizmetinden sonsuz derecede memnun kaldık. Çok hızlı ve doğru fiyata dairemizin işlemlerimi yaptı."
-    },
-    {
-      "ad": "İrem Aleyna Tetik",
-      "musteri": "Tolga Molla",
-      "tarih": "10/09/2025",
-      "yorum": "Konut alım sürecime en başından beri şeffaf ve son derece profesyonel destek oldular. İşlerini hakkını vererek yapan insanlar. Her sorumla ilgilendiler. Açık bir alan bırakmadan güvenle de süreci tamamladık. Sonrasında da destek olma konusunda çok cömertler. Bu süreçte yanımda olan İrem Hanım’a, Makbule Hanım’a ve Umut Bey’e çok teşekkür ederim."
-    },
-    {
-      "ad": "İrem Aleyna Tetik",
-      "musteri": "Süha Oğuzertem",
-      "tarih": "15/05/2025",
-      "yorum": "Hayatın belli bir merhalesinden sonra insan, artık her ilişkide güveni, her alışverişte samimiyeti ve her karşılaşmada nezaketi arar olur. Hele ki söz konusu, yıllar boyu emek verip sahip olunan bir yuvanın devriyse, işin içinde sadece maddi değil, fazlasıyla manevi bir yük vardır. İşte tam da bu noktada karşıma çıkan İrem Tetik ve Gamze Yetkin Hanımefendiler, bugüne dek karşılaştığım nadir profesyoneller arasında kendilerine zarif bir yer edindiler. Eyüpsultan’da bulunan dairemin satış sürecinde gösterdikleri titizlik, yalnızca mesleki yeterliliklerinin değil, aynı zamanda insanî duyarlılıklarının da göstergesiydi. Temizlikten fotoğraf ve video çekimlerine, ilânın hazırlanmasından alıcılarla kurulan iletişime kadar her adımı öylesine özenle ve incelikle yürüttüler ki, insan kendini bir emlak sürecinin değil de, güvenli ellerin rehberliğinde yürütülen bir dostluk yolculuğunun içinde hissediyor. İşlerini layıkıyla yapmanın ötesine geçip, benimle her daim iletişim hâlinde oldular. Sürecin sonuna yaklaşırken, evimi son bir kez görmemi sağlama nezaketini dahi gösterdiler. Neşe Hanım’ın da sürece dâhil oluşuyla bu birliktelik daha da güçlendi. Belediye işlemlerinden tutun, noter evraklarına, tapu devrine kadar her ayrıntıyı benim adıma büyük bir sorumlulukla yürüttüler. Geçirdiğim kaza nedeniyle bizzat bulunamadığım tapu sürecinde, kendilerine vermiş olduğum vekaletin ne denli doğru bir karar olduğunu bir kez daha idrak ettim. Zira bu ekip, bana tek bir zahmet dahi vermeden her şe"
-    },
-    {
-      "ad": "İrem Aleyna Tetik",
-      "musteri": "Mert Dağdeviren",
-      "tarih": "16/04/2025",
-      "yorum": "işinde uzman kişilerle çalışmak gayet keyifliydi. Taşınma sürecimi çok rahat şekilde 3-4 günde tamamladık. Özellikle İrem Hanım kendisiyle iletişime geçtiğim ilk andan eve yerleşene kadar olan süreçte yardımcı olmaya ve ilgilenmeye çok hevesli ve profesyoneldi."
-    },
-    {
-      "ad": "İrem Aleyna Tetik",
-      "musteri": "Süleyman Rahmi Acar",
-      "tarih": "10/02/2025",
-      "yorum": "Merhaba İstanbul Üsküdar’daki evimi satmak istediğim zaman internet üzerinden REMAX Arge ile iletişime geçtiğim an itibari ile konutumun satıldığı güne kadar bana verilen hizmetten gerçekten çok memnun oldum emlak danışmanım İrem Aleyna Tetik ile Broker Vildan Yazar’a çok teşekkür ediyorum. Bana bu emlak danışmanlığı hizmetini verirken gösterdikleri pratik, sonuca yönelik, problem çözücü ve en önemlisi içten ve samimi olmaları bu teşekkürü etmemin nedeni. Başarılarının devamını dilerim."
-    },
-    {
-      "ad": "İrem Aleyna Tetik",
-      "musteri": "Kadir Altun",
-      "tarih": "10/02/2025",
-      "yorum": "Başlangıçtan itibaren süreci büyük bir titizlik ve profesyonellikle yönetti. Zorlu bir süreç olmasına rağmen soğukkanlılığını koruyarak işi en iyi şekilde halletti. Tüm sorularımıza sabırla cevap verdi ve en iyi sonucu almamız için elinden geleni yaptı. Güvenilir, ilgili ve işinde gerçekten uzman biri. Kendisiyle çalışmak büyük bir keyifti, kesinlikle tavsiye ederim."
-    },
-    {
-      "ad": "İrem Aleyna Tetik",
-      "musteri": "Hulusi Karakaş",
-      "tarih": "15/12/2024",
-      "yorum": "Evimizi alırken bize yaklaşımı profesyonelliği ile zorlu bir satışı kolaylastırdı işine sadık profesyonel bir danışman İrem hanıma teşekkür ederiz"
-    },
-    {
-      "ad": "İrem Aleyna Tetik",
-      "musteri": "Burcu Horuz",
-      "tarih": "09/12/2024",
-      "yorum": "Yeni iş yerimizi İrem hanım sayesinde bulduk. Kendisi tüm süreci titizlikle yönetti ve her sorumuza detaylı yanıt verdi. Profesyonelliği ve güler yüzü için kendisine çok teşekkür ederiz"
-    },
-    {
-      "ad": "İrem Aleyna Tetik",
-      "musteri": "Salih Görgülü",
-      "tarih": "09/12/2024",
-      "yorum": "İrem hanım sürecimizi hızlı ve sorunsuz şekilde ilerletti. hem kiracı hem de bizim memnuniyetimizi ön planda tutarak süreci yönetmesi ne kadar deneyimli ve işine hakim olduğunu gösteriyor. Güvenle çalışabilirsiniz."
-    },
-    {
-      "ad": "İrem Aleyna Tetik",
-      "musteri": "Türker Taşdelen",
-      "tarih": "11/11/2024",
-      "yorum": "İrem Hanım'a mülkümü güvenerek teslim ettim ve hiç pişman olmadım. Zorlu bir satışı benim için kolaylaştırdı. İşine sadık, güvenilir, profesyonel bir danışman. Gönül rahatlığı ile çalışabilirsiniz. Her şey için teşekkür ederim İrem Hanım, başarılarınız daim olsun."
-    },
-    {
-      "ad": "İrem Aleyna Tetik",
-      "musteri": "Kadriye Akıcı",
-      "tarih": "11/11/2024",
-      "yorum": "Başarılı, enerjik ve güvenilir bir danışman. İşlerimizi hızlıca işlemle sonuçlandırdı. Emekleri çok büyük. Kendisine çok teşekkür ederiz.."
-    },
-    {
-      "ad": "İrem Aleyna Tetik",
-      "musteri": "Rıza Bahadır",
-      "tarih": "31/08/2024",
-      "yorum": "Dairemi satma sürecinde İrem Hanım'ın profesyonelliği ve özverisi sayesinde büyük bir kolaylık yaşadım. Kendi başımıza uğraşmış olsaydık bu kadar hızlı ve sorunsuz bir sonuç elde edemezdik. İrem Hanım'ın emeği ve desteği için kendisine teşekkür ediyor ve onunla çalışmayı düşünenlere gönül rahatlığıyla tavsiye ediyorum."
-    },
-    {
-      "ad": "İrem Aleyna Tetik",
-      "musteri": "Emrah Başarır",
-      "tarih": "27/08/2024",
-      "yorum": "Başta İrem Hanım olmak üzere bütün ekibe sonsuz teşekkür ederim. Başarılarınız katlanarak devam etsin. Hayatınız kalbiniz gibi güzel geçsin inşallah. Sizi seviyoruz..."
-    },
-    {
-      "ad": "İrem Aleyna Tetik",
-      "musteri": "Mustafa Çamlıbel",
-      "tarih": "29/05/2024",
-      "yorum": "Süreci şeffaf ve net bir şekilde ilerletti, kendisi her konuda bizi bilgilendirdi ve yönlendirdi. İlgisinden dolayı kendisine teşekkür ediyorum."
-    },
-    {
-      "ad": "İrem Aleyna Tetik",
-      "musteri": "Seher Kılıç",
-      "tarih": "29/05/2024",
-      "yorum": "Görüşmemiz sonrasında işlemi hızlı ve sorunsuz şekilde sonuçlandırdık. Teşekkür ediyorum Binlerce özel portföyleri kaçırmayın! RE/MAX ile Satalım Kiralayalım"
+      "musteri": "2026-08-04T23:16:29.32+03:00",
+      "tarih": "2026-08-04",
+      "yorum": "2026-08-04T23:16:29.32+03:00"
     },
     {
       "ad": "Özlem Varol",
@@ -960,21 +192,24 @@
     "hatalar": [],
     "notlar": [
       "yorum sekmesi tıklandı: true",
-      "daha-fazla sonrası metin uzunluğu: 30653",
+      "daha-fazla sonrası metin uzunluğu: 31376",
       "yorum sayfalaması 1. sayfada bitti",
       "Comment API isteği yakalanamadı",
-      "yorum sekmesi ham (yalnızca teşhis, eklenmedi): 100 | json cevap: 2",
+      "yorum sekmesi ham (yalnızca teşhis, eklenmedi): 101 | json cevap: 3",
       "ekip linki: 11 (ham: 11, tekil ID: 11)",
       "profil çöz: id=28250 slug=\"makbule-tokkus\" baslik=\"Makbule Tokkuş\" h1=\"\" -> EŞLEŞMEDİ",
       "profil eşleşmedi (eski danışman olabilir): makbule-tokkus | baslik: Makbule Tokkuş",
       "profil çöz: id=28251 slug=\"umut-tokkus\" baslik=\"Umut Tokkuş\" h1=\"Toplam Yorum Sayısı\" -> Umut Tokkuş",
-      "SAYI FARKI Umut Tokkuş: remax=76, toplanan=75 (kaynak:metin, jsonCevap:3)",
+      "SAYI FARKI Umut Tokkuş: remax=76, toplanan=1 (kaynak:json, jsonCevap:3)",
       "profil çöz: id=40213 slug=\"aysegul-alpay\" baslik=\"Ayşegül Alpay\" h1=\"Toplam Yorum Sayısı\" -> Ayşegül Alpay",
+      "SAYI FARKI Ayşegül Alpay: remax=22, toplanan=1 (kaynak:json, jsonCevap:3)",
       "profil çöz: id=47386 slug=\"aysun-yilmaz\" baslik=\"Aysun Yılmaz\" h1=\"\" -> Aysun Yılmaz",
       "profil çöz: id=54267 slug=\"evsen-ozazman\" baslik=\"Evşen Özazman\" h1=\"Toplam Yorum Sayısı\" -> Evşen Özazman",
       "profil çöz: id=41709 slug=\"gamze-yetkin\" baslik=\"Gamze Yetkin\" h1=\"Toplam Yorum Sayısı\" -> Gamze Yetkin",
+      "SAYI FARKI Gamze Yetkin: remax=16, toplanan=1 (kaynak:json, jsonCevap:3)",
       "profil çöz: id=48933 slug=\"gizem-gok\" baslik=\"Gizem Gök\" h1=\"Toplam Yorum Sayısı\" -> Gizem Gök",
       "profil çöz: id=35392 slug=\"irem-aleyna-tetik\" baslik=\"İrem Aleyna Tetik\" h1=\"Toplam Yorum Sayısı\" -> İrem Aleyna Tetik",
+      "SAYI FARKI İrem Aleyna Tetik: remax=22, toplanan=1 (kaynak:json, jsonCevap:3)",
       "profil çöz: id=46773 slug=\"leman-ozlem-ozgur\" baslik=\"Leman Özlem Özgür\" h1=\"\" -> EŞLEŞMEDİ",
       "profil eşleşmedi (eski danışman olabilir): leman-ozlem-ozgur | baslik: Leman Özlem Özgür",
       "profil çöz: id=47387 slug=\"orhan-ozazman\" baslik=\"Orhan Özazman\" h1=\"\" -> Orhan Özazman",
@@ -983,6 +218,7 @@
     "jsonUrller": [
       "https://remax.com.tr/api/setcookie",
       "https://remaxsiteapi.remax.com.tr/api/Common/GetPropertyCategoryTree",
+      "https://remaxsiteapi.remax.com.tr/api/Office/GetOfficeReviewSummary?OfficeId=801",
       "https://remaxsiteapi.remax.com.tr/api/Employee/Comment",
       "https://remaxsiteapi.remax.com.tr/api/Employee/GetEmployeeReviewSummary?EmployeeId=28251",
       "https://remaxsiteapi.remax.com.tr/api/Employee/GetEmployeeReviewSummary?EmployeeId=40213",
@@ -992,6 +228,6 @@
       "https://remaxsiteapi.remax.com.tr/api/Employee/GetEmployeeReviewSummary?EmployeeId=35392",
       "https://remaxsiteapi.remax.com.tr/api/Employee/GetEmployeeReviewSummary?EmployeeId=46769"
     ],
-    "yorumSekmesiOrnek": "Toplam Yorum Sayısı\n\n238\n\nGenel Puan Durumu\n\n5.0\n\nDüzenli Bilgilendirme\nProfesyonellik\nGüvenirlik\nİletişim Becerisi\nÖK\n04/08/2026\nÖzlem Kenan\nHer şey çok hızlı ve pürüzsüz ilerledi sağ olsunlar Gamze hanım ve İrem hanım çok yardımcı oldular.Çok orta yol buluculardı iyi çalışmalar❤️❤️\nAraçlar ve Teknoloji, Sektör Bilgisi, Bölge Hakimliği\nŞŞ\n04/08/2026\nŞirin Şanlı\nİrem hanım bizi dikkatle dinleyip nasıl bir yer aradığımızı anladıktan sonra ilk baktığımız evi sayesinde tuttuk ve evle ilgili her konuda bize yardımcı oldu kendisine çok çok teşekkür ediyorum\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\nÖK\n04/08/2026\nÖzlem Kenan\nHer şey çok hızlı ve pürüzsüz ilerledi sağ olsunlar Gamze hanım ve İrem hanım çok yardımcı oldular.Çok orta yol buluculardı iyi çalışmalar❤️❤️\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\nBB\n31/07/2026\nBirsen Balta\nAyşegül Alpay hanımın ilgisi ve emekleri için teşekkür ederiz.\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\nAU\n30/07/2026\nArda Unul\nİlgi ve alakaları için İrem hanıma ve Gamze hanıma teşekkür ederim 🌟\nBölge Hakimliği, Araçlar ve Teknoloji, Sektör Bilgisi\nHÇ\n29/07/2026\nHicran Çelik\nEvimin satış sürecinde, Ayşegül hanımın sabrını bana aktarmış olduğu müşteri bilgilerini, deneyiminle verdiği pozitif enerjisini, güler yüzüyle umudumu yükseltmesiyle keyifli ve başarılı bir şatış süreci yaşadık.Dostlarıma , yakınlarıma kendisiyle çalışmayı tavsiye edebilirim .🙏🥰Her şey için çok teşekkür ederim, Ayşegül Alpay hanım başarılarınız daim olsun\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\nHK\n19/07/2026\nHatice Kubatoğlu\nAyşegül Alpay Çabalarınız için çok teşekkürler\nBölge Hakimliği\nGÇ\n19/07/2026\nGülseren Çaliş\nÇalışkanlığı, güler yüzlü ve yakın ilgisi ile işimizi kolayca halletmemizi sağlayan Ayşegül Alpay hanıma teşekkür ederiz.\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\nAÖ\n17/07/2026\nAhmet Önal\nİrem hanıma süreç boyunca göstermiş olduğu destek ve ilgi için teşekkür ederiz.\nAraçlar ve Teknoloji, Sektör Bilgisi, Bölge Hakimliği\nYE\n16/07/2026\nYalçin Ersari\nRE/MAX fikirtepeden Özlem Varol hanım çok çok ilgili bir çalışan ,emeği ilgisi güler yüzlü kişiliği ve kısa süredeki dönüşü ile bize çok çok yardımcı oldu kendisine çok teşekkür ediyoruz başarılarının devamını diliyoruz\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\nAU\n16/07/2026\nArda Unul\nİlgi ve alakaları için İrem hanıma ve Gamze hanıma teşekkür ederim 🌟\nAraçlar ve Teknoloji, Sektör Bilgisi, Bölge Hakimliği\nRB\n16/07/2026\nRıza Balta\nİlk andan son adıma kadar çok kaliteli ve nazik bir işbirliği oldu. Sayın Ayşegül Alpay hanımefendiye çok teşekkür ederim.\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\nIG\n11/07/2026\nIbrahim Gündoğdu\nEvşen hanıma ilgi ve alakası için çok teşekkür ederiz çok güler yüzlü çok anlayışlı bir insan.\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\nMK\n09/07/2026\nMerve Kondu\nKiralama sürecimizde Evşen hanım bizlere çok yardımcı oldu, çok güleryüzlü ve samimi birisi. Bizler çok memnun kaldık:)\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\nEI\n09/07/2026\nEsra Ilgat\nKiralama sürecimiz için Evşen Hanım'la çalıştık ve süreç boyunca kendisiyle çalıştığımız için kendimizi çok şanslı hissettik. Evimizi kendi mülkü gibi sahiplenerek, her daim güler yüzle ve müthiş bir iletişim becerisiyle hızlı şekilde kiralama sürecini tamamladı. Ne zaman arasak ulaşabildik, bizim sormamıza bile gerek kalmadan sürekli bilgi akışı sağladı ve yaklaşımı çok detaycıydı. Daha fiyat analizi sürecinde sunduğu rapordan ne kadar titiz olduğunu anlamıştık zaten. Kiracı adaylarıyla görüşme sürecini de aynı titizlikle yürüttü. İlk kez mal sahibini kendi fikrine ikna etmeye çalışmak yerine onun ne düşündüğünü, ne hissettiğini bu kadar önemseyen bir gayrimenkul uzmanıyla çalıştık. Nezaketiniz, profesyonelliğiniz ve iş bitirme hızınız için çok teşekkür ederiz.\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\nAG\n11/06/2026\nAyşe Afra Gürüzlük Uçar\nGamze hanıma ilgisi ve destekleri için çok teşekkür ederiz. Güler yüzlülüğü ve samimiyeti sayesinde çok güzel bir anlaşma süreci gerçekleştik. Her şey için çok teşekkür ederiz 🤍\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\nUE\n11/06/2026\nUlaş Ergenç\nGamze Hanım’ın profesyonel yaklaşımı ve konudaki desteği için teşekkür ederim.\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\nKP\n13/05/2026\nKarina Pravdziva\nSüreç boyunca gösterdiği profesyonel yaklaşım ve titiz ilgisi için Gamze hanıma teşekkür ederim. Doğru lokasyon, doğru yönlendi"
+    "yorumSekmesiOrnek": "Toplam Yorum Sayısı\n\n238\n\nGenel Puan Durumu\n\n5.0\n\nDüzenli Bilgilendirme\nProfesyonellik\nGüvenirlik\nİletişim Becerisi\nAI Özeti\n\n5 yıllık sektör deneyimiyle hizmet veren RE/MAX Doğuş, süreç yönetimi konusundaki hızı, çözüm odaklı yaklaşımı ve profesyonel iş takibiyle müşteri memnuniyeti sağlamaktadır. Müşteriler, gayrimenkul danışmanlarının ihtiyaçları doğru analiz eden, detaycı ve şeffaf iletişim kuran yaklaşımlarından duydukları memnuniyeti sıklıkla dile getirmektedir. Güler yüzlü ve samimi bir hizmet anlayışının benimsendiği ofiste, özellikle kiralama ve satış süreçlerinin sorunsuz ve hızlı bir şekilde tamamlanması öne çıkan ortak temalar arasındadır. Müşteriler, süreç boyunca sağlanan düzenli bilgilendirme ve yönlendirmelerin, güvene dayalı bir iş birliği ortamı oluşturduğunu belirtmektedir.\n\n04/08/2026 tarihinde oluşturuldu\n\nÖK\n04/08/2026\nÖzlem Kenan\nHer şey çok hızlı ve pürüzsüz ilerledi sağ olsunlar Gamze hanım ve İrem hanım çok yardımcı oldular.Çok orta yol buluculardı iyi çalışmalar❤️❤️\nAraçlar ve Teknoloji, Sektör Bilgisi, Bölge Hakimliği\nŞŞ\n04/08/2026\nŞirin Şanlı\nİrem hanım bizi dikkatle dinleyip nasıl bir yer aradığımızı anladıktan sonra ilk baktığımız evi sayesinde tuttuk ve evle ilgili her konuda bize yardımcı oldu kendisine çok çok teşekkür ediyorum\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\nÖK\n04/08/2026\nÖzlem Kenan\nHer şey çok hızlı ve pürüzsüz ilerledi sağ olsunlar Gamze hanım ve İrem hanım çok yardımcı oldular.Çok orta yol buluculardı iyi çalışmalar❤️❤️\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\nBB\n31/07/2026\nBirsen Balta\nAyşegül Alpay hanımın ilgisi ve emekleri için teşekkür ederiz.\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\nAU\n30/07/2026\nArda Unul\nİlgi ve alakaları için İrem hanıma ve Gamze hanıma teşekkür ederim 🌟\nBölge Hakimliği, Araçlar ve Teknoloji, Sektör Bilgisi\nHÇ\n29/07/2026\nHicran Çelik\nEvimin satış sürecinde, Ayşegül hanımın sabrını bana aktarmış olduğu müşteri bilgilerini, deneyiminle verdiği pozitif enerjisini, güler yüzüyle umudumu yükseltmesiyle keyifli ve başarılı bir şatış süreci yaşadık.Dostlarıma , yakınlarıma kendisiyle çalışmayı tavsiye edebilirim .🙏🥰Her şey için çok teşekkür ederim, Ayşegül Alpay hanım başarılarınız daim olsun\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\nHK\n19/07/2026\nHatice Kubatoğlu\nAyşegül Alpay Çabalarınız için çok teşekkürler\nBölge Hakimliği\nGÇ\n19/07/2026\nGülseren Çaliş\nÇalışkanlığı, güler yüzlü ve yakın ilgisi ile işimizi kolayca halletmemizi sağlayan Ayşegül Alpay hanıma teşekkür ederiz.\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\nAÖ\n17/07/2026\nAhmet Önal\nİrem hanıma süreç boyunca göstermiş olduğu destek ve ilgi için teşekkür ederiz.\nAraçlar ve Teknoloji, Sektör Bilgisi, Bölge Hakimliği\nYE\n16/07/2026\nYalçin Ersari\nRE/MAX fikirtepeden Özlem Varol hanım çok çok ilgili bir çalışan ,emeği ilgisi güler yüzlü kişiliği ve kısa süredeki dönüşü ile bize çok çok yardımcı oldu kendisine çok teşekkür ediyoruz başarılarının devamını diliyoruz\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\nAU\n16/07/2026\nArda Unul\nİlgi ve alakaları için İrem hanıma ve Gamze hanıma teşekkür ederim 🌟\nAraçlar ve Teknoloji, Sektör Bilgisi, Bölge Hakimliği\nRB\n16/07/2026\nRıza Balta\nİlk andan son adıma kadar çok kaliteli ve nazik bir işbirliği oldu. Sayın Ayşegül Alpay hanımefendiye çok teşekkür ederim.\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\nIG\n11/07/2026\nIbrahim Gündoğdu\nEvşen hanıma ilgi ve alakası için çok teşekkür ederiz çok güler yüzlü çok anlayışlı bir insan.\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\nMK\n09/07/2026\nMerve Kondu\nKiralama sürecimizde Evşen hanım bizlere çok yardımcı oldu, çok güleryüzlü ve samimi birisi. Bizler çok memnun kaldık:)\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\nEI\n09/07/2026\nEsra Ilgat\nKiralama sürecimiz için Evşen Hanım'la çalıştık ve süreç boyunca kendisiyle çalıştığımız için kendimizi çok şanslı hissettik. Evimizi kendi mülkü gibi sahiplenerek, her daim güler yüzle ve müthiş bir iletişim becerisiyle hızlı şekilde kiralama sürecini tamamladı. Ne zaman arasak ulaşabildik, bizim sormamıza bile gerek kalmadan sürekli bilgi akışı sağladı ve yaklaşımı çok detaycıydı. Daha fiyat analizi sürecinde sunduğu rapordan ne kadar titiz olduğunu anlamıştık zaten. Kiracı adaylarıyla görüşme sürecini de aynı titizlikle yürüttü. İlk kez mal sahibini kendi fikrine ikna etmeye çalışmak yerine onun ne düşündüğünü, ne hissettiğini bu kadar önemseyen bir gayrimenkul uzmanıyla çalıştık."
   }
 }
