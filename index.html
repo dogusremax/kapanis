@@ -984,7 +984,7 @@ async function _loadAllRecordsGercek(){
 function saveRecords(recs){try{
   localStorage.setItem(STORAGE_KEY,JSON.stringify(recs));
   localStorage.setItem(STORAGE_KEY+'_ts', String(Date.now()));
-}catch(e){}}
+}catch(e){ console.warn('Sessiz hata:', e); }}
 
 // Google Sheets'e kayıt yaz
 async function saveToSheets(rec){
@@ -1453,7 +1453,7 @@ function loginAdvisor(){
     }
   }
   currentUser={type:'advisor',name:selectedAdvisor};
-  try{ localStorage.setItem('kapanis_user', JSON.stringify(currentUser)); }catch(e){}
+  try{ localStorage.setItem('kapanis_user', JSON.stringify(currentUser)); }catch(e){ console.warn('Sessiz hata:', e); }
   showScreen('s-form');
   document.getElementById('form-user-label').innerHTML=avatarHTML(selectedAdvisor,24,9)+`<span>${selectedAdvisor}</span>`;
   resetForm(); document.getElementById('success-msg').style.display='none';
@@ -1464,7 +1464,7 @@ function loginAdmin(){
   if(!el)return;
   if(el.value!==ADMIN_PASS){alert('Şifre hatalı');return}
   currentUser={type:'admin'};
-  try{ localStorage.setItem('kapanis_user', JSON.stringify(currentUser)); }catch(e){}
+  try{ localStorage.setItem('kapanis_user', JSON.stringify(currentUser)); }catch(e){ console.warn('Sessiz hata:', e); }
   try{
     showScreen('s-dash');
     // 1) ANINDA: en son senkronlanan veriyle paneli çiz (bekleme yok)
@@ -1481,7 +1481,7 @@ function loginAdmin(){
   }catch(err){ console.error('loginAdmin hatası:', err); }
 }
 
-function logout(){currentUser=null;selectedAdvisor=null;try{localStorage.removeItem('kapanis_user');}catch(e){}showScreen('s-login');buildAdvisorGrid();advBack()}
+function logout(){currentUser=null;selectedAdvisor=null;try{localStorage.removeItem('kapanis_user');}catch(e){ console.warn('Sessiz hata:', e); }showScreen('s-login');buildAdvisorGrid();advBack()}
 
 function showScreen(id){
   document.querySelectorAll('.screen').forEach(s=>{s.classList.remove('active');s.style.display='none'});
@@ -1883,7 +1883,7 @@ async function dekontKaldir(id, slot){
   const local = loadRecords().filter(x=>String(x.id)!==String(id));
   local.push(yeni); saveRecords(local);
   _recordsCache = _recordsCache.map(x=>String(x.id)===String(id)?yeni:x);
-  try{ const p=new URLSearchParams(); p.append('action','deleteRecord'); p.append('id',id); await fetch(APPS_SCRIPT_URL,{method:'POST',body:p,redirect:'follow'}); }catch(e){}
+  try{ const p=new URLSearchParams(); p.append('action','deleteRecord'); p.append('id',id); await fetch(APPS_SCRIPT_URL,{method:'POST',body:p,redirect:'follow'}); }catch(e){ console.warn('Sessiz hata:', e); }
   await saveToSheets(yeni);
   renderRecords();
   showRecordDetail(id);
@@ -1899,7 +1899,7 @@ async function mkFaturaKaldir(id, slot){
   const local = loadRecords().filter(x=>String(x.id)!==String(id));
   local.push(yeni); saveRecords(local);
   _recordsCache = _recordsCache.map(x=>String(x.id)===String(id)?yeni:x);
-  try{ const p=new URLSearchParams(); p.append('action','deleteRecord'); p.append('id',id); await fetch(APPS_SCRIPT_URL,{method:'POST',body:p,redirect:'follow'}); }catch(e){}
+  try{ const p=new URLSearchParams(); p.append('action','deleteRecord'); p.append('id',id); await fetch(APPS_SCRIPT_URL,{method:'POST',body:p,redirect:'follow'}); }catch(e){ console.warn('Sessiz hata:', e); }
   await saveToSheets(yeni);
   renderRecords();
   showRecordDetail(id);
@@ -2690,7 +2690,7 @@ function showCelebration(name, amount, address){
   document.getElementById('celebrate-address').textContent = address || '';
   showScreen('s-celebrate');
   setTimeout(launchConfetti, 300);
-  setTimeout(()=>{ try{ CELEBRATION_AUDIO.currentTime=0; CELEBRATION_AUDIO.play().catch(()=>{}); }catch(e){} }, 500);
+  setTimeout(()=>{ try{ CELEBRATION_AUDIO.currentTime=0; CELEBRATION_AUDIO.play().catch(()=>{}); }catch(e){ console.warn('Sessiz hata:', e); } }, 500);
 }
 
 function newCapanis(){
@@ -2715,7 +2715,7 @@ function officeShare(r){
 // ===== GİDER YÖNETİMİ =====
 const EXP_KEY = 'kapanis_expenses';
 function loadExpenses(){ try{ const d=localStorage.getItem(EXP_KEY); return d?JSON.parse(d):[]; }catch(e){ return []; } }
-function saveExpenses(exps){ try{ localStorage.setItem(EXP_KEY,JSON.stringify(exps)); }catch(e){} }
+function saveExpenses(exps){ try{ localStorage.setItem(EXP_KEY,JSON.stringify(exps)); }catch(e){ console.warn('Sessiz hata:', e); } }
 
 function initExpenseFilters(){
   const now=new Date();
@@ -3186,7 +3186,7 @@ document.getElementById('f-date').value=new Date().toISOString().split('T')[0];
       const ts = Number(localStorage.getItem(STORAGE_KEY+'_ts') || 0);
       if(ts && (Date.now() - ts) < REC_TTL) _recFetchTime = ts;
     }
-  }catch(e){}
+  }catch(e){ console.warn('Sessiz hata:', e); }
 })();
 
 // Sayfa yenilendiğinde oturumu koru
@@ -3208,7 +3208,7 @@ document.getElementById('f-date').value=new Date().toISOString().split('T')[0];
       document.getElementById('form-user-label').innerHTML=avatarHTML(u.name,24,9)+'<span>'+u.name+'</span>';
       resetForm(); document.getElementById('success-msg').style.display='none';
     }
-  }catch(e){}
+  }catch(e){ console.warn('Sessiz hata:', e); }
 })();
 </script>
 <!-- KAYIT DETAY PANELİ (sağdan açılır) -->
@@ -3465,7 +3465,7 @@ async function faturaResmiGetir(id, mailAt, mailAdres){
             fetch(APPS_SCRIPT_URL,{method:'POST',body:dp,redirect:'follow'}).catch(()=>{}),
             saveToSheets(yeni)
           ]);
-          }catch(e){}
+          }catch(e){ console.warn('Sessiz hata:', e); }
         renderRecords();
       }
     }
@@ -3634,9 +3634,9 @@ async function fkGonder(){
             fetch(APPS_SCRIPT_URL,{method:'POST',body:dp,redirect:'follow'}).catch(()=>{}),
             saveToSheets(yeni)
           ]);
-          }catch(e){}
+          }catch(e){ console.warn('Sessiz hata:', e); }
         renderRecords();
-        try{ showRecordDetail(id); }catch(e){}
+        try{ showRecordDetail(id); }catch(e){ console.warn('Sessiz hata:', e); }
       }
 
       durum.textContent = 'Fatura kesildi ve arşive kaydedildi.';
