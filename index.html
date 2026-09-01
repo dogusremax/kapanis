@@ -1837,7 +1837,8 @@ function yorumMesaji(r, taraf, hitapEk){
   return `Merhaba${ilk?' '+ilk+' '+ek:''},\n${acilis} Süreci birlikte tamamlamak bizim için çok keyifliydi.\nŞimdi sizden küçük bir ricamız olacak: deneyiminizi Google'da yorumlamanız için 30 saniyenizi ayırırsanız bizi çok mutlu edersiniz.\n${GOOGLE_YORUM_LINK}\nŞimdiden çok teşekkür ederiz. ${kapanis}\nRE/MAX Doğuş · ${dan}`;
 }
 function waNumara(tel){ let d=String(tel||'').replace(/\D/g,''); if(d.startsWith('0')) d=d.slice(1); if(d.length===10) d='90'+d; return d.length>=11?d:''; }
-function yorumEk(id,taraf){ const e=document.getElementById('yh-'+taraf+'-'+id); return e?e.value:''; }
+function yorumEk(id,taraf){ const e=document.querySelector('#yh-'+taraf+'-'+id+' .on'); return e?e.dataset.v:''; }
+function yorumEkSec(el){ el.parentNode.querySelectorAll('button').forEach(b=>{b.classList.remove('on');b.style.background='#fff';b.style.color='#333';}); el.classList.add('on'); el.style.background='#1A56A0'; el.style.color='#fff'; }
 function yorumWhatsApp(id, taraf){
   const r=(loadRecords()||[]).find(x=>String(x.id)===String(id)); if(!r) return;
   const tel=waNumara(taraf==='owner'?r.ownerPhone:r.buyerPhone);
@@ -1852,11 +1853,11 @@ function yorumKopyala(id, taraf, btn){
 function yorumButonlari(r, taraf){
   const ad=taraf==='owner'?r.ownerName:r.buyerName; if(!ad) return '';
   const tah=yorumCinsTahmin(ad);
-  const bs='border:none;border-radius:8px;padding:9px 12px;font-size:12px;font-weight:600;cursor:pointer;';
+  const pill=(v)=>`<button type="button" data-v="${v}" class="${tah===v?'on':''}" onclick="yorumEkSec(this)" style="border:1.5px solid #1A56A0;border-radius:8px;padding:8px 10px;font-size:12px;font-weight:600;cursor:pointer;width:auto;margin:0;background:${tah===v?'#1A56A0':'#fff'};color:${tah===v?'#fff':'#333'}">${v}</button>`;
   return `<div style="display:flex;gap:6px;flex-wrap:nowrap;align-items:center;margin:6px 0 4px">
-    <select id="yh-${taraf}-${r.id}" style="width:92px!important;flex:0 0 92px;border:1.5px solid var(--border);border-radius:8px;padding:7px 8px;font-size:12px;background:#fff;margin:0"><option ${tah==='Hanım'?'selected':''}>Hanım</option><option ${tah==='Bey'?'selected':''}>Bey</option></select>
-    <button onclick="yorumWhatsApp('${r.id}','${taraf}')" style="${bs}background:#25D366;color:#fff;flex:1;width:auto;margin:0">💬 WhatsApp'ta gönder</button>
-    <button onclick="yorumKopyala('${r.id}','${taraf}',this)" style="${bs}background:#f1f2f7;color:#333;width:auto;margin:0">📋</button></div>`;
+    <div id="yh-${taraf}-${r.id}" style="display:flex;gap:4px;flex:0 0 auto">${pill('Hanım')}${pill('Bey')}</div>
+    <button type="button" onclick="yorumWhatsApp('${r.id}','${taraf}')" style="border:none;border-radius:8px;padding:9px 10px;font-size:12px;font-weight:600;cursor:pointer;background:#25D366;color:#fff;flex:1;width:auto;margin:0;white-space:nowrap">💬 WhatsApp</button>
+    <button type="button" onclick="yorumKopyala('${r.id}','${taraf}',this)" title="Mesajı kopyala" style="border:none;border-radius:8px;padding:9px 10px;font-size:12px;cursor:pointer;background:#f1f2f7;color:#333;width:auto;margin:0">📋</button></div>`;
 }
 function yorumKutusu(rec){
   let h='<div style="font-weight:700;font-size:14px;color:#1A56A0;margin-bottom:4px">⭐ Şimdi tam zamanı: Google yorumu iste</div><div style="font-size:12px;color:#555;margin-bottom:8px">Mesaj hazır — müşterinin adı, tebrik cümlesi ve yorum linki dolu. Tek dokunuşla WhatsApp\'tan gönder.</div>';
