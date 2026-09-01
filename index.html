@@ -1852,11 +1852,11 @@ function yorumKopyala(id, taraf, btn){
 function yorumButonlari(r, taraf){
   const ad=taraf==='owner'?r.ownerName:r.buyerName; if(!ad) return '';
   const tah=yorumCinsTahmin(ad);
-  const bs='border:none;border-radius:8px;padding:8px 12px;font-size:12px;font-weight:600;cursor:pointer;';
-  return `<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0 4px">
-    <select id="yh-${taraf}-${r.id}" style="border:1.5px solid var(--border);border-radius:8px;padding:7px 8px;font-size:12px;background:#fff"><option ${tah==='Hanım'?'selected':''}>Hanım</option><option ${tah==='Bey'?'selected':''}>Bey</option></select>
-    <button onclick="yorumWhatsApp('${r.id}','${taraf}')" style="${bs}background:#25D366;color:#fff">💬 WhatsApp'ta yorum iste</button>
-    <button onclick="yorumKopyala('${r.id}','${taraf}',this)" style="${bs}background:#f1f2f7;color:#333">📋 Kopyala</button></div>`;
+  const bs='border:none;border-radius:8px;padding:9px 12px;font-size:12px;font-weight:600;cursor:pointer;';
+  return `<div style="display:flex;gap:6px;flex-wrap:nowrap;align-items:center;margin:6px 0 4px">
+    <select id="yh-${taraf}-${r.id}" style="width:92px!important;flex:0 0 92px;border:1.5px solid var(--border);border-radius:8px;padding:7px 8px;font-size:12px;background:#fff;margin:0"><option ${tah==='Hanım'?'selected':''}>Hanım</option><option ${tah==='Bey'?'selected':''}>Bey</option></select>
+    <button onclick="yorumWhatsApp('${r.id}','${taraf}')" style="${bs}background:#25D366;color:#fff;flex:1;width:auto;margin:0">💬 WhatsApp'ta gönder</button>
+    <button onclick="yorumKopyala('${r.id}','${taraf}',this)" style="${bs}background:#f1f2f7;color:#333;width:auto;margin:0">📋</button></div>`;
 }
 function yorumKutusu(rec){
   let h='<div style="font-weight:700;font-size:14px;color:#1A56A0;margin-bottom:4px">⭐ Şimdi tam zamanı: Google yorumu iste</div><div style="font-size:12px;color:#555;margin-bottom:8px">Mesaj hazır — müşterinin adı, tebrik cümlesi ve yorum linki dolu. Tek dokunuşla WhatsApp\'tan gönder.</div>';
