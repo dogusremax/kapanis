@@ -571,6 +571,7 @@
       <div style="color:#fff;font-size:32px;font-weight:700;font-family:Arial,sans-serif" id="celebrate-amount"></div>
       <div style="color:rgba(255,255,255,0.7);font-size:13px;margin-top:8px" id="celebrate-address"></div>
     </div>
+    <div id="celebrate-yorum" style="text-align:left;background:#fff;border-radius:16px;padding:16px 18px;margin-bottom:16px;box-shadow:0 8px 24px rgba(0,0,0,.18)"></div>
     <button class="btn" onclick="newCapanis()" style="background:#fff;color:#1A56A0;font-weight:700;font-size:15px;padding:14px;border-radius:12px;width:100%">🏠 Yeni Kapanış Ekle</button>
   </div>
 </div>
@@ -1810,12 +1811,12 @@ async function submitForm(){
 
   const msg=document.getElementById('success-msg');
   const sy=document.getElementById('success-yorum');
-  if(sy){ sy.innerHTML=(rec.buyerName?`<div style="font-size:12px;color:var(--text2);margin-bottom:4px">⭐ Alıcı/Kiracı'dan Google yorumu iste:</div>${yorumButonlari(rec,'buyer')}`:'')+(rec.ownerName?`<div style="font-size:12px;color:var(--text2);margin:6px 0 4px">⭐ Mülk sahibinden Google yorumu iste:</div>${yorumButonlari(rec,'owner')}`:''); }
+  if(sy){ sy.innerHTML=yorumKutusu(rec); }
   // Yüklenemeyen belge varsa sessiz kalma — net uyar
   if(failedDocs.length){
     alert('⚠️ Kapanış kaydedildi, ANCAK şu belge(ler) Drive\'a YÜKLENEMEDİ:\n\n• '+failedDocs.join('\n• ')+'\n\nİnternet bağlantını kontrol edip tekrar dene. Sorun sürerse broker\'a bildir — broker kaydı düzenleyip belgeleri ekleyebilir.');
   }
-  showCelebration(currentUser.name, rec.amount, rec.address); resetForm();
+  showCelebration(currentUser.name, rec.amount, rec.address, rec); resetForm();
   setTimeout(()=>msg.style.display='none',60000);
 }
 
@@ -1856,6 +1857,12 @@ function yorumButonlari(r, taraf){
     <select id="yh-${taraf}-${r.id}" style="border:1.5px solid var(--border);border-radius:8px;padding:7px 8px;font-size:12px;background:#fff"><option ${tah==='Hanım'?'selected':''}>Hanım</option><option ${tah==='Bey'?'selected':''}>Bey</option></select>
     <button onclick="yorumWhatsApp('${r.id}','${taraf}')" style="${bs}background:#25D366;color:#fff">💬 WhatsApp'ta yorum iste</button>
     <button onclick="yorumKopyala('${r.id}','${taraf}',this)" style="${bs}background:#f1f2f7;color:#333">📋 Kopyala</button></div>`;
+}
+function yorumKutusu(rec){
+  let h='<div style="font-weight:700;font-size:14px;color:#1A56A0;margin-bottom:4px">⭐ Şimdi tam zamanı: Google yorumu iste</div><div style="font-size:12px;color:#555;margin-bottom:8px">Mesaj hazır — müşterinin adı, tebrik cümlesi ve yorum linki dolu. Tek dokunuşla WhatsApp\'tan gönder.</div>';
+  if(rec.buyerName) h+='<div style="font-size:12px;font-weight:600;color:#333;margin-top:6px">'+(/kira/i.test(rec.type||'')?'Kiracı':'Alıcı')+': '+rec.buyerName+'</div>'+yorumButonlari(rec,'buyer');
+  if(rec.ownerName) h+='<div style="font-size:12px;font-weight:600;color:#333;margin-top:8px">Mülk sahibi: '+rec.ownerName+'</div>'+yorumButonlari(rec,'owner');
+  return h;
 }
 function docBadges(r){
   let h='';
@@ -2726,7 +2733,9 @@ function playApplause(){
   }catch(e){ console.log('Ses hatası:', e); }
 }
 
-function showCelebration(name, amount, address){
+function showCelebration(name, amount, address, rec){
+  const cy=document.getElementById('celebrate-yorum');
+  if(cy){ cy.innerHTML=rec?yorumKutusu(rec):''; cy.style.display=rec&&(rec.buyerName||rec.ownerName)?'block':'none'; }
   document.getElementById('celebrate-name').textContent = 'Tebrikler ' + name.split(' ')[0] + '! 🎊';
   document.getElementById('celebrate-msg').textContent = MOTIVASYON[Math.floor(Math.random()*MOTIVASYON.length)];
   document.getElementById('celebrate-amount').textContent = Number(amount).toLocaleString('tr-TR') + ' ₺';
