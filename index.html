@@ -405,6 +405,7 @@
       <div class="success-icon">✓</div>
       <div><div style="font-weight:600;margin-bottom:2px">Kapanış kaydedildi!</div><div style="font-size:12px;color:var(--text2)" id="success-detail">Belgeler Drive'a yüklendi.</div></div>
     </div>
+    <div id="success-yorum" style="margin-top:10px"></div>
   </div>
   <div class="form-content fade-in">
     <div class="form-card">
@@ -1808,12 +1809,47 @@ async function submitForm(){
     pending>0 ? `${uploaded}/${pending} belge Drive'a yüklendi.` : 'Kayıt oluşturuldu.';
 
   const msg=document.getElementById('success-msg');
+  const sy=document.getElementById('success-yorum');
+  if(sy){ sy.innerHTML=(rec.buyerName?`<div style="font-size:12px;color:var(--text2);margin-bottom:4px">⭐ Alıcı/Kiracı'dan Google yorumu iste:</div>${yorumButonlari(rec,'buyer')}`:'')+(rec.ownerName?`<div style="font-size:12px;color:var(--text2);margin:6px 0 4px">⭐ Mülk sahibinden Google yorumu iste:</div>${yorumButonlari(rec,'owner')}`:''); }
   // Yüklenemeyen belge varsa sessiz kalma — net uyar
   if(failedDocs.length){
     alert('⚠️ Kapanış kaydedildi, ANCAK şu belge(ler) Drive\'a YÜKLENEMEDİ:\n\n• '+failedDocs.join('\n• ')+'\n\nİnternet bağlantını kontrol edip tekrar dene. Sorun sürerse broker\'a bildir — broker kaydı düzenleyip belgeleri ekleyebilir.');
   }
   showCelebration(currentUser.name, rec.amount, rec.address); resetForm();
-  setTimeout(()=>msg.style.display='none',5000);
+  setTimeout(()=>msg.style.display='none',60000);
+}
+
+
+/* ===== GOOGLE YORUM MESAJI (müşteriye WhatsApp) ===== */
+const GOOGLE_YORUM_LINK='https://g.page/r/Cf2oLY6Qn2FtEBM/review';
+function yorumHitap(ad){ const p=String(ad||'').trim().split(/\s+/); return p.length?p[0]:''; }
+function yorumMesaji(r, taraf){
+  const ad=taraf==='owner'?r.ownerName:r.buyerName;
+  const dan=(r.advisor||'').replace(/\s*Team\s*$/i,'');
+  const tur=String(r.type||'');
+  let acilis;
+  if(taraf==='owner') acilis = /kira/i.test(tur) ? 'Kiralamanız tekrar hayırlı olsun, süreci birlikte tamamlamak bizim için keyifliydi.' : 'Satışınız tekrar hayırlı olsun, süreci birlikte tamamlamak bizim için keyifliydi.';
+  else acilis='Yeni yuvanız tekrar hayırlı olsun, güzel günlerde oturmanızı dilerim. Sizinle tanışmak ve bu süreçte yanınızda olmak bizim için gerçekten çok keyifliydi.';
+  return `Merhaba ${yorumHitap(ad)} Bey/Hanım 😊\n${acilis}\nDeneyiminizi Google'da paylaşmanız 30 saniyenizi alır, bizi çok mutlu eder. 🙏\n👉 ${GOOGLE_YORUM_LINK}\nŞimdiden çok teşekkür ederim, güle güle kullanın.\n${dan} · RE/MAX Doğuş`;
+}
+function waNumara(tel){ let d=String(tel||'').replace(/\D/g,''); if(d.startsWith('0')) d=d.slice(1); if(d.length===10) d='90'+d; return d.length>=11?d:''; }
+function yorumWhatsApp(id, taraf){
+  const r=(loadRecords()||[]).find(x=>String(x.id)===String(id)); if(!r) return;
+  const tel=waNumara(taraf==='owner'?r.ownerPhone:r.buyerPhone);
+  const url=(tel?`https://wa.me/${tel}`:'https://wa.me/')+'?text='+encodeURIComponent(yorumMesaji(r,taraf));
+  window.open(url,'_blank');
+}
+function yorumKopyala(id, taraf, btn){
+  const r=(loadRecords()||[]).find(x=>String(x.id)===String(id)); if(!r) return;
+  const t=yorumMesaji(r,taraf);
+  (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>{ if(btn){const o=btn.textContent;btn.textContent='✓ Kopyalandı';setTimeout(()=>btn.textContent=o,1800);} }).catch(()=>{ prompt('Mesajı kopyala:',t); });
+}
+function yorumButonlari(r, taraf){
+  const ad=taraf==='owner'?r.ownerName:r.buyerName; if(!ad) return '';
+  const bs='border:none;border-radius:8px;padding:8px 12px;font-size:12px;font-weight:600;cursor:pointer;';
+  return `<div style="display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 4px">
+    <button onclick="yorumWhatsApp('${r.id}','${taraf}')" style="${bs}background:#25D366;color:#fff">💬 WhatsApp'ta yorum iste</button>
+    <button onclick="yorumKopyala('${r.id}','${taraf}',this)" style="${bs}background:#f1f2f7;color:#333">📋 Mesajı kopyala</button></div>`;
 }
 
 function docBadges(r){
@@ -2154,11 +2190,13 @@ async function showRecordDetail(id){
       ${row('T.C. Kimlik No', r.ownerTc)}
       ${row('Telefon', r.ownerPhone)}
       ${row('E-posta', r.ownerEmail)}
+      ${yorumButonlari(r,'owner')}
       <div style="margin-top:16px;font-weight:600;font-size:13px;color:var(--text2);margin-bottom:2px">👤 Alıcı / Kiracı</div>
       ${row('Ad Soyad', r.buyerName)}
       ${row('T.C. Kimlik No', r.buyerTc)}
       ${row('Telefon', r.buyerPhone)}
       ${row('E-posta', r.buyerEmail)}
+      ${yorumButonlari(r,'buyer')}
       ${row('Memnuniyet', r.satisfaction)}
       ${r.notes?`<div style="margin-top:16px"><div style="font-weight:600;font-size:13px;color:var(--text2);margin-bottom:4px">📝 Notlar</div><div style="font-size:14px;line-height:1.5">${r.notes}</div></div>`:''}
       <div style="margin-top:22px;font-weight:600;font-size:14px;border-top:2px solid var(--border);padding-top:16px;margin-bottom:12px">📎 Yüklenen Evraklar</div>
