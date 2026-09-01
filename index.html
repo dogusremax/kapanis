@@ -1822,36 +1822,41 @@ async function submitForm(){
 
 /* ===== GOOGLE YORUM MESAJI (müşteriye WhatsApp) ===== */
 const GOOGLE_YORUM_LINK='https://dogusportal.com/yorum';
-function yorumHitap(ad){ return String(ad||'').replace(/\b(bey|hanım|hanim|sn\.?|sayın)\b/gi,'').replace(/\s+/g,' ').trim(); }
-function yorumMesaji(r, taraf){
+const KADIN_ADLARI=['ayşe','fatma','emine','hatice','zeynep','elif','meryem','şerife','zehra','sultan','hanife','merve','havva','esra','fadime','özlem','yasemin','büşra','kübra','sevim','şenay','gamze','gizem','irem','aysun','evşen','ayşegül','derya','nazlı','ebru','selin','seda','sibel','serap','nurcan','nuray','gül','gülay','gülsüm','gülten','hülya','tuğba','pınar','burcu','deniz','dilek','filiz','sevgi','sevil','nesrin','neslihan','nilgün','nihal','nurten','ayla','aylin','aynur','aysel','ayten','belgin','berna','betül','canan','ceren','cansu','çiğdem','damla','demet','ece','eda','ela','emel','esin','feride','ferda','figen','funda','gonca','gökçe','gülbahar','hale','handan','hande','hilal','ipek','jale','kader','leyla','melek','melike','melis','meltem','mine','mukaddes','nalan','nihan','nur','nurgül','oya','öznur','perihan','rabia','reyhan','rukiye','saadet','sabiha','safiye','selma','semra','sena','serpil','sevda','sevinç','songül','suna','şebnem','şükran','tülay','tülin','ümmü','yeliz','yeşim','yıldız','yonca','zuhal','zübeyde','ayça','ayşenur','beyza','dilara','duygu','ezgi','feyza','gülçin','hazal','ilayda','kıymet','latife','mihriban','naciye','nazan','nebahat','remziye','sabriye','şule','tuba','ümmügülsüm','zeliha','makbule','hira','tannaz'];
+const KADIN_EKLERI=/(nur|gül|han|naz|ay)$/;
+function yorumAd(ad){ return String(ad||'').replace(/\b(bey|hanım|hanim|sn\.?|sayın)\b/gi,'').replace(/\s+/g,' ').trim().split(' ')[0]||''; }
+function yorumCinsTahmin(ad){ const a=yorumAd(ad).toLocaleLowerCase('tr'); if(!a) return 'Hanım'; if(KADIN_ADLARI.includes(a)||KADIN_EKLERI.test(a)) return 'Hanım'; return 'Bey'; }
+function yorumMesaji(r, taraf, hitapEk){
   const ad=taraf==='owner'?r.ownerName:r.buyerName;
+  const ilk=yorumAd(ad); const ek=hitapEk||yorumCinsTahmin(ad);
   const dan=(r.advisor||'').replace(/\s*Team\s*$/i,'');
-  const tur=String(r.type||'');
-  let acilis;
-  if(taraf==='owner') acilis = /kira/i.test(tur) ? 'Kiralamanız tekrar hayırlı olsun, süreci birlikte tamamlamak bizim için keyifliydi.' : 'Satışınız tekrar hayırlı olsun, süreci birlikte tamamlamak bizim için keyifliydi.';
-  else acilis='Yeni yuvanız tekrar hayırlı olsun, güzel günlerde oturmanızı dilerim. Sizinle tanışmak ve bu süreçte yanınızda olmak bizim için gerçekten çok keyifliydi.';
-  const hitap=yorumHitap(ad); return `Merhaba${hitap?' '+hitap:''},\n${acilis}\nDeneyiminizi Google'da paylaşmanız 30 saniyenizi alır, bizi çok mutlu eder:\n${GOOGLE_YORUM_LINK}\nŞimdiden çok teşekkür ederim, güle güle kullanın.\n${dan} · RE/MAX Doğuş`;
+  const kira=/kira/i.test(String(r.type||''));
+  const acilis=taraf==='owner'?(kira?'Kiralamanız tekrar hayırlı olsun.':'Satışınız tekrar hayırlı olsun.'):'Yeni yuvanız tekrar hayırlı olsun.';
+  const kapanis=taraf==='owner'?'Nice güzel işlere birlikte imza atmak dileğiyle.':'Yeni eviniz size ve tüm sevdiklerinize hayırlı olsun.';
+  return `Merhaba${ilk?' '+ilk+' '+ek:''},\n${acilis} Süreci birlikte tamamlamak bizim için çok keyifliydi.\nŞimdi sizden küçük bir ricamız olacak: deneyiminizi Google'da yorumlamanız için 30 saniyenizi ayırırsanız bizi çok mutlu edersiniz.\n${GOOGLE_YORUM_LINK}\nŞimdiden çok teşekkür ederiz. ${kapanis}\nRE/MAX Doğuş · ${dan}`;
 }
 function waNumara(tel){ let d=String(tel||'').replace(/\D/g,''); if(d.startsWith('0')) d=d.slice(1); if(d.length===10) d='90'+d; return d.length>=11?d:''; }
+function yorumEk(id,taraf){ const e=document.getElementById('yh-'+taraf+'-'+id); return e?e.value:''; }
 function yorumWhatsApp(id, taraf){
   const r=(loadRecords()||[]).find(x=>String(x.id)===String(id)); if(!r) return;
   const tel=waNumara(taraf==='owner'?r.ownerPhone:r.buyerPhone);
-  const url=(tel?`https://wa.me/${tel}`:'https://wa.me/')+'?text='+encodeURIComponent(yorumMesaji(r,taraf));
+  const url=(tel?`https://wa.me/${tel}`:'https://wa.me/')+'?text='+encodeURIComponent(yorumMesaji(r,taraf,yorumEk(id,taraf)));
   window.open(url,'_blank');
 }
 function yorumKopyala(id, taraf, btn){
   const r=(loadRecords()||[]).find(x=>String(x.id)===String(id)); if(!r) return;
-  const t=yorumMesaji(r,taraf);
+  const t=yorumMesaji(r,taraf,yorumEk(id,taraf));
   (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>{ if(btn){const o=btn.textContent;btn.textContent='✓ Kopyalandı';setTimeout(()=>btn.textContent=o,1800);} }).catch(()=>{ prompt('Mesajı kopyala:',t); });
 }
 function yorumButonlari(r, taraf){
   const ad=taraf==='owner'?r.ownerName:r.buyerName; if(!ad) return '';
+  const tah=yorumCinsTahmin(ad);
   const bs='border:none;border-radius:8px;padding:8px 12px;font-size:12px;font-weight:600;cursor:pointer;';
-  return `<div style="display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 4px">
+  return `<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0 4px">
+    <select id="yh-${taraf}-${r.id}" style="border:1.5px solid var(--border);border-radius:8px;padding:7px 8px;font-size:12px;background:#fff"><option ${tah==='Hanım'?'selected':''}>Hanım</option><option ${tah==='Bey'?'selected':''}>Bey</option></select>
     <button onclick="yorumWhatsApp('${r.id}','${taraf}')" style="${bs}background:#25D366;color:#fff">💬 WhatsApp'ta yorum iste</button>
-    <button onclick="yorumKopyala('${r.id}','${taraf}',this)" style="${bs}background:#f1f2f7;color:#333">📋 Mesajı kopyala</button></div>`;
+    <button onclick="yorumKopyala('${r.id}','${taraf}',this)" style="${bs}background:#f1f2f7;color:#333">📋 Kopyala</button></div>`;
 }
-
 function docBadges(r){
   let h='';
   if(r.tapuLink) h+=`<a class="attach-thumb" href="${r.tapuLink}" target="_blank" onclick="event.stopPropagation()">🏠 Tapu</a>`;
