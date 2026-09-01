@@ -1830,7 +1830,7 @@ function yorumMesaji(r, taraf){
   let acilis;
   if(taraf==='owner') acilis = /kira/i.test(tur) ? 'Kiralamanız tekrar hayırlı olsun, süreci birlikte tamamlamak bizim için keyifliydi.' : 'Satışınız tekrar hayırlı olsun, süreci birlikte tamamlamak bizim için keyifliydi.';
   else acilis='Yeni yuvanız tekrar hayırlı olsun, güzel günlerde oturmanızı dilerim. Sizinle tanışmak ve bu süreçte yanınızda olmak bizim için gerçekten çok keyifliydi.';
-  const hitap=yorumHitap(ad); return `Merhaba${hitap?' '+hitap:''} 😊\n${acilis}\nDeneyiminizi Google'da paylaşmanız 30 saniyenizi alır, bizi çok mutlu eder. 🙏\n👉 ${GOOGLE_YORUM_LINK}\nŞimdiden çok teşekkür ederim, güle güle kullanın.\n${dan} · RE/MAX Doğuş`;
+  const hitap=yorumHitap(ad); return `Merhaba${hitap?' '+hitap:''},\n${acilis}\nDeneyiminizi Google'da paylaşmanız 30 saniyenizi alır, bizi çok mutlu eder:\n${GOOGLE_YORUM_LINK}\nŞimdiden çok teşekkür ederim, güle güle kullanın.\n${dan} · RE/MAX Doğuş`;
 }
 function waNumara(tel){ let d=String(tel||'').replace(/\D/g,''); if(d.startsWith('0')) d=d.slice(1); if(d.length===10) d='90'+d; return d.length>=11?d:''; }
 function yorumWhatsApp(id, taraf){
