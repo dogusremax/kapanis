@@ -1837,6 +1837,36 @@ function yorumMesaji(r, taraf, hitapEk){
   return `Merhaba${ilk?' '+ilk+' '+ek:''},\n${acilis} Süreci birlikte tamamlamak bizim için çok keyifliydi.\nŞimdi sizden küçük bir ricamız olacak: deneyiminizi Google'da yorumlamanız için 30 saniyenizi ayırırsanız bizi çok mutlu edersiniz.\n${GOOGLE_YORUM_LINK}\nŞimdiden çok teşekkür ederiz. ${kapanis}\nRE/MAX Doğuş · ${dan}`;
 }
 function waNumara(tel){ let d=String(tel||'').replace(/\D/g,''); if(d.startsWith('0')) d=d.slice(1); if(d.length===10) d='90'+d; return d.length>=11?d:''; }
+
+/* Yorum isteği takibi: 'Google Yorum' alanına "İstendi · Alıcı 01.09.2026 · Sahip 02.09.2026" yazar */
+function yorumDurum(r){
+  const v=String(r.review||''); const m={};
+  (v.match(/(Alıcı|Sahip)\s+(\d{2}\.\d{2}\.\d{4})/g)||[]).forEach(x=>{const p=x.split(/\s+/); m[p[0]]=p[1];});
+  return m;
+}
+async function yorumIsaretle(id, taraf){
+  const r=yorumBul(id); if(!r) return;
+  const d=yorumDurum(r); d[taraf==='owner'?'Sahip':'Alıcı']=new Date().toLocaleDateString('tr-TR');
+  const yeni='İstendi · '+Object.keys(d).map(k=>k+' '+d[k]).join(' · ');
+  const rec={...r, review:yeni};
+  // yerel + bellek
+  const local=(loadRecords()||[]).filter(x=>String(x.id)!==String(id)); local.push(rec); saveRecords(local);
+  if(window._yorumRecs) window._yorumRecs=window._yorumRecs.map(x=>String(x.id)===String(id)?rec:x);
+  if(typeof _recordsCache!=='undefined' && Array.isArray(_recordsCache)) _recordsCache=_recordsCache.map(x=>String(x.id)===String(id)?rec:x);
+  document.querySelectorAll('[data-yorum-durum="'+id+'"]').forEach(el=>el.innerHTML=yorumDurumHtml(rec));
+  // Sheets: önce yeni satırı yaz, sonra eski satırı sil (veri kaybı riski yok)
+  try{
+    await saveToSheets(rec);
+    const p=new URLSearchParams(); p.append('action','deleteRecord'); p.append('id',id);
+    await fetch(APPS_SCRIPT_URL,{method:'POST',body:p,redirect:'follow'});
+  }catch(e){ console.warn('yorum takip yazılamadı',e); }
+}
+function yorumDurumHtml(r){
+  const d=yorumDurum(r); const parts=[];
+  if(r.buyerName) parts.push(d['Alıcı']?`✅ ${/kira/i.test(r.type||'')?'Kiracı':'Alıcı'}: ${d['Alıcı']}`:`⏳ ${/kira/i.test(r.type||'')?'Kiracı':'Alıcı'}: gönderilmedi`);
+  if(r.ownerName) parts.push(d['Sahip']?`✅ Mülk sahibi: ${d['Sahip']}`:`⏳ Mülk sahibi: gönderilmedi`);
+  return parts.length?`<div style="font-size:11px;color:#555;margin-top:6px;display:flex;gap:10px;flex-wrap:wrap">${parts.map(p=>`<span>${p}</span>`).join('')}</div>`:'';
+}
 function yorumBul(id){ const a=(loadRecords()||[]).find(x=>String(x.id)===String(id)); if(a) return a; return (window._yorumRecs||[]).find(x=>String(x.id)===String(id)); }
 function yorumEk(id,taraf){ const e=document.querySelector('#yh-'+taraf+'-'+id+' .on'); return e?e.dataset.v:''; }
 function yorumEkSec(el){ el.parentNode.querySelectorAll('button').forEach(b=>{b.classList.remove('on');b.style.background='#fff';b.style.color='#333';}); el.classList.add('on'); el.style.background='#1A56A0'; el.style.color='#fff'; }
@@ -1845,6 +1875,7 @@ function yorumWhatsApp(id, taraf){
   const tel=waNumara(taraf==='owner'?r.ownerPhone:r.buyerPhone);
   const url=(tel?`https://wa.me/${tel}`:'https://wa.me/')+'?text='+encodeURIComponent(yorumMesaji(r,taraf,yorumEk(id,taraf)));
   window.open(url,'_blank');
+  yorumIsaretle(id,taraf);
 }
 function yorumKopyala(id, taraf, btn){
   const r=yorumBul(id); if(!r) return;
@@ -1864,6 +1895,7 @@ function yorumKutusu(rec){
   let h='<div style="font-weight:700;font-size:14px;color:#1A56A0;margin-bottom:4px">⭐ Şimdi tam zamanı: Google yorumu iste</div><div style="font-size:12px;color:#555;margin-bottom:8px">Mesaj hazır — müşterinin adı, tebrik cümlesi ve yorum linki dolu. Tek dokunuşla WhatsApp\'tan gönder.</div>';
   if(rec.buyerName) h+='<div style="font-size:12px;font-weight:600;color:#333;margin-top:6px">'+(/kira/i.test(rec.type||'')?'Kiracı':'Alıcı')+': '+rec.buyerName+'</div>'+yorumButonlari(rec,'buyer');
   if(rec.ownerName) h+='<div style="font-size:12px;font-weight:600;color:#333;margin-top:8px">Mülk sahibi: '+rec.ownerName+'</div>'+yorumButonlari(rec,'owner');
+  h+='<div data-yorum-durum="'+rec.id+'">'+yorumDurumHtml(rec)+'</div>';
   return h;
 }
 function docBadges(r){
@@ -2211,6 +2243,7 @@ async function showRecordDetail(id){
       ${row('Telefon', r.buyerPhone)}
       ${row('E-posta', r.buyerEmail)}
       ${yorumButonlari(r,'buyer')}
+      <div data-yorum-durum="${r.id}">${yorumDurumHtml(r)}</div>
       ${row('Memnuniyet', r.satisfaction)}
       ${r.notes?`<div style="margin-top:16px"><div style="font-weight:600;font-size:13px;color:var(--text2);margin-bottom:4px">📝 Notlar</div><div style="font-size:14px;line-height:1.5">${r.notes}</div></div>`:''}
       <div style="margin-top:22px;font-weight:600;font-size:14px;border-top:2px solid var(--border);padding-top:16px;margin-bottom:12px">📎 Yüklenen Evraklar</div>
@@ -2978,7 +3011,7 @@ async function renderMyClosings(){
       </div>
       <div style="font-size:12px;color:var(--text2);margin-top:3px">${r.address||'—'}</div>
       ${belgeLinkleri(r)}
-      ${(r.buyerName||r.ownerName)?`<div style="margin-top:8px;background:#F4F7FB;border-radius:10px;padding:8px 10px"><div style="font-size:11px;font-weight:600;color:var(--text2);margin-bottom:2px">⭐ Google yorumu iste</div>${r.buyerName?`<div style="font-size:11px;color:#333;margin-top:4px">${/kira/i.test(r.type||'')?'Kiracı':'Alıcı'}: ${r.buyerName}</div>${yorumButonlari(r,'buyer')}`:''}${r.ownerName?`<div style="font-size:11px;color:#333;margin-top:6px">Mülk sahibi: ${r.ownerName}</div>${yorumButonlari(r,'owner')}`:''}</div>`:''}
+      ${(r.buyerName||r.ownerName)?`<div style="margin-top:8px;background:#F4F7FB;border-radius:10px;padding:8px 10px"><div style="font-size:11px;font-weight:600;color:var(--text2);margin-bottom:2px">⭐ Google yorumu iste</div>${r.buyerName?`<div style="font-size:11px;color:#333;margin-top:4px">${/kira/i.test(r.type||'')?'Kiracı':'Alıcı'}: ${r.buyerName}</div>${yorumButonlari(r,'buyer')}`:''}${r.ownerName?`<div style="font-size:11px;color:#333;margin-top:6px">Mülk sahibi: ${r.ownerName}</div>${yorumButonlari(r,'owner')}`:''}<div data-yorum-durum="${r.id}">${yorumDurumHtml(r)}</div></div>`:''}
     </div>`).join('') : `<div style="padding:18px 0;text-align:center;color:var(--text3);font-size:13px">${MONTH_NAMES[myMonth]} ayında kapanışın yok.</div>`;
 }
 
