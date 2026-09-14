@@ -512,28 +512,7 @@
           <input type="text" id="f-site-diger" placeholder="Site adını yazın" style="display:none;margin-top:8px" oninput="capitalizeWords(this);adresKur()">
         </div>
         <div class="field" id="wrap-etap" style="flex:1;display:none"><label>Etap</label>
-          <select id="f-etap" onchange="adresKur()">
-            <option value="">Etap seçin</option>
-            <option value="1">1. Etap</option>
-            <option value="2">2. Etap</option>
-            <option value="3">3. Etap</option>
-            <option value="4">4. Etap</option>
-            <option value="5">5. Etap</option>
-            <option value="6">6. Etap</option>
-            <option value="7">7. Etap</option>
-            <option value="8">8. Etap</option>
-            <option value="9">9. Etap</option>
-            <option value="10">10. Etap</option>
-            <option value="11">11. Etap</option>
-            <option value="12">12. Etap</option>
-            <option value="13">13. Etap</option>
-            <option value="14">14. Etap</option>
-            <option value="15">15. Etap</option>
-            <option value="16">16. Etap</option>
-            <option value="17">17. Etap</option>
-            <option value="18">18. Etap</option>
-            <option value="19">19. Etap</option>
-          </select>
+          <select id="f-etap" onchange="adresKur()"></select>
         </div>
       </div>
       <div class="field" id="wrap-sokak"><label>Sokak / Cadde <span style="font-weight:400;color:var(--text2)">(site yoksa)</span></label>
@@ -1695,7 +1674,10 @@ function setType(t){
    Türkiye: %48 danışman · %52 ofis (ofis RE/MAX %10'unu kendi payından öder). */
 /* Site listesinde "Diğer" seçilirse serbest yazım kutusunu açar. */
 /* Etapları olan siteler — seçilince etap listesi kendiliğinden açılır. */
-const ETAPLI_SITELER = ['Emlak Konut Yenifikirtepe','Yenitepe Kadıköy'];
+const ETAPLI_SITELER = {
+  'Emlak Konut Yenifikirtepe': 19,
+  'Yenitepe Kadıköy': 2
+};
 
 function siteDegisti(){
   const sel  = document.getElementById('f-site');
@@ -1706,12 +1688,20 @@ function siteDegisti(){
   kutu.style.display = diger ? 'block' : 'none';
   if(!diger) kutu.value = ''; else kutu.focus();
 
-  // Etap listesi: yalnızca etaplı sitelerde
-  const etapli = ETAPLI_SITELER.indexOf(sel.value) > -1;
+  // Etap listesi: yalnızca etaplı sitelerde, her sitenin kendi etap sayısıyla
+  const adet = ETAPLI_SITELER[sel.value] || 0;
   const we = document.getElementById('wrap-etap');
   const et = document.getElementById('f-etap');
-  if(we) we.style.display = etapli ? 'block' : 'none';
-  if(!etapli && et) et.value = '';
+  if(we) we.style.display = adet ? 'block' : 'none';
+  if(et){
+    et.innerHTML = '<option value="">Etap seçin</option>';
+    for(let i=1;i<=adet;i++){
+      const o = document.createElement('option');
+      o.value = String(i); o.textContent = i + '. Etap';
+      et.appendChild(o);
+    }
+    et.value = '';
+  }
 
   // Sokak/cadde: yalnızca site seçilmediğinde
   const siteSecili = sel.value !== '';
