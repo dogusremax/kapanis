@@ -480,17 +480,60 @@
         </div>
       </div>
       <div class="field-row">
-        <div class="field" style="flex:2"><label>Site / Proje <span style="font-weight:400;color:var(--text2)">(varsa)</span></label>
-          <input type="text" id="f-site" list="dl-site" placeholder="Yeni Fikirtepe Konutları" oninput="capitalizeWords(this);adresKur()">
-          <datalist id="dl-site">
-            <option>Yeni Fikirtepe Konutları</option><option>Nuhoğlu Yenitepe</option><option>Baysaş İstanbul 216</option>
-            <option>Akasya Acıbadem</option><option>Kentplus Kadıköy</option><option>Evinpark Residence</option>
-            <option>Elite Concept</option><option>Fikirtepe Concord</option><option>Nish Adalar</option>
-            <option>Komşu Finans Evleri</option><option>Yeni Altınköy Konutları</option><option>Anka Evim Kadıköy</option>
-          </datalist>
+        <div class="field" style="flex:2"><label>Site / Proje</label>
+          <select id="f-site" onchange="siteDegisti()">
+            <option value="">— Site yok / bağımsız bina —</option>
+            <option>1071 Kadıköy</option>
+            <option>Akasya Acıbadem</option>
+            <option>Alya Life Residence</option>
+            <option>Anka Evim Kadıköy</option>
+            <option>Brooklyn Life</option>
+            <option>Brooklyn Park</option>
+            <option>Concord İstanbul</option>
+            <option>Concord İstanbul 2. Etap</option>
+            <option>Evinpark Kadıköy</option>
+            <option>Fortis Sinanlı</option>
+            <option>İki Yaka Fikirtepe</option>
+            <option>İstanbul 216</option>
+            <option>İstanbul 216 2. Etap</option>
+            <option>Mina Towers</option>
+            <option>Obaköy Haldız</option>
+            <option>Optimist Residence</option>
+            <option>Pırlanta Göztepe</option>
+            <option>Renovia İstanbul</option>
+            <option>Şua Elite Concept</option>
+            <option>The Mandarins</option>
+            <option>Torkam Sitesi</option>
+            <option>Uplife Kadıköy</option>
+            <option>Emlak Konut Yenifikirtepe</option>
+            <option>Yenitepe Kadıköy</option>
+            <option value="__diger">Diğer (listede yok)</option>
+          </select>
+          <input type="text" id="f-site-diger" placeholder="Site adını yazın" style="display:none;margin-top:8px" oninput="capitalizeWords(this);adresKur()">
         </div>
         <div class="field" style="flex:1"><label>Etap</label>
-          <input type="text" id="f-etap" placeholder="6" inputmode="numeric" oninput="adresKur()">
+          <select id="f-etap" onchange="adresKur()">
+            <option value="">Etap yok</option>
+            <option value="1">1. Etap</option>
+            <option value="2">2. Etap</option>
+            <option value="3">3. Etap</option>
+            <option value="4">4. Etap</option>
+            <option value="5">5. Etap</option>
+            <option value="6">6. Etap</option>
+            <option value="7">7. Etap</option>
+            <option value="8">8. Etap</option>
+            <option value="9">9. Etap</option>
+            <option value="10">10. Etap</option>
+            <option value="11">11. Etap</option>
+            <option value="12">12. Etap</option>
+            <option value="13">13. Etap</option>
+            <option value="14">14. Etap</option>
+            <option value="15">15. Etap</option>
+            <option value="16">16. Etap</option>
+            <option value="17">17. Etap</option>
+            <option value="18">18. Etap</option>
+            <option value="19">19. Etap</option>
+          </select>
         </div>
       </div>
       <div class="field"><label>Sokak / Cadde <span style="font-weight:400;color:var(--text2)">(site yoksa)</span></label>
@@ -1650,11 +1693,25 @@ function setType(t){
    Umut ofis sahibi olduğu için o pay doğrudan ofise yazılır).
    Kıbrıs'ı Umut kendisi kaparsa: danışman payı yok, %90 ofise.
    Türkiye: %48 danışman · %52 ofis (ofis RE/MAX %10'unu kendi payından öder). */
+/* Site listesinde "Diğer" seçilirse serbest yazım kutusunu açar. */
+function siteDegisti(){
+  const sel = document.getElementById('f-site');
+  const kutu = document.getElementById('f-site-diger');
+  if(!sel || !kutu) return;
+  const diger = sel.value === '__diger';
+  kutu.style.display = diger ? 'block' : 'none';
+  if(!diger) kutu.value = '';
+  else kutu.focus();
+  adresKur();
+}
+
 /* Yapılandırılmış adres alanlarını tek standart metne çevirir.
    f-address alanı aynen korunur; tüm mevcut kod onu okumaya devam eder. */
 function adresKur(){
   const g = id => (document.getElementById(id)?.value || '').trim();
-  const ilce = g('f-ilce'), mahalle = g('f-mahalle'), site = g('f-site');
+  const ilce = g('f-ilce'), mahalle = g('f-mahalle');
+  const siteSec = g('f-site');
+  const site = (siteSec === '__diger') ? g('f-site-diger') : siteSec;
   const etap = g('f-etap'), sokak = g('f-sokak'), blok = g('f-blok'), daire = g('f-daire');
 
   const parcalar = [];
@@ -1861,11 +1918,15 @@ function faturaOnayDevam(){
 }
 
 function resetForm(){
-  ['f-date','f-amount','f-hb-owner','f-hb-buyer','f-address','f-deposit','f-owner-name','f-owner-tc','f-owner-phone','f-owner-email','f-buyer-name','f-buyer-tc','f-buyer-phone','f-buyer-email','f-notes','f-tahliye-tarih','f-ilce','f-mahalle','f-site','f-etap','f-sokak','f-blok','f-daire'].forEach(id=>{const el=document.getElementById(id);if(el){el.value='';el.style.borderColor=''}});
+  ['f-date','f-amount','f-hb-owner','f-hb-buyer','f-address','f-deposit','f-owner-name','f-owner-tc','f-owner-phone','f-owner-email','f-buyer-name','f-buyer-tc','f-buyer-phone','f-buyer-email','f-notes','f-tahliye-tarih','f-ilce','f-mahalle','f-sokak','f-blok','f-daire','f-site-diger'].forEach(id=>{const el=document.getElementById(id);if(el){el.value='';el.style.borderColor=''}});
   document.getElementById('f-date').value=new Date().toISOString().split('T')[0];
   document.getElementById('f-ref-shared').value=''; document.getElementById('f-taraf').value=''; document.getElementById('f-ref').value=''; document.getElementById('f-ref-partner-wrap').style.display='none';
   { const t=document.getElementById('f-ref-type'); if(t) t.value=''; const fw=document.getElementById('f-ref-firm'); if(fw) fw.value=''; const tw=document.getElementById('f-ref-type-wrap'); if(tw) tw.style.display='none'; const ftw=document.getElementById('f-ref-firm-wrap'); if(ftw) ftw.style.display='none'; }
   document.getElementById('f-review').value='Hayır';
+  { const _s=document.getElementById('f-site'); if(_s) _s.value='';
+    const _e=document.getElementById('f-etap'); if(_e) _e.value='';
+    const _sd=document.getElementById('f-site-diger'); if(_sd) _sd.style.display='none';
+    const _a=document.getElementById('f-address'); if(_a) _a.value=''; }
   setType('Satılık');
   DOC_TYPES.forEach(t=>removeFile({stopPropagation:()=>{}},t));
   const btn=document.getElementById('submit-btn');
