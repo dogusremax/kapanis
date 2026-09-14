@@ -540,7 +540,7 @@
           </select>
         </div>
       </div>
-      <div class="field"><label>Sokak / Cadde <span style="font-weight:400;color:var(--text2)">(site yoksa)</span></label>
+      <div class="field" id="wrap-sokak"><label>Sokak / Cadde <span style="font-weight:400;color:var(--text2)">(site yoksa)</span></label>
         <input type="text" id="f-sokak" placeholder="Barış Sok. No:40" oninput="capitalizeWords(this);adresKur()">
       </div>
       <div class="field-row">
@@ -1705,6 +1705,13 @@ function etapDegisti(){
   const acik = varMi.value === 'var';
   liste.style.display = acik ? 'block' : 'none';
   if(!acik) liste.value = '';
+
+  // Etap varsa sokak/cadde alanı gereksiz — gizle ve temizle
+  const ws = document.getElementById('wrap-sokak');
+  const sk = document.getElementById('f-sokak');
+  if(ws) ws.style.display = acik ? 'none' : 'block';
+  if(acik && sk) sk.value = '';
+
   adresKur();
 }
 
@@ -1941,6 +1948,7 @@ function resetForm(){
   { const _s=document.getElementById('f-site'); if(_s) _s.value='';
     const _e=document.getElementById('f-etap'); if(_e){ _e.value=''; _e.style.display='none'; }
     const _ev=document.getElementById('f-etap-var'); if(_ev) _ev.value='';
+    const _ws=document.getElementById('wrap-sokak'); if(_ws) _ws.style.display='block';
     const _sd=document.getElementById('f-site-diger'); if(_sd) _sd.style.display='none';
     const _a=document.getElementById('f-address'); if(_a) _a.value=''; }
   setType('Satılık');
