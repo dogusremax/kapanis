@@ -512,8 +512,12 @@
           <input type="text" id="f-site-diger" placeholder="Site adını yazın" style="display:none;margin-top:8px" oninput="capitalizeWords(this);adresKur()">
         </div>
         <div class="field" style="flex:1"><label>Etap</label>
-          <select id="f-etap" onchange="adresKur()">
-            <option value="">Etap yok</option>
+          <select id="f-etap-var" onchange="etapDegisti()">
+            <option value="">Yok</option>
+            <option value="var">Var</option>
+          </select>
+          <select id="f-etap" onchange="adresKur()" style="display:none;margin-top:8px">
+            <option value="">Etap seçin</option>
             <option value="1">1. Etap</option>
             <option value="2">2. Etap</option>
             <option value="3">3. Etap</option>
@@ -1693,6 +1697,17 @@ function setType(t){
    Umut ofis sahibi olduğu için o pay doğrudan ofise yazılır).
    Kıbrıs'ı Umut kendisi kaparsa: danışman payı yok, %90 ofise.
    Türkiye: %48 danışman · %52 ofis (ofis RE/MAX %10'unu kendi payından öder). */
+/* Etap "Var" seçilince 1–19 listesini açar. */
+function etapDegisti(){
+  const varMi = document.getElementById('f-etap-var');
+  const liste = document.getElementById('f-etap');
+  if(!varMi || !liste) return;
+  const acik = varMi.value === 'var';
+  liste.style.display = acik ? 'block' : 'none';
+  if(!acik) liste.value = '';
+  adresKur();
+}
+
 /* Site listesinde "Diğer" seçilirse serbest yazım kutusunu açar. */
 function siteDegisti(){
   const sel = document.getElementById('f-site');
@@ -1924,7 +1939,8 @@ function resetForm(){
   { const t=document.getElementById('f-ref-type'); if(t) t.value=''; const fw=document.getElementById('f-ref-firm'); if(fw) fw.value=''; const tw=document.getElementById('f-ref-type-wrap'); if(tw) tw.style.display='none'; const ftw=document.getElementById('f-ref-firm-wrap'); if(ftw) ftw.style.display='none'; }
   document.getElementById('f-review').value='Hayır';
   { const _s=document.getElementById('f-site'); if(_s) _s.value='';
-    const _e=document.getElementById('f-etap'); if(_e) _e.value='';
+    const _e=document.getElementById('f-etap'); if(_e){ _e.value=''; _e.style.display='none'; }
+    const _ev=document.getElementById('f-etap-var'); if(_ev) _ev.value='';
     const _sd=document.getElementById('f-site-diger'); if(_sd) _sd.style.display='none';
     const _a=document.getElementById('f-address'); if(_a) _a.value=''; }
   setType('Satılık');
