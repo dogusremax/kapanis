@@ -555,6 +555,9 @@
             <div class="upload-hint" id="uh-tahliye">Varsa — sadece PDF</div>
             <button class="upload-remove" id="ur-tahliye" style="display:none" onclick="removeFile(event,'tahliye')">✕ Kaldır</button>
           </div>
+          <label style="margin-top:10px">Tahliye Tarihi</label>
+          <input type="date" id="f-tahliye-tarih">
+          <div style="font-size:11.5px;color:var(--text2);margin-top:5px;line-height:1.5">Taahhütnamede yazan tahliye tarihi. Kira Takip bu tarihten 2 ay önce hatırlatma gönderir.</div>
         </div>
       </div>
     </div>
@@ -1589,6 +1592,7 @@ function setType(t){
   if(wrapTah){
     wrapTah.style.display = (t==='Kiralık') ? 'block' : 'none';
     if(t!=='Kiralık' && pendingFiles['tahliye']){ pendingFiles['tahliye']=null; setUploadStatus('tahliye','idle'); }
+    if(t!=='Kiralık'){ const _tt=document.getElementById('f-tahliye-tarih'); if(_tt) _tt.value=''; }
   }
 }
 
@@ -1777,7 +1781,7 @@ function faturaOnayDevam(){
 }
 
 function resetForm(){
-  ['f-date','f-amount','f-hb-owner','f-hb-buyer','f-address','f-deposit','f-owner-name','f-owner-tc','f-owner-phone','f-owner-email','f-buyer-name','f-buyer-tc','f-buyer-phone','f-buyer-email','f-notes'].forEach(id=>{const el=document.getElementById(id);if(el){el.value='';el.style.borderColor=''}});
+  ['f-date','f-amount','f-hb-owner','f-hb-buyer','f-address','f-deposit','f-owner-name','f-owner-tc','f-owner-phone','f-owner-email','f-buyer-name','f-buyer-tc','f-buyer-phone','f-buyer-email','f-notes','f-tahliye-tarih'].forEach(id=>{const el=document.getElementById(id);if(el){el.value='';el.style.borderColor=''}});
   document.getElementById('f-date').value=new Date().toISOString().split('T')[0];
   document.getElementById('f-ref-shared').value=''; document.getElementById('f-taraf').value=''; document.getElementById('f-ref').value=''; document.getElementById('f-ref-partner-wrap').style.display='none';
   { const t=document.getElementById('f-ref-type'); if(t) t.value=''; const fw=document.getElementById('f-ref-firm'); if(fw) fw.value=''; const tw=document.getElementById('f-ref-type-wrap'); if(tw) tw.style.display='none'; const ftw=document.getElementById('f-ref-firm-wrap'); if(ftw) ftw.style.display='none'; }
@@ -1875,6 +1879,17 @@ async function submitForm(){
 
   // Diğer her şey tamamsa: yüklenmiş ama ismi olmayan belge varsa,
   // uyarı verip kullanıcıyı ortada bırakmak yerine doğrudan isim penceresini aç.
+  // Tahliye taahhütnamesi eklendiyse tahliye tarihi zorunlu
+  const _tahTarihEl = document.getElementById('f-tahliye-tarih');
+  if(selectedType==='Kiralık' && pendingFiles['tahliye'] && _tahTarihEl && !_tahTarihEl.value){
+    alert('Tahliye taahhütnamesi eklediniz. Lütfen taahhütnamede yazan TAHLİYE TARİHİNİ de girin.\n\nBu tarih girilmezse Kira Takip hatırlatma gönderemez.');
+    _tahTarihEl.style.borderColor='#dc1c2e';
+    _tahTarihEl.scrollIntoView({behavior:'smooth',block:'center'});
+    _tahTarihEl.focus();
+    return;
+  }
+  if(_tahTarihEl) _tahTarihEl.style.borderColor='';
+
   const isimsizBelge = ['tapu','kontrat','fatura'].find(t => pendingFiles[t] && !(pendingNames[t]||'').trim());
   if(isimsizBelge){
     alert((isimsizBelge==='tapu'?'Tapu':isimsizBelge==='kontrat'?'Kontrat':'Fatura') + ' belgesine isim vermeniz gerekiyor. İsim penceresi açılıyor.');
@@ -1943,7 +1958,18 @@ async function submitForm(){
     buyerPhone:document.getElementById('f-buyer-phone').value,
     buyerEmail:document.getElementById('f-buyer-email').value,
 
-    notes:document.getElementById('f-notes').value,
+    notes:(function(){
+      let _n = document.getElementById('f-notes').value || '';
+      const _el = document.getElementById('f-tahliye-tarih');
+      const _v = (selectedType==='Kiralık' && _el) ? _el.value : '';
+      if(_v){
+        const _p = _v.split('-');
+        const _s = 'Tahliye: ' + _p[2] + '.' + _p[1] + '.' + _p[0];
+        const _duz = _n.replace(/\u0130/g,'i').replace(/I/g,'i').replace(/\u0131/g,'i').toLowerCase();
+        if(_duz.indexOf('tahliye') === -1) _n = _n ? (_s + ' \u00b7 ' + _n) : _s;
+      }
+      return _n;
+    })(),
     satisfaction:'',
     review:document.getElementById('f-review').value,
     tapuLink:driveLinks.tapu,
