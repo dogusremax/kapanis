@@ -511,12 +511,8 @@
           </select>
           <input type="text" id="f-site-diger" placeholder="Site adını yazın" style="display:none;margin-top:8px" oninput="capitalizeWords(this);adresKur()">
         </div>
-        <div class="field" style="flex:1"><label>Etap</label>
-          <select id="f-etap-var" onchange="etapDegisti()">
-            <option value="">Yok</option>
-            <option value="var">Var</option>
-          </select>
-          <select id="f-etap" onchange="adresKur()" style="display:none;margin-top:8px">
+        <div class="field" id="wrap-etap" style="flex:1;display:none"><label>Etap</label>
+          <select id="f-etap" onchange="adresKur()">
             <option value="">Etap seçin</option>
             <option value="1">1. Etap</option>
             <option value="2">2. Etap</option>
@@ -1697,33 +1693,33 @@ function setType(t){
    Umut ofis sahibi olduğu için o pay doğrudan ofise yazılır).
    Kıbrıs'ı Umut kendisi kaparsa: danışman payı yok, %90 ofise.
    Türkiye: %48 danışman · %52 ofis (ofis RE/MAX %10'unu kendi payından öder). */
-/* Etap "Var" seçilince 1–19 listesini açar. */
-function etapDegisti(){
-  const varMi = document.getElementById('f-etap-var');
-  const liste = document.getElementById('f-etap');
-  if(!varMi || !liste) return;
-  const acik = varMi.value === 'var';
-  liste.style.display = acik ? 'block' : 'none';
-  if(!acik) liste.value = '';
-
-  // Etap varsa sokak/cadde alanı gereksiz — gizle ve temizle
-  const ws = document.getElementById('wrap-sokak');
-  const sk = document.getElementById('f-sokak');
-  if(ws) ws.style.display = acik ? 'none' : 'block';
-  if(acik && sk) sk.value = '';
-
-  adresKur();
-}
-
 /* Site listesinde "Diğer" seçilirse serbest yazım kutusunu açar. */
+/* Etapları olan siteler — seçilince etap listesi kendiliğinden açılır. */
+const ETAPLI_SITELER = ['Emlak Konut Yenifikirtepe','Yenitepe Kadıköy'];
+
 function siteDegisti(){
-  const sel = document.getElementById('f-site');
+  const sel  = document.getElementById('f-site');
   const kutu = document.getElementById('f-site-diger');
   if(!sel || !kutu) return;
+
   const diger = sel.value === '__diger';
   kutu.style.display = diger ? 'block' : 'none';
-  if(!diger) kutu.value = '';
-  else kutu.focus();
+  if(!diger) kutu.value = ''; else kutu.focus();
+
+  // Etap listesi: yalnızca etaplı sitelerde
+  const etapli = ETAPLI_SITELER.indexOf(sel.value) > -1;
+  const we = document.getElementById('wrap-etap');
+  const et = document.getElementById('f-etap');
+  if(we) we.style.display = etapli ? 'block' : 'none';
+  if(!etapli && et) et.value = '';
+
+  // Sokak/cadde: yalnızca site seçilmediğinde
+  const siteSecili = sel.value !== '';
+  const ws = document.getElementById('wrap-sokak');
+  const sk = document.getElementById('f-sokak');
+  if(ws) ws.style.display = siteSecili ? 'none' : 'block';
+  if(siteSecili && sk) sk.value = '';
+
   adresKur();
 }
 
@@ -1946,8 +1942,8 @@ function resetForm(){
   { const t=document.getElementById('f-ref-type'); if(t) t.value=''; const fw=document.getElementById('f-ref-firm'); if(fw) fw.value=''; const tw=document.getElementById('f-ref-type-wrap'); if(tw) tw.style.display='none'; const ftw=document.getElementById('f-ref-firm-wrap'); if(ftw) ftw.style.display='none'; }
   document.getElementById('f-review').value='Hayır';
   { const _s=document.getElementById('f-site'); if(_s) _s.value='';
-    const _e=document.getElementById('f-etap'); if(_e){ _e.value=''; _e.style.display='none'; }
-    const _ev=document.getElementById('f-etap-var'); if(_ev) _ev.value='';
+    const _e=document.getElementById('f-etap'); if(_e) _e.value='';
+    const _we=document.getElementById('wrap-etap'); if(_we) _we.style.display='none';
     const _ws=document.getElementById('wrap-sokak'); if(_ws) _ws.style.display='block';
     const _sd=document.getElementById('f-site-diger'); if(_sd) _sd.style.display='none';
     const _a=document.getElementById('f-address'); if(_a) _a.value=''; }
