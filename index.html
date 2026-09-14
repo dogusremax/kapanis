@@ -458,7 +458,55 @@
     </div>
     <div class="form-card">
       <div class="form-section-title">🏠 Mülk Bilgisi</div>
-      <div class="field"><label>Mülk Adresi</label><input type="text" id="f-address" placeholder="Mahalle, sokak, no..." oninput="capitalizeWords(this);updateFaturaHesap()"></div>
+      <div class="field-row">
+        <div class="field"><label>İlçe</label>
+          <input type="text" id="f-ilce" list="dl-ilce" placeholder="Kadıköy" oninput="capitalizeWords(this);adresKur()">
+          <datalist id="dl-ilce">
+            <option>Kadıköy</option><option>Ataşehir</option><option>Üsküdar</option><option>Maltepe</option>
+            <option>Ümraniye</option><option>Çekmeköy</option><option>Tuzla</option><option>Pendik</option>
+            <option>Kartal</option><option>Beykoz</option><option>Sancaktepe</option><option>Sultanbeyli</option>
+            <option>Şile</option><option>Adalar</option><option>Kuzey Kıbrıs</option>
+          </datalist>
+        </div>
+        <div class="field"><label>Mahalle / Semt</label>
+          <input type="text" id="f-mahalle" list="dl-mahalle" placeholder="Dumlupınar" oninput="capitalizeWords(this);adresKur()">
+          <datalist id="dl-mahalle">
+            <option>Dumlupınar</option><option>Fikirtepe</option><option>Merdivenköy</option><option>Eğitim</option>
+            <option>Acıbadem</option><option>Caddebostan</option><option>Bostancı</option><option>Rasimpaşa</option>
+            <option>Göztepe</option><option>Erenköy</option><option>Suadiye</option><option>Kozyatağı</option>
+            <option>Bulgurlu</option><option>Örnek</option><option>Esatpaşa</option><option>İçerenköy</option>
+            <option>Altıntepe</option><option>Küçükyalı</option><option>Aydıntepe</option><option>Tepeören</option>
+          </datalist>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field" style="flex:2"><label>Site / Proje <span style="font-weight:400;color:var(--text2)">(varsa)</span></label>
+          <input type="text" id="f-site" list="dl-site" placeholder="Yeni Fikirtepe Konutları" oninput="capitalizeWords(this);adresKur()">
+          <datalist id="dl-site">
+            <option>Yeni Fikirtepe Konutları</option><option>Nuhoğlu Yenitepe</option><option>Baysaş İstanbul 216</option>
+            <option>Akasya Acıbadem</option><option>Kentplus Kadıköy</option><option>Evinpark Residence</option>
+            <option>Elite Concept</option><option>Fikirtepe Concord</option><option>Nish Adalar</option>
+            <option>Komşu Finans Evleri</option><option>Yeni Altınköy Konutları</option><option>Anka Evim Kadıköy</option>
+          </datalist>
+        </div>
+        <div class="field" style="flex:1"><label>Etap</label>
+          <input type="text" id="f-etap" placeholder="6" inputmode="numeric" oninput="adresKur()">
+        </div>
+      </div>
+      <div class="field"><label>Sokak / Cadde <span style="font-weight:400;color:var(--text2)">(site yoksa)</span></label>
+        <input type="text" id="f-sokak" placeholder="Barış Sok. No:40" oninput="capitalizeWords(this);adresKur()">
+      </div>
+      <div class="field-row">
+        <div class="field"><label>Blok</label>
+          <input type="text" id="f-blok" placeholder="E" oninput="this.value=this.value.toLocaleUpperCase('tr');adresKur()">
+        </div>
+        <div class="field"><label>Daire / No</label>
+          <input type="text" id="f-daire" placeholder="36" oninput="adresKur()">
+        </div>
+      </div>
+      <div class="field"><label>Mülk Adresi</label>
+        <input type="text" id="f-address" readonly placeholder="Yukarıdaki alanları doldurun" style="background:#f5f7fa;color:var(--text2)">
+      </div>
       <div class="field-row">
         <div class="field"><label>Kapora (₺)</label>
           <div class="currency-input"><span>₺</span><input type="text" id="f-deposit" placeholder="0" inputmode="numeric" oninput="formatCurrency(this)"></div>
@@ -1602,6 +1650,38 @@ function setType(t){
    Umut ofis sahibi olduğu için o pay doğrudan ofise yazılır).
    Kıbrıs'ı Umut kendisi kaparsa: danışman payı yok, %90 ofise.
    Türkiye: %48 danışman · %52 ofis (ofis RE/MAX %10'unu kendi payından öder). */
+/* Yapılandırılmış adres alanlarını tek standart metne çevirir.
+   f-address alanı aynen korunur; tüm mevcut kod onu okumaya devam eder. */
+function adresKur(){
+  const g = id => (document.getElementById(id)?.value || '').trim();
+  const ilce = g('f-ilce'), mahalle = g('f-mahalle'), site = g('f-site');
+  const etap = g('f-etap'), sokak = g('f-sokak'), blok = g('f-blok'), daire = g('f-daire');
+
+  const parcalar = [];
+
+  if(ilce && mahalle)      parcalar.push(ilce + ' / ' + mahalle);
+  else if(ilce || mahalle) parcalar.push(ilce || mahalle);
+
+  if(site){
+    let s2 = site;
+    if(etap) s2 += /^\d+$/.test(etap) ? (' ' + etap + '. Etap') : (' ' + etap);
+    parcalar.push(s2);
+  } else if(etap){
+    parcalar.push(/^\d+$/.test(etap) ? (etap + '. Etap') : etap);
+  }
+
+  if(sokak) parcalar.push(sokak);
+
+  const bd = [];
+  if(blok)  bd.push(blok + ' Blok');
+  if(daire) bd.push('Daire ' + daire);
+  if(bd.length) parcalar.push(bd.join(' '));
+
+  const el = document.getElementById('f-address');
+  if(el){ el.value = parcalar.join(' \u00b7 '); el.style.borderColor=''; }
+  if(typeof updateFaturaHesap === 'function') updateFaturaHesap();
+}
+
 function adresKibrisMi(adr){
   const a = String(adr || '').toLocaleLowerCase('tr');
   return a.indexOf('kıbrıs')!==-1 || a.indexOf('kibris')!==-1 || a.indexOf('cyprus')!==-1;
@@ -1781,7 +1861,7 @@ function faturaOnayDevam(){
 }
 
 function resetForm(){
-  ['f-date','f-amount','f-hb-owner','f-hb-buyer','f-address','f-deposit','f-owner-name','f-owner-tc','f-owner-phone','f-owner-email','f-buyer-name','f-buyer-tc','f-buyer-phone','f-buyer-email','f-notes','f-tahliye-tarih'].forEach(id=>{const el=document.getElementById(id);if(el){el.value='';el.style.borderColor=''}});
+  ['f-date','f-amount','f-hb-owner','f-hb-buyer','f-address','f-deposit','f-owner-name','f-owner-tc','f-owner-phone','f-owner-email','f-buyer-name','f-buyer-tc','f-buyer-phone','f-buyer-email','f-notes','f-tahliye-tarih','f-ilce','f-mahalle','f-site','f-etap','f-sokak','f-blok','f-daire'].forEach(id=>{const el=document.getElementById(id);if(el){el.value='';el.style.borderColor=''}});
   document.getElementById('f-date').value=new Date().toISOString().split('T')[0];
   document.getElementById('f-ref-shared').value=''; document.getElementById('f-taraf').value=''; document.getElementById('f-ref').value=''; document.getElementById('f-ref-partner-wrap').style.display='none';
   { const t=document.getElementById('f-ref-type'); if(t) t.value=''; const fw=document.getElementById('f-ref-firm'); if(fw) fw.value=''; const tw=document.getElementById('f-ref-type-wrap'); if(tw) tw.style.display='none'; const ftw=document.getElementById('f-ref-firm-wrap'); if(ftw) ftw.style.display='none'; }
@@ -1879,6 +1959,17 @@ async function submitForm(){
 
   // Diğer her şey tamamsa: yüklenmiş ama ismi olmayan belge varsa,
   // uyarı verip kullanıcıyı ortada bırakmak yerine doğrudan isim penceresini aç.
+  // Kiralıkta daire/no zorunlu — Kira Takip mülkü bununla eşleştiriyor
+  const _daireEl = document.getElementById('f-daire');
+  if(selectedType==='Kiralık' && _daireEl && !_daireEl.value.trim()){
+    alert('Kiralık kapanışlarında DAİRE / NO alanı zorunludur.\n\nBu bilgi olmadan Kira Takip mülkü tanıyamaz ve kiracı değişikliğinde eski sözleşme kapanmaz.');
+    _daireEl.style.borderColor='#dc1c2e';
+    _daireEl.scrollIntoView({behavior:'smooth',block:'center'});
+    _daireEl.focus();
+    return;
+  }
+  if(_daireEl) _daireEl.style.borderColor='';
+
   // Tahliye taahhütnamesi eklendiyse tahliye tarihi zorunlu
   const _tahTarihEl = document.getElementById('f-tahliye-tarih');
   if(selectedType==='Kiralık' && pendingFiles['tahliye'] && _tahTarihEl && !_tahTarihEl.value){
