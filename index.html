@@ -458,7 +458,7 @@
     </div>
     <div class="form-card">
       <div class="form-section-title">🏠 Mülk Bilgisi</div>
-      <div class="field-row" id="wrap-konum">
+      <div class="field-row" id="wrap-konum" style="display:none">
         <div class="field"><label>İlçe</label>
           <input type="text" id="f-ilce" list="dl-ilce" placeholder="Kadıköy" oninput="capitalizeWords(this);adresKur()">
           <datalist id="dl-ilce">
@@ -482,7 +482,7 @@
       <div class="field-row">
         <div class="field" style="flex:2"><label>Site / Proje</label>
           <select id="f-site" onchange="siteDegisti()">
-            <option value="">— Site yok / bağımsız bina —</option>
+            <option value="">— Site seçin —</option>
             <option>1071 Kadıköy</option>
             <option>Akasya Acıbadem</option>
             <option>Alya Life Residence</option>
@@ -505,15 +505,14 @@
             <option>Uplife Kadıköy</option>
             <option>Emlak Konut Yenifikirtepe</option>
             <option>Nuhoğlu Yenitepe</option>
-            <option value="__diger">Diğer (listede yok)</option>
+            <option value="__diger">Diğer / listede yok — adresi elle gir</option>
           </select>
-          <input type="text" id="f-site-diger" placeholder="Site adını yazın" style="display:none;margin-top:8px" oninput="capitalizeWords(this);adresKur()">
         </div>
         <div class="field" id="wrap-etap" style="flex:1;display:none"><label>Etap</label>
           <select id="f-etap" onchange="adresKur()"></select>
         </div>
       </div>
-      <div class="field" id="wrap-sokak"><label>Sokak / Cadde <span style="font-weight:400;color:var(--text2)">(site yoksa)</span></label>
+      <div class="field" id="wrap-sokak" style="display:none"><label>Sokak / Cadde <span style="font-weight:400;color:var(--text2)">(site yoksa)</span></label>
         <input type="text" id="f-sokak" placeholder="Barış Sok. No:40" oninput="capitalizeWords(this);adresKur()">
       </div>
       <div class="field-row">
@@ -1680,15 +1679,12 @@ const ETAPLI_SITELER = {
 };
 
 function siteDegisti(){
-  const sel  = document.getElementById('f-site');
-  const kutu = document.getElementById('f-site-diger');
-  if(!sel || !kutu) return;
+  const sel = document.getElementById('f-site');
+  if(!sel) return;
 
   const diger = sel.value === '__diger';
-  kutu.style.display = diger ? 'block' : 'none';
-  if(!diger) kutu.value = ''; else kutu.focus();
 
-  // Etap listesi: yalnızca etaplı sitelerde, her sitenin kendi etap sayısıyla
+  // Etap listesi: yalnızca etaplı sitelerde
   const adet = ETAPLI_SITELER[sel.value] || 0;
   const we = document.getElementById('wrap-etap');
   const et = document.getElementById('f-etap');
@@ -1703,20 +1699,16 @@ function siteDegisti(){
     et.value = '';
   }
 
-  // Listeden gerçek bir site seçildiyse ilçe/mahalle ve sokak alanlarına gerek yok
-  const listedenSite = sel.value !== '' && !diger;
-
+  // İlçe, mahalle ve sokak: yalnızca "Diğer" seçildiğinde
   const wk = document.getElementById('wrap-konum');
-  if(wk) wk.style.display = listedenSite ? 'none' : 'flex';
-  if(listedenSite){
-    const il = document.getElementById('f-ilce');   if(il) il.value = '';
-    const mh = document.getElementById('f-mahalle'); if(mh) mh.value = '';
-  }
-
   const ws = document.getElementById('wrap-sokak');
-  const sk = document.getElementById('f-sokak');
-  if(ws) ws.style.display = listedenSite ? 'none' : 'block';
-  if(listedenSite && sk) sk.value = '';
+  if(wk) wk.style.display = diger ? 'flex'  : 'none';
+  if(ws) ws.style.display = diger ? 'block' : 'none';
+  if(!diger){
+    ['f-ilce','f-mahalle','f-sokak'].forEach(function(id){
+      const el = document.getElementById(id); if(el) el.value = '';
+    });
+  }
 
   adresKur();
 }
@@ -1727,7 +1719,7 @@ function adresKur(){
   const g = id => (document.getElementById(id)?.value || '').trim();
   const ilce = g('f-ilce'), mahalle = g('f-mahalle');
   const siteSec = g('f-site');
-  const site = (siteSec === '__diger') ? g('f-site-diger') : siteSec;
+  const site = (siteSec === '__diger') ? '' : siteSec;
   const etap = g('f-etap'), sokak = g('f-sokak'), blok = g('f-blok'), daire = g('f-daire');
 
   const parcalar = [];
@@ -1934,7 +1926,7 @@ function faturaOnayDevam(){
 }
 
 function resetForm(){
-  ['f-date','f-amount','f-hb-owner','f-hb-buyer','f-address','f-deposit','f-owner-name','f-owner-tc','f-owner-phone','f-owner-email','f-buyer-name','f-buyer-tc','f-buyer-phone','f-buyer-email','f-notes','f-tahliye-tarih','f-ilce','f-mahalle','f-sokak','f-blok','f-daire','f-site-diger'].forEach(id=>{const el=document.getElementById(id);if(el){el.value='';el.style.borderColor=''}});
+  ['f-date','f-amount','f-hb-owner','f-hb-buyer','f-address','f-deposit','f-owner-name','f-owner-tc','f-owner-phone','f-owner-email','f-buyer-name','f-buyer-tc','f-buyer-phone','f-buyer-email','f-notes','f-tahliye-tarih','f-ilce','f-mahalle','f-sokak','f-blok','f-daire'].forEach(id=>{const el=document.getElementById(id);if(el){el.value='';el.style.borderColor=''}});
   document.getElementById('f-date').value=new Date().toISOString().split('T')[0];
   document.getElementById('f-ref-shared').value=''; document.getElementById('f-taraf').value=''; document.getElementById('f-ref').value=''; document.getElementById('f-ref-partner-wrap').style.display='none';
   { const t=document.getElementById('f-ref-type'); if(t) t.value=''; const fw=document.getElementById('f-ref-firm'); if(fw) fw.value=''; const tw=document.getElementById('f-ref-type-wrap'); if(tw) tw.style.display='none'; const ftw=document.getElementById('f-ref-firm-wrap'); if(ftw) ftw.style.display='none'; }
@@ -1942,9 +1934,8 @@ function resetForm(){
   { const _s=document.getElementById('f-site'); if(_s) _s.value='';
     const _e=document.getElementById('f-etap'); if(_e) _e.value='';
     const _we=document.getElementById('wrap-etap'); if(_we) _we.style.display='none';
-    const _ws=document.getElementById('wrap-sokak'); if(_ws) _ws.style.display='block';
-    const _wk=document.getElementById('wrap-konum'); if(_wk) _wk.style.display='flex';
-    const _sd=document.getElementById('f-site-diger'); if(_sd) _sd.style.display='none';
+    const _ws=document.getElementById('wrap-sokak'); if(_ws) _ws.style.display='none';
+    const _wk=document.getElementById('wrap-konum'); if(_wk) _wk.style.display='none';
     const _a=document.getElementById('f-address'); if(_a) _a.value=''; }
   setType('Satılık');
   DOC_TYPES.forEach(t=>removeFile({stopPropagation:()=>{}},t));
