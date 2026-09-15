@@ -458,7 +458,7 @@
     </div>
     <div class="form-card">
       <div class="form-section-title">🏠 Mülk Bilgisi</div>
-      <div class="field-row">
+      <div class="field-row" id="wrap-konum">
         <div class="field"><label>İlçe</label>
           <input type="text" id="f-ilce" list="dl-ilce" placeholder="Kadıköy" oninput="capitalizeWords(this);adresKur()">
           <datalist id="dl-ilce">
@@ -1703,12 +1703,20 @@ function siteDegisti(){
     et.value = '';
   }
 
-  // Sokak/cadde: yalnızca site seçilmediğinde
-  const siteSecili = sel.value !== '';
+  // Listeden gerçek bir site seçildiyse ilçe/mahalle ve sokak alanlarına gerek yok
+  const listedenSite = sel.value !== '' && !diger;
+
+  const wk = document.getElementById('wrap-konum');
+  if(wk) wk.style.display = listedenSite ? 'none' : 'flex';
+  if(listedenSite){
+    const il = document.getElementById('f-ilce');   if(il) il.value = '';
+    const mh = document.getElementById('f-mahalle'); if(mh) mh.value = '';
+  }
+
   const ws = document.getElementById('wrap-sokak');
   const sk = document.getElementById('f-sokak');
-  if(ws) ws.style.display = siteSecili ? 'none' : 'block';
-  if(siteSecili && sk) sk.value = '';
+  if(ws) ws.style.display = listedenSite ? 'none' : 'block';
+  if(listedenSite && sk) sk.value = '';
 
   adresKur();
 }
@@ -1935,6 +1943,7 @@ function resetForm(){
     const _e=document.getElementById('f-etap'); if(_e) _e.value='';
     const _we=document.getElementById('wrap-etap'); if(_we) _we.style.display='none';
     const _ws=document.getElementById('wrap-sokak'); if(_ws) _ws.style.display='block';
+    const _wk=document.getElementById('wrap-konum'); if(_wk) _wk.style.display='flex';
     const _sd=document.getElementById('f-site-diger'); if(_sd) _sd.style.display='none';
     const _a=document.getElementById('f-address'); if(_a) _a.value=''; }
   setType('Satılık');
