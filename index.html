@@ -1057,20 +1057,61 @@ async function _loadAllRecordsGercek(){
   // Önce Sheets'ten yükle, sonra localStorage ile birleştir
   let sheetRecs = await loadFromSheets();
   let localRecs = loadRecords();
+  // Sunucuya ulaşılamadıysa: telefondaki son kopyayı göster ama "taze" sayma (bir sonraki açılışta yine dener)
+  if(sheetRecs === null){
+    const yedek = (Array.isArray(localRecs) ? localRecs : []).filter(isValidRecord).map(r=>({...r, advisor:canonAdvisor(r.advisor)}));
+    _recordsCache = yedek;
+    _recFetchTime = 0;
+    try{ if(typeof showToast==='function') showToast('Sunucuya ulaşılamadı — telefondaki son kayıtlar gösteriliyor'); }catch(e){}
+    return yedek;
+  }
   // Sheets veya localStorage'dan gelen null/boş/id'siz satırları ayıkla
   // (Sheets'te silinmiş/boş bir satır olduğunda eski kod burada çöküyor ve broker paneli beyaz kalıyordu)
   sheetRecs = (Array.isArray(sheetRecs) ? sheetRecs : []).filter(isValidRecord);
   localRecs = (Array.isArray(localRecs) ? localRecs : []).filter(isValidRecord);
   // Sheets'teki id'lere göre tekrarları önle
   const sheetIds = new Set(sheetRecs.map(r=>String(r.id)));
-  const onlyLocal = localRecs.filter(r=>!sheetIds.has(String(r.id)));
+  // ESKİ HATA: Sheets'te olmayan HER yerel kayıt ekranda kalıyordu (başka cihazdan silinen / değişen
+  // kayıtlar telefonda hayalet olarak yaşıyor, rakamlar web ile tutmuyordu).
+  // YENİ: yalnızca bu cihazdan girilip henüz Sheets'e ulaşmamış kayıtlar tutulur.
+  const bekleyen = pendingOku();
+  const simdi2 = Date.now();
+  const onlyLocal = localRecs.filter(r=>{
+    const k = String(r.id);
+    if(sheetIds.has(k)) return false;
+    if(bekleyen[k]) return true;
+    const t = Date.parse(r.createdAt || '');
+    return !isNaN(t) && (simdi2 - t) < 48*3600*1000;   // güncelleme öncesi girilmiş taze kayıtlar için
+  });
+  // Sheets'e ulaşmış olanları bekleyen listesinden düş; 2 dk'dan eski ve hâlâ ulaşmamışları tekrar gönder
+  let degisti = false;
+  Object.keys(bekleyen).forEach(k=>{
+    if(sheetIds.has(k)){ delete bekleyen[k]; degisti = true; return; }
+    const r = localRecs.find(x=>String(x.id)===k);
+    if(!r){ delete bekleyen[k]; degisti = true; return; }
+    if(simdi2 - bekleyen[k] > 120000){ bekleyen[k] = simdi2; degisti = true; saveToSheets(r); }
+  });
+  if(degisti) pendingYaz(bekleyen);
   const all = [...sheetRecs, ...onlyLocal].map(r=>({...r, advisor:canonAdvisor(r.advisor)}));
   // Sheets kayıtlarını localStorage'a da kaydet
-  if(sheetRecs.length > 0) saveRecords(all);
+  saveRecords(all);   // Sheets başarıyla okundu → telefon kopyası Sheets ile aynı olur (hayaletler temizlenir)
   _recordsCache = all; // detay kartının anında açılması için belleğe al
   _recFetchTime = Date.now();
   return all;
 }
+function showToast(msg){
+  try{
+    let t=document.getElementById('kap-toast');
+    if(!t){ t=document.createElement('div'); t.id='kap-toast';
+      t.style.cssText='position:fixed;left:50%;bottom:24px;transform:translateX(-50%);max-width:90vw;background:#0B2545;color:#fff;padding:10px 16px;border-radius:12px;font-size:13px;z-index:99999;box-shadow:0 8px 24px rgba(0,0,0,.3);text-align:center;transition:opacity .3s';
+      document.body.appendChild(t); }
+    t.textContent=msg; t.style.opacity='1';
+    clearTimeout(t._z); t._z=setTimeout(()=>{t.style.opacity='0';},4500);
+  }catch(e){}
+}
+const PENDING_KEY = STORAGE_KEY + '_pending';
+function pendingOku(){ try{ const o = JSON.parse(localStorage.getItem(PENDING_KEY) || '{}'); return (o && typeof o==='object') ? o : {}; }catch(e){ return {}; } }
+function pendingYaz(o){ try{ localStorage.setItem(PENDING_KEY, JSON.stringify(o||{})); }catch(e){} }
 function saveRecords(recs){try{
   localStorage.setItem(STORAGE_KEY,JSON.stringify(recs));
   localStorage.setItem(STORAGE_KEY+'_ts', String(Date.now()));
@@ -1094,15 +1135,16 @@ async function saveToSheets(rec){
 async function loadFromSheets(){
   try{
     const ctrl = new AbortController();
-    const timer = setTimeout(()=>ctrl.abort(), 8000);
+    const timer = setTimeout(()=>ctrl.abort(), 20000);   // telefonda Apps Script uyanması 8 sn'yi aşabiliyor
     const resp = await fetch(APPS_SCRIPT_URL + '?action=getRecords', { redirect: 'follow', signal: ctrl.signal });
     clearTimeout(timer);
     const text = await resp.text();
     const json = JSON.parse(text);
-    return json.records || [];
+    if(!json || !Array.isArray(json.records)) return null;
+    return json.records;
   }catch(e){
     console.warn('Sheets baglantisi atlandi:', e.name==='AbortError'?'zaman asimi':e.message);
-    return [];
+    return null;
   }
 }
 
@@ -2171,6 +2213,7 @@ async function submitForm(){
     createdAt:new Date().toISOString()
   };
   const recs=loadRecords(); recs.push(rec); saveRecords(recs);
+  { const b = pendingOku(); b[String(rec.id)] = Date.now(); pendingYaz(b); }
   // Google Sheets'e de yaz
   saveToSheets(rec);
 
@@ -3075,6 +3118,7 @@ async function deleteRecord(id){
   // localStorage'dan sil (id metin/sayı farkına takılmasın diye String karşılaştırma)
   const recs=loadRecords();
   saveRecords(recs.filter(r=>String(r.id)!==String(id)));
+  { const b = pendingOku(); if(b[String(id)]){ delete b[String(id)]; pendingYaz(b); } }
   // BELLEKTEN DE SİL — eksik olan buydu. Diğer işlemler _recordsCache'i güncelliyor,
   // silme güncellemiyordu; ekran eski bellekten okuyup kaydı geri çiziyordu.
   if(typeof _recordsCache!=='undefined' && Array.isArray(_recordsCache)){
