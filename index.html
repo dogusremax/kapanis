@@ -2024,6 +2024,12 @@ async function mkFaturaEsKaydaIsle(rec, linkler){
   }catch(e){ console.warn('Eş kayda fatura işlenemedi:', e); return false; }
 }
 
+/* İşlem sayısı: co-op (ofis içi veya dış firma) kapanış her danışmana 0,5 işlem sayılır.
+   Ofis içi co-op iki kayıt olduğundan ofis toplamında 0,5 + 0,5 = 1 işlem eder. */
+function islemAgirligi(r){ return /co-?op/i.test(String((r&&r.ref)||'')) ? 0.5 : 1; }
+function islemSay(rs){ return (rs||[]).reduce((s,r)=>s+islemAgirligi(r),0); }
+function fmtIslem(n){ return Number(n||0).toLocaleString('tr-TR',{maximumFractionDigits:2}); }
+
 /* Kayıt, HB'si ikiye bölünmüş bir OFİS İÇİ ortak kapanış mı?
    (Müşteriye kesilecek fatura bu durumda TAM tutar üzerinden, tek seferde kesilir.)
    Kıbrıs + Umut ortaklığında HB bölünmediği için hariç tutulur.
@@ -3466,7 +3472,7 @@ async function renderDashboard(preRecs){
   document.getElementById('metrics-row').innerHTML=`
     <div class="metric accent"><div class="metric-label">Yıllık Toplam Ciro</div><div class="metric-value">${fmtShort(totalCiro)}</div><div class="metric-sub">${thisYear} yılı</div></div>
     <div class="metric"><div class="metric-label">Bu Ay Ciro</div><div class="metric-value">${fmtShort(monthCiro)}</div><div class="metric-sub">${now.toLocaleDateString('tr-TR',{month:'long'})}</div></div>
-    <div class="metric"><div class="metric-label">Toplam Kapanış</div><div class="metric-value">${yearRecs.length}</div><div class="metric-sub">Bu yıl</div></div>`;
+    <div class="metric"><div class="metric-label">Toplam Kapanış</div><div class="metric-value">${fmtIslem(islemSay(yearRecs))}</div><div class="metric-sub">Bu yıl</div></div>`;
   const byAdvisor={};
   yearRecs.forEach(r=>{
     if(HIDDEN_FROM_RANKING.includes(r.advisor)) return;
@@ -3505,13 +3511,13 @@ async function renderDashboard(preRecs){
   fY.value=curY;
   const months=['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'];
   const monthlyCounts=Array(12).fill(0);
-  yearRecs.forEach(r=>monthlyCounts[new Date(r.date).getMonth()]++);
+  yearRecs.forEach(r=>monthlyCounts[new Date(r.date).getMonth()]+=islemAgirligi(r));
   const maxM=Math.max(...monthlyCounts,1);
   document.getElementById('monthly-bars').innerHTML=months.map((m,i)=>`
     <div class="bar-row">
       <div class="bar-label">${m}</div>
       <div class="bar-track"><div class="bar-fill" style="width:${Math.round(monthlyCounts[i]/maxM*100)}%;${i===thisMonth?'background:var(--green)':''}"></div></div>
-      <div class="bar-val">${monthlyCounts[i]} kapanış</div>
+      <div class="bar-val">${fmtIslem(monthlyCounts[i])} kapanış</div>
     </div>`).join('');
   /* Ortak kapanıştan otomatik oluşup faturası hâlâ yüklenmemiş kayıtlar.
      Broker buradan kimin eksik bıraktığını tek bakışta görür. */
@@ -3688,7 +3694,7 @@ function _renderRecordsCiz(recs){
     summaryEl.innerHTML = `
       <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:var(--accent-bg);border-radius:var(--radius);margin-top:8px;border:1px solid var(--border2)">
         <div style="font-size:13px;color:var(--text2)">
-          <strong style="color:var(--text)">${filtered.length} kapanış</strong>
+          <strong style="color:var(--text)">${fmtIslem(islemSay(filtered))} kapanış</strong>
           ${advFilter2 ? ' · ' + advFilter2 : ''}
         </div>
         <div style="display:flex;gap:24px">
@@ -4050,7 +4056,7 @@ async function renderMyClosings(){
     <div style="flex:1;background:var(--surface2);border-radius:9px;padding:9px;text-align:center">
       <div style="font-size:11px;color:var(--text2)">Ciro</div><div style="font-size:15px;font-weight:700;font-family:Arial,sans-serif">${fmt(ciro)}</div></div>
     <div style="flex:1;background:var(--surface2);border-radius:9px;padding:9px;text-align:center">
-      <div style="font-size:11px;color:var(--text2)">İşlem</div><div style="font-size:15px;font-weight:700">${filtered.length}</div></div>
+      <div style="font-size:11px;color:var(--text2)">İşlem</div><div style="font-size:15px;font-weight:700">${fmtIslem(islemSay(filtered))}</div></div>
   </div>`;
 
   const fmtDate=d=>{const x=new Date(d);return isNaN(x)?'':x.toLocaleDateString('tr-TR');};
@@ -4162,7 +4168,7 @@ async function renderLeaderboard(){
   const stats = {};
   filtered.forEach(r=>{
     if(HIDDEN_FROM_RANKING.includes(r.advisor)) return; // ayrılan danışman sıralamada yok (verisi durur)
-    const _coop = /co-?op/i.test(String(r.ref||''));
+    const _coop = islemAgirligi(r) < 1;
     // Umut'un SOLO Türkiye işleri sıralama/toplam dışı.
     // Kıbrıs'ta Umut da saha danışmanı sayılır → cirosu toplama dahil (co-op mantığıyla aynı).
     if(r.advisor===BROKER_NAME && !_coop && !adresKibrisMi(r.address)) return;
@@ -4173,7 +4179,7 @@ async function renderLeaderboard(){
     // Kıbrıs'ta cironun yarısı portföy sahibi Umut'a yazılır (satırda gösterilmez, toplama girer)
     const _bp = brokerCiroPayi(r);
     if(_bp>0){ if(!stats[BROKER_NAME]) stats[BROKER_NAME]={ciro:0, islem:0, memnun:0}; stats[BROKER_NAME].ciro += _bp; }
-    stats[a].islem += _coop ? 0.5 : 1; // ortak = 0.5; takım da ortaksa 0.5, sonra /2 -> 3'lüde 0.25, saf takımda 0.5
+    stats[a].islem += islemAgirligi(r); // ortak = 0.5; takım da ortaksa 0.5, sonra /2 -> 3'lüde 0.25, saf takımda 0.5
     if(r.review==='Evet') stats[a].memnun++;
   });
 
@@ -4239,7 +4245,7 @@ function showAdvisorQuarterDetail(name){
   const nDeals = recs.length;
   const half = isDuo ? 2 : 1;
   const toplamCiro = recs.reduce((s,r)=>s+danismanCiroPayi(r),0) / half;
-  const islem = recs.reduce((s,r)=> s + (/co-?op/i.test(String(r.ref||''))?0.5:1), 0) / (isDuo?2:1);
+  const islem = islemSay(recs) / (isDuo?2:1);
   const memnun = recs.filter(r=>r.review==='Evet').length / half;
   const fmtDate=d=>{ const x=new Date(d); return isNaN(x)?'':x.toLocaleDateString('tr-TR'); };
 
