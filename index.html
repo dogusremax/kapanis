@@ -556,6 +556,8 @@
         <div class="field" id="f-ref-firm-wrap" style="display:none">
           <label>Emlak Firması</label>
           <input type="text" id="f-ref-firm" placeholder="Firma adı..." oninput="capitalizeWords(this);if(typeof updateFaturaHesap==='function')updateFaturaHesap()">
+          <div id="dis-saticidan-not" style="display:none;margin-top:10px;font-size:12px;color:#1A56A0;background:#EEF4FF;border:1px solid #C7D9FF;border-radius:8px;padding:9px 11px;line-height:1.5">🤝 <b>Satılıkta alıcı tarafı:</b> karşı firma komisyonunu satıcıdan alır. Alıcıdan aldığın hizmet bedeli paylaşılmaz, tamamı senin HB'n olarak kaydedilir.</div>
+          <div id="dis-oran-blok">
           <label style="margin-top:10px">Karşı Firmanın Payı</label>
           <div style="display:flex;gap:6px">
             <button type="button" id="dis-oran-25" onclick="disOranSec(25)" style="flex:1;padding:11px 6px;border-radius:10px;border:1.5px solid var(--border2);background:var(--surface);color:var(--text2);font-size:12.5px;font-weight:600;cursor:pointer;line-height:1.3">%25<br><span style="font-size:10.5px;font-weight:500;opacity:.8">Referral</span></button>
@@ -570,6 +572,7 @@
             <div style="font-size:11px;color:var(--text3);margin-top:4px">Karşı firmaya gidecek yüzde (1–99)</div>
           </div>
           <div id="dis-oran-ozet" style="display:none;margin-top:10px"></div>
+          </div>
         </div>
       </div>
     </div>
@@ -1808,6 +1811,8 @@ function setType(t){
     if(t!=='Kiralık' && pendingFiles['tahliye']){ pendingFiles['tahliye']=null; setUploadStatus('tahliye','idle'); }
     if(t!=='Kiralık'){ const _tt=document.getElementById('f-tahliye-tarih'); if(_tt) _tt.value=''; }
   }
+  // İşlem türü dış firma paylaşım kesintisini etkiler (Satılık + alıcı tarafı)
+  if(typeof updateFaturaHesap === 'function') updateFaturaHesap();
 }
 
 /* ===== KIBRIS / PAY ORANLARI — TEK KAYNAK =====
@@ -2189,11 +2194,19 @@ function disFirmaYuzdesi(){
   const v = parseFloat(document.getElementById('f-ref-oran')?.value);
   return (isFinite(v) && v > 0 && v < 100) ? v : 50;
 }
+/* Satılıkta ALICI tarafını temsil edip farklı bir emlak firmasıyla ortak çalışıldıysa
+   karşı firma komisyonunu SATICIDAN alır. Alıcıdan alınan HB paylaşılmaz → kesinti yok. */
+function disFirmaSaticidanAliyorMu(){
+  return selectedType === 'Satılık'
+    && paylasimliBolmeVarMi()
+    && (document.getElementById('f-taraf')?.value || '') === 'alici-kiraci'
+    && (document.getElementById('f-ref-type')?.value || '') === 'dis';
+}
 /* Girilen HB'den düşülecek oran (0..1). Ofis içi her zaman yarı yarıya. */
 function ortakKesintiOrani(){
   if(!paylasimliBolmeVarMi()) return 0;
   const tip = document.getElementById('f-ref-type')?.value || '';
-  if(tip === 'dis') return disFirmaYuzdesi() / 100;
+  if(tip === 'dis') return disFirmaSaticidanAliyorMu() ? 0 : disFirmaYuzdesi() / 100;
   return 0.5;
 }
 function getToplamHB(){
@@ -2221,7 +2234,7 @@ function updateFaturaHesap(){
 
   // 1) HB alanlarının altında sakin özet — sadece bilgi
   const ozet = document.getElementById('hb-ozet');
-  const bolundu = paylasimliBolmeVarMi();
+  const bolundu = ortakKesintiOrani() > 0;
   const girilen = getGirilenHB();
   if(ozet){
     if(toplam > 0){
@@ -2234,6 +2247,8 @@ function updateFaturaHesap(){
         bolmeSatir = _disMi
           ? `<div class="hb-bolme">🤝 Dış firma paylaşımı — girilen HB ${moneyTR(girilen)} · karşı firma %${Math.round(_k*100)} (${moneyTR(_karsi)}) · sana kalan ${moneyTR(toplam)}</div>`
           : `<div class="hb-bolme">🤝 Paylaşımlı kapanış — girilen HB ${moneyTR(girilen)} ikiye bölündü</div>`;
+      } else if(disFirmaSaticidanAliyorMu()){
+        bolmeSatir = `<div class="hb-bolme">🤝 Dış firma satıcı tarafında — komisyonunu satıcıdan alıyor, alıcı HB'si bölünmedi</div>`;
       } else if(kibrisUmutOrtakMi()){
         bolmeSatir = `<div class="hb-bolme">🇨🇾 Kıbrıs — Umut'un payı %${yuzde} oranının içinde. HB bölünmedi, ciro otomatik yarı yarıya yazılır.</div>`;
       }
@@ -2250,7 +2265,10 @@ function updateFaturaHesap(){
   (function(){
     const kutu = document.getElementById('dis-oran-ozet');
     if(!kutu) return;
-    const disMi = paylasimliBolmeVarMi() && document.getElementById('f-ref-type')?.value === 'dis';
+    const _sat = disFirmaSaticidanAliyorMu();
+    const _blok = document.getElementById('dis-oran-blok'); if(_blok) _blok.style.display = _sat ? 'none' : 'block';
+    const _not = document.getElementById('dis-saticidan-not'); if(_not) _not.style.display = _sat ? 'block' : 'none';
+    const disMi = paylasimliBolmeVarMi() && document.getElementById('f-ref-type')?.value === 'dis' && !_sat;
     if(!disMi || girilen <= 0){ kutu.style.display='none'; kutu.innerHTML=''; return; }
     const yuzdeDis = disFirmaYuzdesi();
     const karsi = Math.max(0, girilen - toplam);
@@ -2388,7 +2406,7 @@ async function submitForm(){
       errors.push('• Paylaşım türü (ofis içi / farklı firma)');
     } else if(refType==='dis'){
       if(!(document.getElementById('f-ref-firm').value||'').trim()) errors.push('• Ortak emlak firması adı');
-      if(_disOranSecim === 'ozel'){
+      if(_disOranSecim === 'ozel' && !disFirmaSaticidanAliyorMu()){
         const _v = parseFloat(document.getElementById('f-ref-oran')?.value);
         if(!(isFinite(_v) && _v > 0 && _v < 100)) errors.push('• Karşı firmanın payı (1–99 arası bir yüzde)');
       }
@@ -2567,7 +2585,7 @@ async function submitForm(){
     address, deposit:getCurrencyValue('f-deposit'),
     // Dış firma paylaşımında karşı tarafın oranı ve tutarı (raporlama için)
     coopDisYuzde: (document.getElementById('f-ref-shared').value==='Evet'
-                   && document.getElementById('f-ref-type').value==='dis') ? disFirmaYuzdesi() : '',
+                   && document.getElementById('f-ref-type').value==='dis') ? (disFirmaSaticidanAliyorMu() ? 0 : disFirmaYuzdesi()) : '',
     coopDisTutar: (document.getElementById('f-ref-shared').value==='Evet'
                    && document.getElementById('f-ref-type').value==='dis')
                    ? Math.max(0, getGirilenHB() - getToplamHB()) : '',
@@ -2577,7 +2595,8 @@ async function submitForm(){
       const type=document.getElementById('f-ref-type').value;
       if(type==='dis'){
         const firm=(document.getElementById('f-ref-firm').value||'').trim();
-        const y = disFirmaYuzdesi();
+        // %0 = karşı firma satıcıdan alıyor, alıcı HB'si paylaşılmadı
+        const y = disFirmaSaticidanAliyorMu() ? 0 : disFirmaYuzdesi();
         return firm ? 'Co-op (dış) %'+y+': '+firm : 'Co-op (dış) %'+y;
       }
       const partner=document.getElementById('f-ref').value; return partner ? 'Co-op: '+partner : 'Yok';
@@ -3078,7 +3097,7 @@ async function showRecordDetail(id){
     if(v.indexOf('Co-op (dış)')===0){
       const i=v.indexOf(':'); const f=i>-1?v.slice(i+1).trim():'';
       const y=disCoopYuzdesi(r);
-      return 'Evet — Dış firma'+(f?': '+f:'')+(y?` (payı %${y})`:'');
+      return 'Evet — Dış firma'+(f?': '+f:'')+(y?` (payı %${y})`:' (satıcıdan alıyor, paylaşım yok)');
     }
     if(v.indexOf('Co-op:')===0) return 'Evet — Ofis içi: '+v.slice(6).trim();
     return 'Evet — '+v;
@@ -3280,8 +3299,8 @@ function editRecord(id){
       <div style="margin-bottom:10px;display:${refP.shared==='Evet'&&refP.type==='dis'?'block':'none'}" id="edit-ref-firm-wrap"><label style="display:block;font-size:12px;color:var(--text2);margin-bottom:3px">Emlak Firması</label>
         <input id="edit-ref-firm" type="text" value="${esc(refP.firm)}" style="${inpStyle}">
         <label style="display:block;font-size:12px;color:var(--text2);margin:10px 0 3px">Karşı Firmanın Payı (%)</label>
-        <input id="edit-ref-oran" type="number" min="1" max="99" step="1" value="${refP.yuzde||50}" style="${inpStyle}">
-        <div style="font-size:11px;color:var(--text3);margin-top:3px">Referral %25 · Cooperation %50. HB alanlarını bu orana göre elle güncelle.</div></div>`;
+        <input id="edit-ref-oran" type="number" max="99" step="1" value="${refP.yuzde===0?0:(refP.yuzde||50)}" min="0" style="${inpStyle}">
+        <div style="font-size:11px;color:var(--text3);margin-top:3px">Referral %25 · Cooperation %50 · Satılıkta alıcı tarafı (karşı firma satıcıdan alıyor) %0. HB alanlarını bu orana göre elle güncelle.</div></div>`;
   const fld=(label,fid,val,type='text',extra='',attrs='')=>`<div style="margin-bottom:10px;${extra}"><label style="display:block;font-size:12px;color:var(--text2);margin-bottom:3px">${label}</label><input id="${fid}" type="${type}" value="${esc(val)}" ${attrs} style="${inpStyle}"></div>`;
   // Ön dolum formatları: kayıtlı ham telefonu maskeye, isimleri baş harfi büyüğe çevir
   const phoneFmt=(v)=>{if(telYurtDisiMi(v)) return String(v).trim(); let d=String(v||'').replace(/\D/g,''); if(!d) return ''; if(d.length===10&&d[0]==='5') d='0'+d; if(d.length>11) d=d.slice(0,11); if(d.length!==11) return String(v||''); return d[0]+' ('+d.slice(1,4)+') '+d.slice(4,7)+' '+d.slice(7,9)+' '+d.slice(9);};
@@ -3385,7 +3404,7 @@ async function saveRecordEdit(id){
       if(!f){ eErrors.push('• Ortak emlak firması adı'); }
       else {
         const _ey = parseFloat(gv('edit-ref-oran'));
-        const _y = (isFinite(_ey) && _ey > 0 && _ey < 100) ? _ey : 50;
+        const _y = (isFinite(_ey) && _ey >= 0 && _ey < 100) ? _ey : 50;
         refNew = 'Co-op (dış) %'+_y+': '+f;
       }
     } else {
@@ -3430,6 +3449,7 @@ async function saveRecordEdit(id){
       if(!v || v === 'Yok') return 0;
       if(v.indexOf('Co-op (dış)') === 0){
         const y = disCoopYuzdesi({ref:v});
+        if(y === 0) return 0;                       // %0: karşı firma satıcıdan alıyor
         return (y > 0 && y < 100) ? y/100 : 0.5;
       }
       return 0.5;                                   // ofis içi her zaman yarı yarıya
