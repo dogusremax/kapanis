@@ -556,7 +556,7 @@
         <div class="field" id="f-ref-firm-wrap" style="display:none">
           <label>Emlak Firması</label>
           <input type="text" id="f-ref-firm" placeholder="Firma adı..." oninput="capitalizeWords(this);if(typeof updateFaturaHesap==='function')updateFaturaHesap()">
-          <div id="dis-saticidan-not" style="display:none;margin-top:10px;font-size:12px;color:#1A56A0;background:#EEF4FF;border:1px solid #C7D9FF;border-radius:8px;padding:9px 11px;line-height:1.5">🤝 <b>Satılıkta alıcı tarafı:</b> karşı firma komisyonunu satıcıdan alır. Alıcıdan aldığın hizmet bedeli paylaşılmaz, tamamı senin HB'n olarak kaydedilir.</div>
+          <div id="dis-saticidan-not" style="display:none;margin-top:10px;font-size:12px;color:#1A56A0;background:#EEF4FF;border:1px solid #C7D9FF;border-radius:8px;padding:9px 11px;line-height:1.5">🤝 <b><span class="dsn-taraf">Satılıkta alıcı tarafı</span>:</b> karşı firma komisyonunu <span class="dsn-karsi">satıcıdan</span> alır. <span class="dsn-biz">Alıcıdan</span> aldığın hizmet bedeli paylaşılmaz, tamamı senin HB'n olarak kaydedilir.</div>
           <div id="dis-oran-blok">
           <label style="margin-top:10px">Karşı Firmanın Payı</label>
           <div style="display:flex;gap:6px">
@@ -2194,10 +2194,11 @@ function disFirmaYuzdesi(){
   const v = parseFloat(document.getElementById('f-ref-oran')?.value);
   return (isFinite(v) && v > 0 && v < 100) ? v : 50;
 }
-/* Satılıkta ALICI tarafını temsil edip farklı bir emlak firmasıyla ortak çalışıldıysa
-   karşı firma komisyonunu SATICIDAN alır. Alıcıdan alınan HB paylaşılmaz → kesinti yok. */
+/* Satılıkta ALICI / Kiralıkta KİRACI tarafını temsil edip farklı bir emlak firmasıyla
+   ortak çalışıldıysa karşı firma komisyonunu SATICIDAN / EV SAHİBİNDEN alır.
+   Alıcıdan / kiracıdan alınan HB paylaşılmaz → kesinti yok. */
 function disFirmaSaticidanAliyorMu(){
-  return selectedType === 'Satılık'
+  return (selectedType === 'Satılık' || selectedType === 'Kiralık')
     && paylasimliBolmeVarMi()
     && (document.getElementById('f-taraf')?.value || '') === 'alici-kiraci'
     && (document.getElementById('f-ref-type')?.value || '') === 'dis';
@@ -2248,7 +2249,9 @@ function updateFaturaHesap(){
           ? `<div class="hb-bolme">🤝 Dış firma paylaşımı — girilen HB ${moneyTR(girilen)} · karşı firma %${Math.round(_k*100)} (${moneyTR(_karsi)}) · sana kalan ${moneyTR(toplam)}</div>`
           : `<div class="hb-bolme">🤝 Paylaşımlı kapanış — girilen HB ${moneyTR(girilen)} ikiye bölündü</div>`;
       } else if(disFirmaSaticidanAliyorMu()){
-        bolmeSatir = `<div class="hb-bolme">🤝 Dış firma satıcı tarafında — komisyonunu satıcıdan alıyor, alıcı HB'si bölünmedi</div>`;
+        bolmeSatir = selectedType === 'Kiralık'
+          ? `<div class="hb-bolme">🤝 Dış firma ev sahibi tarafında — komisyonunu ev sahibinden alıyor, kiracı HB'si bölünmedi</div>`
+          : `<div class="hb-bolme">🤝 Dış firma satıcı tarafında — komisyonunu satıcıdan alıyor, alıcı HB'si bölünmedi</div>`;
       } else if(kibrisUmutOrtakMi()){
         bolmeSatir = `<div class="hb-bolme">🇨🇾 Kıbrıs — Umut'un payı %${yuzde} oranının içinde. HB bölünmedi, ciro otomatik yarı yarıya yazılır.</div>`;
       }
@@ -2267,7 +2270,15 @@ function updateFaturaHesap(){
     if(!kutu) return;
     const _sat = disFirmaSaticidanAliyorMu();
     const _blok = document.getElementById('dis-oran-blok'); if(_blok) _blok.style.display = _sat ? 'none' : 'block';
-    const _not = document.getElementById('dis-saticidan-not'); if(_not) _not.style.display = _sat ? 'block' : 'none';
+    const _not = document.getElementById('dis-saticidan-not');
+    if(_not){
+      _not.style.display = _sat ? 'block' : 'none';
+      const _kira = selectedType === 'Kiralık';
+      const _q=(c,t)=>{ const e=_not.querySelector(c); if(e) e.textContent=t; };
+      _q('.dsn-taraf', _kira ? 'Kiralıkta kiracı tarafı' : 'Satılıkta alıcı tarafı');
+      _q('.dsn-karsi', _kira ? 'ev sahibinden' : 'satıcıdan');
+      _q('.dsn-biz',   _kira ? 'Kiracıdan' : 'Alıcıdan');
+    }
     const disMi = paylasimliBolmeVarMi() && document.getElementById('f-ref-type')?.value === 'dis' && !_sat;
     if(!disMi || girilen <= 0){ kutu.style.display='none'; kutu.innerHTML=''; return; }
     const yuzdeDis = disFirmaYuzdesi();
@@ -3097,7 +3108,7 @@ async function showRecordDetail(id){
     if(v.indexOf('Co-op (dış)')===0){
       const i=v.indexOf(':'); const f=i>-1?v.slice(i+1).trim():'';
       const y=disCoopYuzdesi(r);
-      return 'Evet — Dış firma'+(f?': '+f:'')+(y?` (payı %${y})`:' (satıcıdan alıyor, paylaşım yok)');
+      return 'Evet — Dış firma'+(f?': '+f:'')+(y?` (payı %${y})`:' (karşı taraftan alıyor, paylaşım yok)');
     }
     if(v.indexOf('Co-op:')===0) return 'Evet — Ofis içi: '+v.slice(6).trim();
     return 'Evet — '+v;
@@ -3300,7 +3311,7 @@ function editRecord(id){
         <input id="edit-ref-firm" type="text" value="${esc(refP.firm)}" style="${inpStyle}">
         <label style="display:block;font-size:12px;color:var(--text2);margin:10px 0 3px">Karşı Firmanın Payı (%)</label>
         <input id="edit-ref-oran" type="number" max="99" step="1" value="${refP.yuzde===0?0:(refP.yuzde||50)}" min="0" style="${inpStyle}">
-        <div style="font-size:11px;color:var(--text3);margin-top:3px">Referral %25 · Cooperation %50 · Satılıkta alıcı tarafı (karşı firma satıcıdan alıyor) %0. HB alanlarını bu orana göre elle güncelle.</div></div>`;
+        <div style="font-size:11px;color:var(--text3);margin-top:3px">Referral %25 · Cooperation %50 · Satılıkta alıcı / kiralıkta kiracı tarafı (karşı firma diğer taraftan alıyor) %0. HB alanlarını bu orana göre elle güncelle.</div></div>`;
   const fld=(label,fid,val,type='text',extra='',attrs='')=>`<div style="margin-bottom:10px;${extra}"><label style="display:block;font-size:12px;color:var(--text2);margin-bottom:3px">${label}</label><input id="${fid}" type="${type}" value="${esc(val)}" ${attrs} style="${inpStyle}"></div>`;
   // Ön dolum formatları: kayıtlı ham telefonu maskeye, isimleri baş harfi büyüğe çevir
   const phoneFmt=(v)=>{if(telYurtDisiMi(v)) return String(v).trim(); let d=String(v||'').replace(/\D/g,''); if(!d) return ''; if(d.length===10&&d[0]==='5') d='0'+d; if(d.length>11) d=d.slice(0,11); if(d.length!==11) return String(v||''); return d[0]+' ('+d.slice(1,4)+') '+d.slice(4,7)+' '+d.slice(7,9)+' '+d.slice(9);};
