@@ -606,7 +606,7 @@
             <button class="upload-remove" id="ur-tapu" style="display:none" onclick="removeFile(event,'tapu')">✕ Kaldır</button>
           </div>
         </div>
-        <div class="field" style="margin:0">
+        <div class="field" style="margin:0;display:none" id="wrap-kontrat">
           <label>Kontrat</label>
           <div class="upload-area" id="ua-kontrat" onclick="triggerUpload('kontrat')">
             <input type="file" id="f-kontrat" accept=".pdf" style="display:none" onchange="handleKontrat(this)" multiple>
@@ -1789,6 +1789,12 @@ function setType(t){
   // Tapu: sadece Satılık ve Devir'de göster
   const wrapTapu = document.getElementById('wrap-tapu');
   if(wrapTapu) wrapTapu.style.display = (t==='Kiralık') ? 'none' : 'block';
+  // Kontrat: Satılık'ta istenmez; seçilmiş kontrat varsa temizlenir
+  const wrapKontrat = document.getElementById('wrap-kontrat');
+  if(wrapKontrat){
+    wrapKontrat.style.display = (t==='Satılık') ? 'none' : 'block';
+    if(t==='Satılık' && pendingFiles['kontrat']){ kontratFiles = []; removeFile({stopPropagation(){}},'kontrat'); }
+  }
   // Kira başlangıç tarihi: sadece Kiralık'ta göster
   const wrapKB = document.getElementById('wrap-kira-bas');
   if(wrapKB){
@@ -2391,9 +2397,9 @@ async function submitForm(){
     }
   }
 
-  // Belgeler: tapu (Kiralık hariç) ve kontrat zorunlu; fatura dosyası zorunlu
+  // Belgeler: tapu (Kiralık hariç) ve kontrat (Satılık hariç) zorunlu; fatura dosyası zorunlu
   if(selectedType!=='Kiralık' && !pendingFiles['tapu']) errors.push('• Tapu belgesi (PDF)');
-  if(!pendingFiles['kontrat']) errors.push('• Kontrat belgesi (PDF)');
+  if(selectedType!=='Satılık' && !pendingFiles['kontrat']) errors.push('• Kontrat belgesi (PDF)');
   if(!pendingFiles['fatura']) errors.push('• Ofise kesilen fatura (PDF) — fatura olmadan kapanış kaydedilemez');
   // Mülk sahibi bilgileri: mülk sahibi tarafı (veya her ikisi) temsil edildiyse
   // ya da ofis içi ortak kapanışta (iki taraf da zorunlu) istenir
