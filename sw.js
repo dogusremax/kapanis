@@ -1,5 +1,5 @@
 // v158 — sayfa her zaman ağdan (tarayıcı önbelleği atlanır), çevrimdışıysa son kopya
-const CACHE_NAME = 'kapanis-v159';
+const CACHE_NAME = 'kapanis-v160';
 
 self.addEventListener('install', event => {
   self.skipWaiting();
