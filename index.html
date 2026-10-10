@@ -730,6 +730,10 @@
           <option value="3">Nisan</option><option value="4">Mayıs</option><option value="5">Haziran</option>
           <option value="6">Temmuz</option><option value="7">Ağustos</option><option value="8">Eylül</option>
           <option value="9">Ekim</option><option value="10">Kasım</option><option value="11">Aralık</option>
+          <optgroup label="3 Aylık (Çeyrek)">
+            <option value="q1">1. Çeyrek (Oca–Mar)</option><option value="q2">2. Çeyrek (Nis–Haz)</option>
+            <option value="q3">3. Çeyrek (Tem–Eyl)</option><option value="q4">4. Çeyrek (Eki–Ara)</option>
+          </optgroup>
         </select>
         <select class="filter-select" id="filter-odeme" onchange="renderRecords()">
           <option value="">Tüm Ödemeler</option>
@@ -3700,6 +3704,14 @@ function kayitAramaUyar(r, sorgu){
   });
 }
 
+/* Ay filtresi: '' = tüm aylar, '0'..'11' = tek ay, 'q1'..'q4' = çeyrek (3 ay) */
+function ayFiltreUyar(tarih, deger){
+  if(deger==='') return true;
+  const ay = new Date(tarih).getMonth();
+  if(deger.charAt(0)==='q') return Math.floor(ay/3) === Number(deger.slice(1))-1;
+  return ay == deger;
+}
+
 function _renderRecordsCiz(recs){
   const advFilter=document.getElementById('filter-advisor').value;
   const typeFilter=document.getElementById('filter-type').value;
@@ -3713,7 +3725,7 @@ function _renderRecordsCiz(recs){
     if(advFilter&&r.advisor!==advFilter)return false;
     if(typeFilter&&r.type!==typeFilter)return false;
     if(yearFilter&&new Date(r.date).getFullYear()!=yearFilter)return false;
-    if(monthFilter!==''&&new Date(r.date).getMonth()!=monthFilter)return false;
+    if(!ayFiltreUyar(r.date, monthFilter))return false;
     if(odemeFilter&&odemeDurumu(r)!==odemeFilter)return false;
     if(searchFilter && !kayitAramaUyar(r, searchFilter))return false;
     return true;
@@ -3774,7 +3786,7 @@ function _renderRecordsCiz(recs){
     if(advFilter&&r.advisor!==advFilter)return false;
     if(typeFilter&&r.type!==typeFilter)return false;
     if(yearFilter&&new Date(r.date).getFullYear()!=yearFilter)return false;
-    if(monthFilter!==''&&new Date(r.date).getMonth()!=monthFilter)return false;
+    if(!ayFiltreUyar(r.date, monthFilter))return false;
     if(searchFilter && !kayitAramaUyar(r, searchFilter))return false;
     return odemeDurumu(r) !== 'yok';
   });
