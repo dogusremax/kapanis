@@ -318,6 +318,15 @@
   }
   @keyframes sheetUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
   @keyframes ddFade{from{opacity:0}to{opacity:1}}
+  /* Telefon bildirimleri paneli */
+  #bld-ort{position:fixed;inset:0;background:rgba(20,20,20,.45);display:none;align-items:center;justify-content:center;z-index:9999;padding:16px}
+  #bld-ort.acik{display:flex}
+  #bld-kutu{background:var(--surface);border-radius:var(--radius-lg);max-width:380px;width:100%;padding:20px;box-shadow:0 18px 44px rgba(0,0,0,.2)}
+  #bld-kutu h3{margin:0 0 8px;font-size:17px}
+  #bld-kutu p{margin:0 0 12px;color:var(--text2);line-height:1.45}
+  #bld-kutu .btn{width:100%;margin-top:8px}
+  #bld-durum{font-size:13px;color:var(--text2);margin-top:10px;min-height:18px}
+  #bld-anahtar{margin-top:14px;padding-top:12px;border-top:1px solid var(--border);display:none}
 </style>
 
 <!-- LOGIN -->
@@ -377,6 +386,7 @@
       <span class="header-user" id="form-user-label"></span>
       <button class="btn btn-ghost btn-sm" onclick="toggleMyClosings()" id="my-toggle-btn">📋 Kapanışlarım</button>
       <button class="btn btn-ghost btn-sm" onclick="toggleAdvisorLeaderboard()" id="lb-toggle-btn">🏆</button>
+      <button class="btn btn-ghost btn-sm bildirim-btn" onclick="bildirimPaneli()" title="Bildirimler" style="display:none">🔔</button>
       <button class="btn btn-ghost btn-sm" onclick="logout()">Çıkış</button>
     </div>
   </div>
@@ -693,6 +703,7 @@
     </div>
     <div style="display:flex;align-items:center;gap:8px">
       <button class="export-btn" onclick="exportExcel()">⬇ Excel</button>
+      <button class="btn btn-ghost btn-sm bildirim-btn" onclick="bildirimPaneli()" title="Bildirimler" style="display:none">🔔</button>
       <button class="btn btn-ghost btn-sm" onclick="logout()">Çıkış</button>
     </div>
   </div>
@@ -1780,7 +1791,7 @@ function loginAdmin(){
   }catch(err){ console.error('loginAdmin hatası:', err); }
 }
 
-function logout(){currentUser=null;selectedAdvisor=null;try{localStorage.removeItem('kapanis_user');}catch(e){ console.warn('Sessiz hata:', e); }showScreen('s-login');buildAdvisorGrid();advBack()}
+function logout(){bildirimCikis();currentUser=null;selectedAdvisor=null;try{localStorage.removeItem('kapanis_user');}catch(e){ console.warn('Sessiz hata:', e); }showScreen('s-login');buildAdvisorGrid();advBack()}
 
 function showScreen(id){
   document.querySelectorAll('.screen').forEach(s=>{s.classList.remove('active');s.style.display='none'});
@@ -1791,6 +1802,7 @@ function showScreen(id){
   s.style.minHeight='100vh';
   s.classList.add('active');
   if(window.scrollTo) window.scrollTo(0,0);
+  if(typeof bildirimHazirla==='function') try{ bildirimHazirla(); }catch(e){}
 }
 
 function setType(t){
@@ -5045,6 +5057,149 @@ async function fkGonder(){
     btn.disabled=false; btn.textContent='Tekrar Dene';
   }
 }
+</script>
+
+<!-- TELEFON BİLDİRİMLERİ -->
+<div id="bld-ort" onclick="if(event.target===this)bildirimKapat()">
+  <div id="bld-kutu">
+    <h3>🔔 Telefon bildirimleri</h3>
+    <p id="bld-aciklama"></p>
+    <button class="btn btn-primary" id="bld-ac" onclick="bildirimAc()">Bildirimleri aç</button>
+    <button class="btn btn-ghost" id="bld-test" onclick="bildirimTest()" style="display:none">Deneme bildirimi gönder</button>
+    <div id="bld-anahtar">
+      <p style="margin-bottom:6px"><b>Gönderme anahtarı</b> (yalnız bir kez): Firebase'den indirdiğin .json dosyasını seç.</p>
+      <input type="file" accept=".json,application/json" onchange="bildirimAnahtarYukle(this)">
+    </div>
+    <div id="bld-durum"></div>
+    <button class="btn btn-ghost" onclick="bildirimKapat()">Kapat</button>
+  </div>
+</div>
+<script>
+// Telefon bildirimleri: Firebase Cloud Messaging ile web push.
+// Abonelik ve gönderim dogus-whatsapp-service (Bildirim.js) üzerinden.
+const FIREBASE_CONFIG = null;   // Firebase > Proje ayarları > Web uygulaması
+const FIREBASE_VAPID = '';      // Firebase > Cloud Messaging > Web Push sertifikası
+const FIREBASE_SDK = 'https://www.gstatic.com/firebasejs/10.14.1/';
+
+function bldKisi(){
+  if(!currentUser) return '';
+  return currentUser.type==='admin' ? BROKER_NAME : (currentUser.name||'');
+}
+function bldIos(){ return /iPhone|iPad|iPod/.test(navigator.userAgent); }
+function bldAnaEkranda(){ return window.matchMedia('(display-mode: standalone)').matches || navigator.standalone===true; }
+function bldDestekli(){ return 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window; }
+function bldCihaz(){
+  const u=navigator.userAgent;
+  return (bldIos()?'iPhone':/Android/.test(u)?'Android':/Mac/.test(u)?'Mac':/Windows/.test(u)?'Windows':'Diğer')+(bldAnaEkranda()?' (uygulama)':' (tarayıcı)');
+}
+function bldYaz(t){ document.getElementById('bld-durum').textContent=t||''; }
+async function bldPost(action, ek){
+  const p=new URLSearchParams(); p.append('action',action);
+  Object.keys(ek||{}).forEach(k=>p.append(k,String(ek[k])));
+  const r=await fetch(WA_SERVICE_URL,{method:'POST',body:p,redirect:'follow'});
+  return r.json();
+}
+async function bldToken(){
+  const app=await import(FIREBASE_SDK+'firebase-app.js');
+  const msg=await import(FIREBASE_SDK+'firebase-messaging.js');
+  if(!(await msg.isSupported())) throw new Error('Bu tarayıcı bildirimleri desteklemiyor');
+  const fa=app.getApps().length?app.getApp():app.initializeApp(FIREBASE_CONFIG);
+  const reg=await navigator.serviceWorker.ready;
+  return msg.getToken(msg.getMessaging(fa),{vapidKey:FIREBASE_VAPID,serviceWorkerRegistration:reg});
+}
+async function bldAboneOl(){
+  const token=await bldToken();
+  if(!token) throw new Error('Bildirim adresi alınamadı');
+  const kisi=bldKisi();
+  const j=await bldPost('pushAbone',{danisman:kisi,token:token,cihaz:bldCihaz()});
+  if(!j.ok) throw new Error(j.error||'Kayıt olmadı');
+  try{ localStorage.setItem('bld_token',token); localStorage.setItem('bld_kisi',kisi); localStorage.setItem('bld_tarih',String(Date.now())); }catch(e){}
+  return token;
+}
+function bildirimHazirla(){
+  const goster=!!FIREBASE_CONFIG && !!currentUser && (bldDestekli() || bldIos());
+  document.querySelectorAll('.bildirim-btn').forEach(b=>{
+    b.style.display=goster?'':'none';
+    let tok=''; try{ tok=localStorage.getItem('bld_token')||''; }catch(e){}
+    b.textContent=(goster && bldDestekli() && Notification.permission==='granted' && tok)?'🔔':'🔕';
+  });
+  if(!goster || !bldDestekli() || Notification.permission!=='granted') return;
+  // Açık aboneliği tazele: günde bir kez ya da kullanıcı değiştiyse
+  let tok='',kisi='',tarih=0;
+  try{ tok=localStorage.getItem('bld_token')||''; kisi=localStorage.getItem('bld_kisi')||''; tarih=+localStorage.getItem('bld_tarih')||0; }catch(e){}
+  if(tok && (kisi!==bldKisi() || Date.now()-tarih>864e5)) bldAboneOl().catch(e=>console.warn('Bildirim tazelenemedi:',e));
+}
+function bildirimPaneli(){
+  const ac=document.getElementById('bld-ac'), test=document.getElementById('bld-test'), acik=document.getElementById('bld-aciklama');
+  bldYaz('');
+  let aboneMi=false; try{ aboneMi=bldDestekli() && Notification.permission==='granted' && !!localStorage.getItem('bld_token'); }catch(e){}
+  if(bldIos() && !bldAnaEkranda()){
+    acik.innerHTML='iPhone\'da bildirim almak için önce bu sayfayı ana ekrana eklemelisin: Safari\'de alttaki <b>Paylaş</b> tuşu &gt; <b>Ana Ekrana Ekle</b>. Sonra Kapanış\'ı ana ekrandaki simgesinden açıp 🔔 tuşuna tekrar bas.';
+    ac.style.display='none'; test.style.display='none';
+  }else if(!bldDestekli()){
+    acik.textContent='Bu tarayıcı bildirimleri desteklemiyor. iPhone\'da iOS 16.4 veya üstü gerekir.';
+    ac.style.display='none'; test.style.display='none';
+  }else if(Notification.permission==='denied'){
+    acik.textContent='Bildirim izni kapalı. Telefonun Ayarlar > Bildirimler bölümünden Kapanış için izni açıp tekrar dene.';
+    ac.style.display='none'; test.style.display='none';
+  }else if(aboneMi){
+    acik.textContent='Bildirimler bu cihazda açık ('+bldKisi()+'). Sana yeni müşteri yönlendirildiğinde ve sabah aranacak müşterilerin için bildirim gelir.';
+    ac.style.display='none'; test.style.display='';
+  }else{
+    acik.textContent='Açarsan sana yeni müşteri yönlendirildiğinde ve sabah o gün aranacak müşterilerin için bu telefona bildirim gelir.';
+    ac.style.display=''; test.style.display='none';
+  }
+  const anahtarKutu=document.getElementById('bld-anahtar');
+  anahtarKutu.style.display='none';
+  if(currentUser && currentUser.type==='admin'){
+    bldPost('pushDurum',{}).then(j=>{ if(j && j.ok && !j.anahtarVar) anahtarKutu.style.display='block'; }).catch(()=>{});
+  }
+  document.getElementById('bld-ort').classList.add('acik');
+}
+function bildirimKapat(){ document.getElementById('bld-ort').classList.remove('acik'); bildirimHazirla(); }
+async function bildirimAc(){
+  const btn=document.getElementById('bld-ac');
+  btn.disabled=true; bldYaz('İzin isteniyor…');
+  try{
+    const izin=await Notification.requestPermission();
+    if(izin!=='granted'){ bldYaz('İzin verilmedi.'); return; }
+    bldYaz('Kaydediliyor…');
+    await bldAboneOl();
+    bldYaz('Bildirimler açıldı ✓');
+    bildirimPaneli(); bldYaz('Bildirimler açıldı ✓');
+  }catch(e){ bldYaz('Hata: '+(e.message||e)); }
+  finally{ btn.disabled=false; }
+}
+async function bildirimTest(){
+  bldYaz('Gönderiliyor…');
+  try{
+    const j=await bldPost('pushTest',{token:localStorage.getItem('bld_token')||''});
+    if(j.ok) bldYaz('Gönderildi, birkaç saniye içinde gelmeli.');
+    else if(j.error==='ANAHTAR_YOK') bldYaz('Henüz gönderme anahtarı yüklenmedi (broker panelinden yüklenir).');
+    else if(j.error==='ABONE_YOK'){ try{localStorage.removeItem('bld_token');}catch(e){} bldYaz('Bu cihazın kaydı bulunamadı, Bildirimleri aç\'a tekrar bas.'); bildirimPaneli(); }
+    else bldYaz('Gitmedi: '+(j.sonuc||j.error||''));
+  }catch(e){ bldYaz('Hata: '+(e.message||e)); }
+}
+function bildirimAnahtarYukle(inp){
+  const f=inp.files && inp.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=async()=>{
+    bldYaz('Anahtar yükleniyor…');
+    try{
+      const j=await bldPost('pushAnahtar',{anahtar:String(r.result)});
+      if(j.ok){ bldYaz('Anahtar yüklendi ✓ Artık bildirim gönderilebilir.'); document.getElementById('bld-anahtar').style.display='none'; }
+      else bldYaz('Yüklenmedi: '+({YANLIS_DOSYA:'bu dosya dogus-bildirim projesinin hizmet hesabı anahtarı değil',JSON_DEGIL:'dosya okunamadı',ZATEN_VAR:'anahtar zaten yüklü',ANAHTAR_CALISMADI:'anahtar Google tarafından kabul edilmedi'}[j.error]||j.error));
+    }catch(e){ bldYaz('Hata: '+(e.message||e)); }
+    inp.value='';
+  };
+  r.readAsText(f);
+}
+async function bildirimCikis(){
+  // Çıkışta bu cihazın kaydını sil ki başkası giriş yapınca eski kişinin bildirimleri gelmesin
+  let tok=''; try{ tok=localStorage.getItem('bld_token')||''; ['bld_token','bld_kisi','bld_tarih'].forEach(k=>localStorage.removeItem(k)); }catch(e){}
+  if(tok) bldPost('pushAyril',{token:tok}).catch(()=>{});
+}
+try{ bildirimHazirla(); }catch(e){}
 </script>
 
 </body>
