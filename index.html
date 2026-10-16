@@ -5077,8 +5077,15 @@ async function fkGonder(){
 <script>
 // Telefon bildirimleri: Firebase Cloud Messaging ile web push.
 // Abonelik ve gönderim dogus-whatsapp-service (Bildirim.js) üzerinden.
-const FIREBASE_CONFIG = null;   // Firebase > Proje ayarları > Web uygulaması
-const FIREBASE_VAPID = '';      // Firebase > Cloud Messaging > Web Push sertifikası
+const FIREBASE_CONFIG = {        // Firebase > Proje ayarları > Web uygulaması (herkese açık bilgi)
+  apiKey: "AIzaSyCchJJKBB-iJTwH0tLDN4OL14iVx5zi7lE",
+  authDomain: "dogus-bildirim.firebaseapp.com",
+  projectId: "dogus-bildirim",
+  storageBucket: "dogus-bildirim.firebasestorage.app",
+  messagingSenderId: "756084706346",
+  appId: "1:756084706346:web:a009be1467cea77bff0753"
+};
+const FIREBASE_VAPID = 'BH8LvqJz-RN9r-YTLX6iDNe8DZghco5q6gn0dEnspWPgXmC7wyn3WVtHdy4LKx9rmF2Mi8dP_5ACRYyMPk926VM';      // Firebase > Cloud Messaging > Web Push sertifikası
 const FIREBASE_SDK = 'https://www.gstatic.com/firebasejs/10.14.1/';
 
 function bldKisi(){
