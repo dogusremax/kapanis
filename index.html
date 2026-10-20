@@ -469,6 +469,10 @@
     <div class="form-card">
       <div class="form-section-title">🏠 Mülk Bilgisi</div>
       <div class="field-row" id="wrap-konum" style="display:none">
+        <div class="field"><label>İl</label>
+          <input type="text" id="f-il" list="dl-il" placeholder="İstanbul" oninput="capitalizeWords(this);adresKur()">
+          <datalist id="dl-il"><option>İstanbul</option><option>İzmir</option><option>Adana</option><option>Adıyaman</option><option>Afyonkarahisar</option><option>Ağrı</option><option>Aksaray</option><option>Amasya</option><option>Ankara</option><option>Antalya</option><option>Ardahan</option><option>Artvin</option><option>Aydın</option><option>Balıkesir</option><option>Bartın</option><option>Batman</option><option>Bayburt</option><option>Bilecik</option><option>Bingöl</option><option>Bitlis</option><option>Bolu</option><option>Burdur</option><option>Bursa</option><option>Çanakkale</option><option>Çankırı</option><option>Çorum</option><option>Denizli</option><option>Diyarbakır</option><option>Düzce</option><option>Edirne</option><option>Elazığ</option><option>Erzincan</option><option>Erzurum</option><option>Eskişehir</option><option>Gaziantep</option><option>Giresun</option><option>Gümüşhane</option><option>Hakkari</option><option>Hatay</option><option>Iğdır</option><option>Isparta</option><option>Kahramanmaraş</option><option>Karabük</option><option>Karaman</option><option>Kars</option><option>Kastamonu</option><option>Kayseri</option><option>Kırıkkale</option><option>Kırklareli</option><option>Kırşehir</option><option>Kilis</option><option>Kocaeli</option><option>Konya</option><option>Kütahya</option><option>Malatya</option><option>Manisa</option><option>Mardin</option><option>Mersin</option><option>Muğla</option><option>Muş</option><option>Nevşehir</option><option>Niğde</option><option>Ordu</option><option>Osmaniye</option><option>Rize</option><option>Sakarya</option><option>Samsun</option><option>Siirt</option><option>Sinop</option><option>Sivas</option><option>Şanlıurfa</option><option>Şırnak</option><option>Tekirdağ</option><option>Tokat</option><option>Trabzon</option><option>Tunceli</option><option>Uşak</option><option>Van</option><option>Yalova</option><option>Yozgat</option><option>Zonguldak</option></datalist>
+        </div>
         <div class="field"><label>İlçe</label>
           <input type="text" id="f-ilce" list="dl-ilce" placeholder="Kadıköy" oninput="capitalizeWords(this);adresKur()">
           <datalist id="dl-ilce">
@@ -476,6 +480,7 @@
             <option>Ümraniye</option><option>Çekmeköy</option><option>Tuzla</option><option>Pendik</option>
             <option>Kartal</option><option>Beykoz</option><option>Sancaktepe</option><option>Sultanbeyli</option>
             <option>Şile</option><option>Adalar</option><option>Kuzey Kıbrıs</option>
+            <option>Karşıyaka</option><option>Bornova</option><option>Konak</option><option>Bayraklı</option><option>Buca</option><option>Çiğli</option><option>Narlıdere</option><option>Balçova</option><option>Gaziemir</option><option>Karabağlar</option><option>Güzelbahçe</option><option>Urla</option><option>Çeşme</option><option>Seferihisar</option><option>Menderes</option><option>Torbalı</option>
           </datalist>
         </div>
         <div class="field"><label>Mahalle / Semt</label>
@@ -1876,7 +1881,7 @@ function siteDegisti(){
   if(wk) wk.style.display = diger ? 'flex'  : 'none';
   if(ws) ws.style.display = diger ? 'block' : 'none';
   if(!diger){
-    ['f-ilce','f-mahalle','f-sokak'].forEach(function(id){
+    ['f-il','f-ilce','f-mahalle','f-sokak'].forEach(function(id){
       const el = document.getElementById(id); if(el) el.value = '';
     });
   }
@@ -1889,14 +1894,17 @@ function siteDegisti(){
 function adresKur(){
   const g = id => (document.getElementById(id)?.value || '').trim();
   const ilce = g('f-ilce'), mahalle = g('f-mahalle');
+  const il = g('f-il');
   const siteSec = g('f-site');
   const site = (siteSec === '__diger') ? '' : siteSec;
   const etap = g('f-etap'), sokak = g('f-sokak'), blok = g('f-blok'), daire = g('f-daire');
 
   const parcalar = [];
 
-  if(ilce && mahalle)      parcalar.push(ilce + ' / ' + mahalle);
-  else if(ilce || mahalle) parcalar.push(ilce || mahalle);
+  // İstanbul dışı il yazılırsa adresin başına eklenir: "İzmir / Karşıyaka / Bostanlı"
+  const ilEk = (il && il.toLocaleLowerCase('tr') !== 'istanbul' && il.toLocaleLowerCase('tr') !== 'i̇stanbul') ? [il] : [];
+  const konum = ilEk.concat([ilce, mahalle].filter(Boolean));
+  if(konum.length) parcalar.push(konum.join(' / '));
 
   if(site){
     let s2 = site;
@@ -4748,7 +4756,7 @@ function acFaturaKesmeModal(id){
         <label style="display:block;font-size:11px;font-weight:600;color:#6B6860;margin:8px 0 4px">İlçe / İl</label>
         <div style="display:flex;gap:6px">
           <input type="text" class="fk-ilce" data-key="${key}" value="${fkIlceBul(_fkRec && _fkRec.address)}" placeholder="Kadıköy" style="flex:1;padding:9px 12px;border:1.5px solid #E0DDD6;border-radius:10px;font-size:13px;box-sizing:border-box">
-          <input type="text" class="fk-il" data-key="${key}" value="İstanbul" style="width:38%;padding:9px 12px;border:1.5px solid #E0DDD6;border-radius:10px;font-size:13px;box-sizing:border-box">
+          <input type="text" class="fk-il" data-key="${key}" value="${fkIlBul(_fkRec && _fkRec.address)}" style="width:38%;padding:9px 12px;border:1.5px solid #E0DDD6;border-radius:10px;font-size:13px;box-sizing:border-box">
         </div>
         <label style="display:block;font-size:11px;font-weight:600;color:#6B6860;margin:8px 0 4px">E-posta <span style="font-weight:400;color:#A8A59F">(fatura buraya gönderilir)</span></label>
         <input type="email" class="fk-mail" data-key="${key}" value="${mail||''}" placeholder="ornek@mail.com" style="width:100%;padding:9px 12px;border:1.5px solid ${mail?'#E0DDD6':'#F0C674'};border-radius:10px;font-size:13px;box-sizing:border-box;background:${mail?'#fff':'#FFFDF5'}">
@@ -4806,7 +4814,18 @@ function fkHesapla(){
 
 const FK_ILCELER = ['Adalar','Arnavutköy','Ataşehir','Avcılar','Bağcılar','Bahçelievler','Bakırköy','Başakşehir','Bayrampaşa','Beşiktaş','Beykoz','Beylikdüzü','Beyoğlu','Büyükçekmece','Çatalca','Çekmeköy','Esenler','Esenyurt','Eyüpsultan','Eyüp','Fatih','Gaziosmanpaşa','Güngören','Kadıköy','Kağıthane','Kartal','Küçükçekmece','Maltepe','Pendik','Sancaktepe','Sarıyer','Silivri','Sultanbeyli','Sultangazi','Şile','Şişli','Tuzla','Ümraniye','Üsküdar','Zeytinburnu'];
 
+const FK_ILLER = ["Adana", "Adıyaman", "Afyonkarahisar", "Ağrı", "Aksaray", "Amasya", "Ankara", "Antalya", "Ardahan", "Artvin", "Aydın", "Balıkesir", "Bartın", "Batman", "Bayburt", "Bilecik", "Bingöl", "Bitlis", "Bolu", "Burdur", "Bursa", "Çanakkale", "Çankırı", "Çorum", "Denizli", "Diyarbakır", "Düzce", "Edirne", "Elazığ", "Erzincan", "Erzurum", "Eskişehir", "Gaziantep", "Giresun", "Gümüşhane", "Hakkari", "Hatay", "Iğdır", "Isparta", "İstanbul", "İzmir", "Kahramanmaraş", "Karabük", "Karaman", "Kars", "Kastamonu", "Kayseri", "Kırıkkale", "Kırklareli", "Kırşehir", "Kilis", "Kocaeli", "Konya", "Kütahya", "Malatya", "Manisa", "Mardin", "Mersin", "Muğla", "Muş", "Nevşehir", "Niğde", "Ordu", "Osmaniye", "Rize", "Sakarya", "Samsun", "Siirt", "Sinop", "Sivas", "Şanlıurfa", "Şırnak", "Tekirdağ", "Tokat", "Trabzon", "Tunceli", "Uşak", "Van", "Yalova", "Yozgat", "Zonguldak"];
+/* Adres "İzmir / Karşıyaka / ..." ile başlıyorsa il odur; yoksa İstanbul. */
+function fkIlBul(adres){
+  const ilk = String(adres||'').split(' / ')[0].trim();
+  return FK_ILLER.find(i => i.toLocaleUpperCase('tr-TR') === ilk.toLocaleUpperCase('tr-TR')) || 'İstanbul';
+}
 function fkIlceBul(adres){
+  const _il = fkIlBul(adres);
+  if(_il !== 'İstanbul'){
+    const p = String(adres||'').split(' \u00b7 ')[0].split(' / ');
+    return (p[1]||'').trim();
+  }
   const a = String(adres||'').toLocaleUpperCase('tr-TR');
   for(const ilce of FK_ILCELER){
     if(a.includes(ilce.toLocaleUpperCase('tr-TR'))) return ilce;
