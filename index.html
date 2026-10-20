@@ -2789,6 +2789,7 @@ async function yorumIsaretle(id, taraf){
   }catch(e){ console.warn('yorum takip yazılamadı',e); }
 }
 function yorumDurumHtml(r){
+  if(yorumAlindi(r)) return '<div style="font-size:11px;color:#1E7A3C;margin-top:6px">✅ Google yorumu alındı</div>';
   const d=yorumDurum(r); const parts=[];
   if(r.buyerName) parts.push(d['Alıcı']?`✅ ${/kira/i.test(r.type||'')?'Kiracı':'Alıcı'}: ${d['Alıcı']}`:`⏳ ${/kira/i.test(r.type||'')?'Kiracı':'Alıcı'}: gönderilmedi`);
   if(r.ownerName) parts.push(d['Sahip']?`✅ Mülk sahibi: ${d['Sahip']}`:`⏳ Mülk sahibi: gönderilmedi`);
@@ -2810,6 +2811,7 @@ function yorumKopyala(id, taraf, btn){
   (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>{ if(btn){const o=btn.textContent;btn.textContent='✓ Kopyalandı';setTimeout(()=>btn.textContent=o,1800);} }).catch(()=>{ prompt('Mesajı kopyala:',t); });
 }
 function yorumButonlari(r, taraf){
+  if(yorumAlindi(r)) return '';
   const ad=taraf==='owner'?r.ownerName:r.buyerName; if(!ad) return '';
   const tah=yorumCinsTahmin(ad);
   const pill=(v)=>`<button type="button" data-v="${v}" class="${tah===v?'on':''}" onclick="yorumEkSec(this)" style="border:1.5px solid #1A56A0;border-radius:8px;padding:8px 10px;font-size:12px;font-weight:600;cursor:pointer;width:auto;margin:0;background:${tah===v?'#1A56A0':'#fff'};color:${tah===v?'#fff':'#333'}">${v}</button>`;
@@ -2818,7 +2820,9 @@ function yorumButonlari(r, taraf){
     <button type="button" onclick="yorumWhatsApp('${r.id}','${taraf}')" style="border:none;border-radius:8px;padding:9px 10px;font-size:12px;font-weight:600;cursor:pointer;background:#25D366;color:#fff;flex:1;width:auto;margin:0;white-space:nowrap">💬 WhatsApp</button>
     <button type="button" onclick="yorumKopyala('${r.id}','${taraf}',this)" title="Mesajı kopyala" style="border:none;border-radius:8px;padding:9px 10px;font-size:12px;cursor:pointer;background:#f1f2f7;color:#333;width:auto;margin:0">📋</button></div>`;
 }
+function yorumAlindi(r){ return String((r&&r.review)||'').trim()==='Evet'; }
 function yorumKutusu(rec){
+  if(yorumAlindi(rec)) return '';
   let h='<div style="font-weight:700;font-size:14px;color:#1A56A0;margin-bottom:4px">⭐ Şimdi tam zamanı: Google yorumu iste</div><div style="font-size:12px;color:#555;margin-bottom:8px">Mesaj hazır — müşterinin adı, tebrik cümlesi ve yorum linki dolu. Tek dokunuşla WhatsApp\'tan gönder.</div>';
   if(rec.buyerName) h+='<div style="font-size:12px;font-weight:600;color:#333;margin-top:6px">'+(/kira/i.test(rec.type||'')?'Kiracı':'Alıcı')+': '+rec.buyerName+'</div>'+yorumButonlari(rec,'buyer');
   if(rec.ownerName) h+='<div style="font-size:12px;font-weight:600;color:#333;margin-top:8px">Mülk sahibi: '+rec.ownerName+'</div>'+yorumButonlari(rec,'owner');
@@ -3977,7 +3981,7 @@ function playApplause(){
 
 function showCelebration(name, amount, address, rec){
   const cy=document.getElementById('celebrate-yorum');
-  if(cy){ cy.innerHTML=rec?yorumKutusu(rec):''; cy.style.display=rec&&(rec.buyerName||rec.ownerName)?'block':'none'; }
+  if(cy){ cy.innerHTML=rec?yorumKutusu(rec):''; cy.style.display=rec&&(rec.buyerName||rec.ownerName)&&!yorumAlindi(rec)?'block':'none'; }
   document.getElementById('celebrate-name').textContent = 'Tebrikler ' + name.split(' ')[0] + '! 🎊';
   document.getElementById('celebrate-msg').textContent = MOTIVASYON[Math.floor(Math.random()*MOTIVASYON.length)];
   document.getElementById('celebrate-amount').textContent = Number(amount).toLocaleString('tr-TR') + ' ₺';
@@ -4238,7 +4242,7 @@ async function renderMyClosings(){
       <div style="font-size:12px;color:var(--text2);margin-top:3px">${r.address||'—'}</div>
       ${belgeLinkleri(r)}
       ${ortakSatiri(r)}
-      ${(r.buyerName||r.ownerName)?`<div style="margin-top:8px;background:#F4F7FB;border-radius:10px;padding:8px 10px"><div style="font-size:11px;font-weight:600;color:var(--text2);margin-bottom:2px">⭐ Google yorumu iste</div>${r.buyerName?`<div style="font-size:11px;color:#333;margin-top:4px">${/kira/i.test(r.type||'')?'Kiracı':'Alıcı'}: ${r.buyerName}</div>${yorumButonlari(r,'buyer')}`:''}${r.ownerName?`<div style="font-size:11px;color:#333;margin-top:6px">Mülk sahibi: ${r.ownerName}</div>${yorumButonlari(r,'owner')}`:''}<div data-yorum-durum="${r.id}">${yorumDurumHtml(r)}</div></div>`:''}
+      ${(r.buyerName||r.ownerName)&&!yorumAlindi(r)?`<div style="margin-top:8px;background:#F4F7FB;border-radius:10px;padding:8px 10px"><div style="font-size:11px;font-weight:600;color:var(--text2);margin-bottom:2px">⭐ Google yorumu iste</div>${r.buyerName?`<div style="font-size:11px;color:#333;margin-top:4px">${/kira/i.test(r.type||'')?'Kiracı':'Alıcı'}: ${r.buyerName}</div>${yorumButonlari(r,'buyer')}`:''}${r.ownerName?`<div style="font-size:11px;color:#333;margin-top:6px">Mülk sahibi: ${r.ownerName}</div>${yorumButonlari(r,'owner')}`:''}<div data-yorum-durum="${r.id}">${yorumDurumHtml(r)}</div></div>`:''}
     </div>`).join('') : `<div style="padding:18px 0;text-align:center;color:var(--text3);font-size:13px">${MONTH_NAMES[myMonth]} ayında kapanışın yok.</div>`;
 }
 
