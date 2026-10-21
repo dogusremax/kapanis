@@ -1250,7 +1250,10 @@ async function loadFromSheets(){
   try{
     const ctrl = new AbortController();
     const timer = setTimeout(()=>ctrl.abort(), 20000);   // telefonda Apps Script uyanması 8 sn'yi aşabiliyor
-    const resp = await fetch(APPS_SCRIPT_URL + '?action=getRecords', { redirect: 'follow', signal: ctrl.signal });
+    // Sunucu 20.10.2026'dan beri listeyi PIN'siz vermiyor: giriş yapanın PIN'i (yönetici girişinde yönetici şifresi) gider
+    const u = (typeof currentUser!=='undefined' && currentUser) || {};
+    const pin = u.type==='admin' ? ADMIN_PASS : ((ADVISORS.find(a=>a.name===u.name)||{}).pin || '');
+    const resp = await fetch(APPS_SCRIPT_URL + '?action=getRecords&pin=' + encodeURIComponent(pin), { redirect: 'follow', signal: ctrl.signal });
     clearTimeout(timer);
     const text = await resp.text();
     const json = JSON.parse(text);
