@@ -1165,6 +1165,7 @@ async function _loadAllRecordsGercek(){
     _recordsCache = yedek;
     _recFetchTime = 0;
     try{ if(typeof showToast==='function') showToast('Sunucuya ulaşılamadı — telefondaki son kayıtlar gösteriliyor'); }catch(e){}
+    sunucuHatasiBildir();
     return yedek;
   }
   // Sheets veya localStorage'dan gelen null/boş/id'siz satırları ayıkla
@@ -1246,6 +1247,16 @@ function waBildir(action, ek){
 }
 
 // Google Sheets'ten kayıtları yükle (8sn zaman aşımı ile - takılmayı önler)
+var _sunucuHata = '';
+// Liste alınamazsa Umut'a haber (WhatsApp servisi hataBildir: telefon bildirimi + mail, 2 saatte bir).
+// 20 Ekim'de liste 1 gün boyunca gelmedi ve fark edilmedi (21.10.2026).
+function sunucuHatasiBildir(){
+  try{
+    if(navigator.onLine===false) return;   // telefonun interneti yoksa sunucu suçlu değil
+    const u = (typeof currentUser!=='undefined' && currentUser) || {};
+    waBildir('hataBildir', { uygulama:'Kapanış Formu', mesaj:'Kayıt listesi alınamadı (' + _sunucuHata + ').', kim: u.name || (u.type==='admin'?'yönetici':''), kaynak:'uygulama' });
+  }catch(e){}
+}
 async function loadFromSheets(){
   try{
     const ctrl = new AbortController();
@@ -1257,10 +1268,11 @@ async function loadFromSheets(){
     clearTimeout(timer);
     const text = await resp.text();
     const json = JSON.parse(text);
-    if(!json || !Array.isArray(json.records)) return null;
+    if(!json || !Array.isArray(json.records)){ _sunucuHata = 'sunucu cevabı: ' + text.slice(0,120); return null; }
     return json.records;
   }catch(e){
-    console.warn('Sheets baglantisi atlandi:', e.name==='AbortError'?'zaman asimi':e.message);
+    _sunucuHata = e.name==='AbortError' ? '20 sn zaman aşımı' : (e.message||'bağlantı hatası');
+    console.warn('Sheets baglantisi atlandi:', _sunucuHata);
     return null;
   }
 }
