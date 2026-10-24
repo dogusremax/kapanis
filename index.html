@@ -553,6 +553,15 @@
           </select>
         </div>
       </div>
+        <div class="field" id="f-karsi-wrap" style="display:none">
+          <label>Karşı tarafı kim temsil etti?</label>
+          <select id="f-karsi" onchange="karsiTarafSec(this.value)">
+            <option value="">— Seçiniz —</option>
+            <option value="firma">Başka bir emlak ofisi</option>
+            <option value="aracisiz">Kimse (aracısız, doğrudan)</option>
+          </select>
+          <div style="font-size:11.5px;color:#1A56A0;background:#EEF4FF;border:1px solid #C7D9FF;border-radius:8px;padding:8px 10px;margin-top:6px;line-height:1.5">🤝 Karşı tarafta bir ofis varsa adı kayda geçer. Aracısızsa karşı tarafın ad, T.C. ve telefonu da istenir.</div>
+        </div>
         <div class="field" id="f-ref-type-wrap" style="display:none">
           <label>Paylaşım Türü</label>
           <select id="f-ref-type" onchange="toggleRefType(this.value)">
@@ -981,15 +990,45 @@ function ortakIkiTarafZorunluMu(){
 function musteriAlanlariniGuncelle(){
   const taraf = document.getElementById('f-taraf')?.value || '';
   if(!taraf) return;
-  const ikiTaraf = ortakIkiTarafZorunluMu();
+  const ikiTaraf = ortakIkiTarafZorunluMu() || karsiTarafAracisizMi();
   const mulkGoster = taraf === 'mulk-sahibi' || taraf === 'her-ikisi' || ikiTaraf;
   const aliciGoster = taraf === 'alici-kiraci' || taraf === 'her-ikisi' || ikiTaraf;
   const wM = document.getElementById('wrap-mulk-sahibi'); if(wM) wM.style.display = mulkGoster ? 'block' : 'none';
   const wA = document.getElementById('wrap-alici-kiraci'); if(wA) wA.style.display = aliciGoster ? 'block' : 'none';
-  const not = document.getElementById('ortak-musteri-not'); if(not) not.style.display = ikiTaraf ? 'block' : 'none';
+  const not = document.getElementById('ortak-musteri-not'); if(not) not.style.display = ortakIkiTarafZorunluMu() ? 'block' : 'none';
+}
+
+/* KARŞI TARAF — tek taraf temsil edilip paylaşım "Hayır" seçilirse karşı tarafı
+   kimin temsil ettiği sorulur. "Başka bir emlak ofisi" → paylaşım dış firmaya
+   çevrilir (firma adı kayda geçer). "Aracısız" → karşı tarafın bilgileri zorunlu. */
+function karsiTarafSorulurMu(){
+  const taraf = document.getElementById('f-taraf')?.value || '';
+  const shared = document.getElementById('f-ref-shared')?.value || '';
+  return (taraf === 'mulk-sahibi' || taraf === 'alici-kiraci') && shared === 'Hayır';
+}
+function karsiTarafAracisizMi(){
+  return karsiTarafSorulurMu() && (document.getElementById('f-karsi')?.value || '') === 'aracisiz';
+}
+function karsiTarafSec(val){
+  if(val === 'firma'){
+    // Paylaşımı "Evet → Farklı emlak firması"na çevir; firma adı ve pay oradan girilir
+    document.getElementById('f-ref-shared').value = 'Evet';
+    document.getElementById('f-ref-type').value = 'dis';
+    document.getElementById('f-karsi').value = '';
+    toggleSharedAdvisor('Evet');
+    const firm = document.getElementById('f-ref-firm'); if(firm) firm.focus();
+    return;
+  }
+  musteriAlanlariniGuncelle();
 }
 
 function toggleSharedAdvisor(val){
+  const karsiWrap = document.getElementById('f-karsi-wrap');
+  if(karsiWrap){
+    const sor = karsiTarafSorulurMu();
+    karsiWrap.style.display = sor ? 'block' : 'none';
+    if(!sor) document.getElementById('f-karsi').value = '';
+  }
   const typeWrap = document.getElementById('f-ref-type-wrap');
   const partnerWrap = document.getElementById('f-ref-partner-wrap');
   const firmWrap = document.getElementById('f-ref-firm-wrap');
@@ -1003,6 +1042,7 @@ function toggleSharedAdvisor(val){
     document.getElementById('f-ref').value = '';
     const firm = document.getElementById('f-ref-firm'); if(firm) firm.value = '';
   }
+  musteriAlanlariniGuncelle();
   // Paylaşım durumu HB bölmesini etkiler → fatura/pay hesabını yenile
   if(typeof updateFaturaHesap === 'function') updateFaturaHesap();
 }
@@ -2400,7 +2440,7 @@ function resetForm(){
   ['f-date','f-amount','f-hb-owner','f-hb-buyer','f-address','f-deposit','f-owner-name','f-owner-tc','f-owner-phone','f-owner-email','f-buyer-name','f-buyer-tc','f-buyer-phone','f-buyer-email','f-notes','f-tahliye-tarih','f-kira-bas','f-ilce','f-mahalle','f-sokak','f-blok','f-daire'].forEach(id=>{const el=document.getElementById(id);if(el){el.value='';el.style.borderColor=''}});
   document.getElementById('f-date').value=new Date().toISOString().split('T')[0];
   document.getElementById('f-ref-shared').value=''; document.getElementById('f-taraf').value=''; document.getElementById('f-ref').value=''; document.getElementById('f-ref-partner-wrap').style.display='none';
-  { const t=document.getElementById('f-ref-type'); if(t) t.value=''; const fw=document.getElementById('f-ref-firm'); if(fw) fw.value=''; const tw=document.getElementById('f-ref-type-wrap'); if(tw) tw.style.display='none'; const ftw=document.getElementById('f-ref-firm-wrap'); if(ftw) ftw.style.display='none'; }
+  { const t=document.getElementById('f-ref-type'); if(t) t.value=''; const fw=document.getElementById('f-ref-firm'); if(fw) fw.value=''; const tw=document.getElementById('f-ref-type-wrap'); if(tw) tw.style.display='none'; const ftw=document.getElementById('f-ref-firm-wrap'); if(ftw) ftw.style.display='none'; const kw=document.getElementById('f-karsi-wrap'); if(kw) kw.style.display='none'; const k=document.getElementById('f-karsi'); if(k) k.value=''; }
   document.getElementById('f-review').value='Hayır';
   { const _s=document.getElementById('f-site'); if(_s) _s.value='';
     const _e=document.getElementById('f-etap'); if(_e) _e.value='';
@@ -2453,6 +2493,9 @@ async function submitForm(){
   if((taraf==='mulk-sahibi'||taraf==='alici-kiraci') && refShared===''){
     errors.push('• Paylaşımlı kapanış (Evet / Hayır)');
   }
+  if(karsiTarafSorulurMu() && !document.getElementById('f-karsi').value){
+    errors.push('• Karşı tarafı kim temsil etti (başka ofis / aracısız)');
+  }
   if(refShared==='Evet'){
     const refType=document.getElementById('f-ref-type').value;
     if(!refType){
@@ -2475,6 +2518,18 @@ async function submitForm(){
   // Mülk sahibi bilgileri: mülk sahibi tarafı (veya her ikisi) temsil edildiyse
   // ya da ofis içi ortak kapanışta (iki taraf da zorunlu) istenir
   const _ikiTaraf = ortakIkiTarafZorunluMu();
+  // Aracısız karşı taraf: o tarafın ad, T.C. ve telefonu zorunlu (e-posta değil)
+  if(karsiTarafAracisizMi()){
+    if(taraf==='alici-kiraci'){
+      if(!ownerName) errors.push('• Mülk sahibi adı soyadı (karşı taraf aracısız)');
+      if(!ownerTc) errors.push('• Mülk sahibi T.C. kimlik no (karşı taraf aracısız)');
+      if(!ownerPhone) errors.push('• Mülk sahibi telefonu (karşı taraf aracısız)');
+    } else {
+      if(!buyerName) errors.push('• Alıcı / kiracı adı soyadı (karşı taraf aracısız)');
+      if(!buyerTc) errors.push('• Alıcı / kiracı T.C. kimlik no (karşı taraf aracısız)');
+      if(!buyerPhone) errors.push('• Alıcı / kiracı telefonu (karşı taraf aracısız)');
+    }
+  }
   if(taraf==='mulk-sahibi' || taraf==='her-ikisi' || _ikiTaraf){
     if(!ownerName) errors.push('• Mülk sahibi adı soyadı');
     if(!ownerTc) errors.push('• Mülk sahibi T.C. kimlik no');
@@ -2666,6 +2721,7 @@ async function submitForm(){
 
     notes:(function(){
       let _n = document.getElementById('f-notes').value || '';
+      if(karsiTarafAracisizMi()) _n = _n ? ('Karşı taraf aracısız \u00b7 ' + _n) : 'Karşı taraf aracısız';
       const _el = document.getElementById('f-tahliye-tarih');
       const _v = (selectedType==='Kiralık' && _el) ? _el.value : '';
       if(_v){
