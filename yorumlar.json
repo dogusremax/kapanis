@@ -1,5 +1,5 @@
 {
-  "guncelleme": "27.10.2026 12:26:01",
+  "guncelleme": "28.10.2026 13:08:10",
   "ozet": [
     {
       "ad": "Umut Tokkuş",
@@ -13,18 +13,18 @@
     },
     {
       "ad": "Aysun Yılmaz",
-      "yorumSayisi": 0,
-      "siteSayisi": null
+      "yorumSayisi": 1,
+      "siteSayisi": 1
     },
     {
       "ad": "Evşen Özazman",
       "yorumSayisi": 1,
-      "siteSayisi": 7
+      "siteSayisi": 8
     },
     {
       "ad": "Gamze Yetkin",
       "yorumSayisi": 1,
-      "siteSayisi": 21
+      "siteSayisi": 23
     },
     {
       "ad": "Gizem Gök",
@@ -34,17 +34,17 @@
     {
       "ad": "İrem Aleyna Tetik",
       "yorumSayisi": 1,
-      "siteSayisi": 22
+      "siteSayisi": 23
     },
     {
       "ad": "Orhan Özazman",
-      "yorumSayisi": 0,
-      "siteSayisi": null
+      "yorumSayisi": 1,
+      "siteSayisi": 1
     },
     {
       "ad": "Özlem Varol",
-      "yorumSayisi": 1,
-      "siteSayisi": 1
+      "yorumSayisi": 3,
+      "siteSayisi": 3
     }
   ],
   "sayiDenetimi": {
@@ -65,19 +65,19 @@
       {
         "ad": "Evşen Özazman",
         "toplanan": 1,
-        "site": 7,
+        "site": 8,
         "tutuyor": false
       },
       {
         "ad": "Gamze Yetkin",
         "toplanan": 1,
-        "site": 21,
+        "site": 23,
         "tutuyor": false
       },
       {
         "ad": "İrem Aleyna Tetik",
         "toplanan": 1,
-        "site": 22,
+        "site": 23,
         "tutuyor": false
       }
     ],
@@ -96,20 +96,20 @@
       },
       {
         "ad": "Aysun Yılmaz",
-        "toplanan": 0,
-        "site": null,
-        "tutuyor": null
+        "toplanan": 1,
+        "site": 1,
+        "tutuyor": true
       },
       {
         "ad": "Evşen Özazman",
         "toplanan": 1,
-        "site": 7,
+        "site": 8,
         "tutuyor": false
       },
       {
         "ad": "Gamze Yetkin",
         "toplanan": 1,
-        "site": 21,
+        "site": 23,
         "tutuyor": false
       },
       {
@@ -121,19 +121,19 @@
       {
         "ad": "İrem Aleyna Tetik",
         "toplanan": 1,
-        "site": 22,
+        "site": 23,
         "tutuyor": false
       },
       {
         "ad": "Orhan Özazman",
-        "toplanan": 0,
-        "site": null,
-        "tutuyor": null
+        "toplanan": 1,
+        "site": 1,
+        "tutuyor": true
       },
       {
         "ad": "Özlem Varol",
-        "toplanan": 1,
-        "site": 1,
+        "toplanan": 3,
+        "site": 3,
         "tutuyor": true
       }
     ]
@@ -152,16 +152,22 @@
       "yorum": "2026-09-29T13:50:53.203+03:00"
     },
     {
+      "ad": "Aysun Yılmaz",
+      "musteri": "Mobil Uygulamamızı",
+      "tarih": "27/10/2026",
+      "yorum": "Binlerce özel portföyü kaçırmayın! RE/MAX ile Satalım Kiralayalım"
+    },
+    {
       "ad": "Evşen Özazman",
-      "musteri": "2026-10-08T21:52:04.18+03:00",
-      "tarih": "2026-10-08",
-      "yorum": "2026-10-08T21:52:04.18+03:00"
+      "musteri": "2026-10-27T00:10:55.07+03:00",
+      "tarih": "2026-10-27",
+      "yorum": "2026-10-27T00:10:55.07+03:00"
     },
     {
       "ad": "Gamze Yetkin",
-      "musteri": "2026-10-05T10:43:51.107+03:00",
-      "tarih": "2026-10-05",
-      "yorum": "2026-10-05T10:43:51.107+03:00"
+      "musteri": "2026-10-27T00:16:30.567+03:00",
+      "tarih": "2026-10-27",
+      "yorum": "2026-10-27T00:16:30.567+03:00"
     },
     {
       "ad": "Gizem Gök",
@@ -171,9 +177,27 @@
     },
     {
       "ad": "İrem Aleyna Tetik",
-      "musteri": "2026-08-04T23:16:29.32+03:00",
-      "tarih": "2026-08-04",
-      "yorum": "2026-08-04T23:16:29.32+03:00"
+      "musteri": "2026-10-27T00:17:11.69+03:00",
+      "tarih": "2026-10-27",
+      "yorum": "2026-10-27T00:17:11.69+03:00"
+    },
+    {
+      "ad": "Orhan Özazman",
+      "musteri": "Mobil Uygulamamızı",
+      "tarih": "27/10/2026",
+      "yorum": "Binlerce özel portföyü kaçırmayın! RE/MAX ile Satalım Kiralayalım"
+    },
+    {
+      "ad": "Özlem Varol",
+      "musteri": "Hakan Çolak",
+      "tarih": "27/10/2026",
+      "yorum": "Özlem Hanım’a ev kiralama sürecimizde bize destek olduğu için çok teşekkür ediyorum. Güler yüzlü her sonumuzu özenle cevapladı ayrıca REM MAX ekibine de ofiste bizi ağırdıkları için teşekkür ederiz."
+    },
+    {
+      "ad": "Özlem Varol",
+      "musteri": "Yalçin Ersari",
+      "tarih": "27/10/2026",
+      "yorum": "RE/MAX fikirtepeden Özlem Varol hanım çok çok ilgili bir çalışan ,emeği ilgisi güler yüzlü kişiliği ve kısa süredeki dönüşü ile bize çok çok yardımcı oldu kendisine çok teşekkür ediyoruz başarılarının devamını diliyoruz"
     },
     {
       "ad": "Özlem Varol",
@@ -186,7 +210,7 @@
     "hatalar": [],
     "notlar": [
       "yorum sekmesi tıklandı: true",
-      "daha-fazla sonrası metin uzunluğu: 34160",
+      "daha-fazla sonrası metin uzunluğu: 34641",
       "yorum sayfalaması 1. sayfada bitti",
       "Comment API isteği yakalanamadı",
       "yorum sekmesi ham (yalnızca teşhis, eklenmedi): 101 | json cevap: 2",
@@ -197,17 +221,17 @@
       "SAYI FARKI Umut Tokkuş: remax=77, toplanan=1 (kaynak:json, jsonCevap:3)",
       "profil çöz: id=40213 slug=\"aysegul-alpay\" baslik=\"Ayşegül Alpay\" h1=\"Toplam Yorum Sayısı\" -> Ayşegül Alpay",
       "SAYI FARKI Ayşegül Alpay: remax=23, toplanan=1 (kaynak:json, jsonCevap:3)",
-      "profil çöz: id=47386 slug=\"aysun-yilmaz\" baslik=\"Aysun Yılmaz\" h1=\"\" -> Aysun Yılmaz",
+      "profil çöz: id=47386 slug=\"aysun-yilmaz\" baslik=\"Aysun Yılmaz\" h1=\"Toplam Yorum Sayısı\" -> Aysun Yılmaz",
       "profil çöz: id=54267 slug=\"evsen-ozazman\" baslik=\"Evşen Özazman\" h1=\"Toplam Yorum Sayısı\" -> Evşen Özazman",
-      "SAYI FARKI Evşen Özazman: remax=7, toplanan=1 (kaynak:json, jsonCevap:3)",
+      "SAYI FARKI Evşen Özazman: remax=8, toplanan=1 (kaynak:json, jsonCevap:3)",
       "profil çöz: id=41709 slug=\"gamze-yetkin\" baslik=\"Gamze Yetkin\" h1=\"Toplam Yorum Sayısı\" -> Gamze Yetkin",
-      "SAYI FARKI Gamze Yetkin: remax=21, toplanan=1 (kaynak:json, jsonCevap:3)",
+      "SAYI FARKI Gamze Yetkin: remax=23, toplanan=1 (kaynak:json, jsonCevap:3)",
       "profil çöz: id=48933 slug=\"gizem-gok\" baslik=\"Gizem Gök\" h1=\"Toplam Yorum Sayısı\" -> Gizem Gök",
       "profil çöz: id=35392 slug=\"irem-aleyna-tetik\" baslik=\"İrem Aleyna Tetik\" h1=\"Toplam Yorum Sayısı\" -> İrem Aleyna Tetik",
-      "SAYI FARKI İrem Aleyna Tetik: remax=22, toplanan=1 (kaynak:json, jsonCevap:3)",
+      "SAYI FARKI İrem Aleyna Tetik: remax=23, toplanan=1 (kaynak:json, jsonCevap:3)",
       "profil çöz: id=46773 slug=\"leman-ozlem-ozgur\" baslik=\"Leman Özlem Özgür\" h1=\"\" -> EŞLEŞMEDİ",
       "profil eşleşmedi (eski danışman olabilir): leman-ozlem-ozgur | baslik: Leman Özlem Özgür",
-      "profil çöz: id=47387 slug=\"orhan-ozazman\" baslik=\"Orhan Özazman\" h1=\"\" -> Orhan Özazman",
+      "profil çöz: id=47387 slug=\"orhan-ozazman\" baslik=\"Orhan Özazman\" h1=\"Toplam Yorum Sayısı\" -> Orhan Özazman",
       "profil çöz: id=46769 slug=\"ozlem-varol\" baslik=\"Özlem Varol\" h1=\"Toplam Yorum Sayısı\" -> Özlem Varol"
     ],
     "jsonUrller": [
@@ -216,12 +240,14 @@
       "https://remaxsiteapi.remax.com.tr/api/Employee/Comment",
       "https://remaxsiteapi.remax.com.tr/api/Employee/GetEmployeeReviewSummary?EmployeeId=28251",
       "https://remaxsiteapi.remax.com.tr/api/Employee/GetEmployeeReviewSummary?EmployeeId=40213",
+      "https://remaxsiteapi.remax.com.tr/api/Employee/GetEmployeeReviewSummary?EmployeeId=47386",
       "https://remaxsiteapi.remax.com.tr/api/Employee/GetEmployeeReviewSummary?EmployeeId=54267",
       "https://remaxsiteapi.remax.com.tr/api/Employee/GetEmployeeReviewSummary?EmployeeId=41709",
       "https://remaxsiteapi.remax.com.tr/api/Employee/GetEmployeeReviewSummary?EmployeeId=48933",
       "https://remaxsiteapi.remax.com.tr/api/Employee/GetEmployeeReviewSummary?EmployeeId=35392",
+      "https://remaxsiteapi.remax.com.tr/api/Employee/GetEmployeeReviewSummary?EmployeeId=47387",
       "https://remaxsiteapi.remax.com.tr/api/Employee/GetEmployeeReviewSummary?EmployeeId=46769"
     ],
-    "yorumSekmesiOrnek": "Toplam Yorum Sayısı\n\n249\n\nGenel Puan Durumu\n\n5.0\n\nDüzenli Bilgilendirme\nProfesyonellik\nGüvenirlik\nİletişim Becerisi\nYapay Zeka Özeti\n\n6 yıllık sektör deneyimiyle hizmet veren RE/MAX Doğuş, gayrimenkul alım, satım ve kiralama süreçlerinde profesyonel, çözüm odaklı ve titiz bir yaklaşım sergilemektedir. Müşteriler, süreçlerin başından sonuna kadar düzenli bilgilendirildiklerini, danışmanların ulaşılabilirliği ve iş süreçlerine hakimiyetleri sayesinde işlemlerin hızlı ve sorunsuz tamamlandığını belirtmektedir. Ekibin güler yüzlü ve destekleyici tutumu, müşteri memnuniyetini artıran temel unsurlar olarak öne çıkmaktadır. Genel olarak ofis, güven veren kurumsal yapısı ve ihtiyaçlara yönelik sunduğu etkili çözümlerle olumlu bir izlenim bırakmaktadır.\n\n08/10/2026 tarihinde oluşturuldu\n\nCalvin Guang\nI had an excellent experience working with Evşen Özazman at RE/MAX Doğuş in Istanbul. As an international buyer, purchasing property in Türkiye involves many complicated procedures. Throughout the entire process, Evşen demonstrated outstanding professionalism, patience, and dedication. From property selection and negotiations to coordinating with lawyers, banks, and the title deed office, she was always responsive, proactive, and willing to go the extra mile to ensure everything went smoothly. What impressed me most was her genuine commitment to her clients. She consistently kept me informed, helped resolve issues efficiently, and made the entire experience much easier and more comfortable. My first property purchase has now been successfully completed, and I am truly grateful for all her hard work and support. I highly recommend Evşen Özazman and RE/MAX Doğuş to anyone looking to purchase property in Istanbul. I look forward to continuing our cooperation on my next property purchase! Thank you again, Evşen, for your exceptional service!\nBölge Hakimliği, Araçlar ve Teknoloji, Sektör Bilgisi\n08/10/2026\nEmre Yurdakul\nEmlak sürecim boyunca aldığım hizmetten çok memnun kaldım. Evşen Hanım ve Özlem Hanım, tüm süreç boyunca ilgileri, hızlı dönüşleri ve çözüm odaklı yaklaşımlarıyla her konuda yardımcı oldular. Kendilerine çok teşekkür ederim. Güvenle tavsiye ederim.\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\n08/10/2026\nÖmür Çulfaz\nGayrimenkulümüzün kiralanma sürecinde gösterdiği profesyonelliği ve çözüm odaklı yaklaşımıyla beklentilerimizin çok üzerinde bir hizmet sundu Evşen Özazman. Sürecin her aşamasını titizlikle takip ederek bizi düzenli olarak bilgilendirdi ve tüm sorularımıza sabırla yanıt verdi sağolsun. Güven veren iletişimi, güçlü pazarlık becerisi ve işine olan hakimiyeti sayesinde işlemlerimizi sorunsuz ve hızlı bir şekilde tamamladık. Güvenilir bir emlak danışmanı arayan herkese gönül rahatlığıyla tavsiye ederim.\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\n08/10/2026\nSerhat Gürbüz\nUmut Bey ve Makbule Hanım, iyi ki tanıştık, iyi ki yollarımız kesişti. En ince ayrıntısına kadar herşey ile ilgilendiğiniz için çok teşekkür ederim. Sizler gibi profesyonel ve işini severen yapan insanlarla bir araya geldiğim için çok şanslı hissediyorum. Çok teşekkür ederim.\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\n07/10/2026\nÖmür Çulfaz\nEv kiralama sürecimizde Evşen Hanım’dan hizmet aldık ve kendisinden gerçekten çok memnun kaldık. Sürecin başından sonuna kadar ilgili, güler yüzlü ve çözüm odaklıydı. Tüm sorularımıza hızlı şekilde dönüş yaptı. Site yönetimiyle ilişkili konular, ev sahibi ve bizim açımızdan sürecin sorunsuz ilerlemesine yardımcı oldu. Güven veren ve işini gerçekten takip eden bir emlak danışmanı. Ev kiralama sürecinde gönül rahatlığıyla destek alınabilecek birisi. Kendisine emekleri ve ilgisi için teşekkür ederiz. 🙏🏻\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\n06/10/2026\nCanan Akşar\nYıllar evvelinde edindiğimiz bir kaç olumlu RE/MAX deneyimimize dayanarak, referans almadan ve randevusuz olarak eve en yakın ofislerine uğrayarak tesadüfen Gamze Yetkin Hanımla tanıştık,belli ki şanslı günümüzmüş ve aynı görüşmede kiralanmasını istediğimiz dairemizin anahtarını vererek işbirliğimizi başlattık.Bir ay içinde ev kiralandı. Gamze Hanımın kurumsal,profesyonel yaklaşımı ile hem biz hem kiracımız güven içinde anlaşmamızı sonuçlandırdık. Aynı dönemde,diğer yandan aile üyelerim, ahbaplıkları sebebiyle birkaç \"mahalle emlakçılarıyla\" kendi süreçlerini götürdüler ve liyakatsiz,profesyonellikten uzak süreç yönetimleri sebebiyle türlü sorunlar yaşadılar,yaşamaktalar. Bir sonraki emlak hareketimizde yi"
+    "yorumSekmesiOrnek": "Toplam Yorum Sayısı\n\n257\n\nGenel Puan Durumu\n\n5.0\n\nDüzenli Bilgilendirme\nProfesyonellik\nGüvenirlik\nİletişim Becerisi\nYapay Zeka Özeti\n\n6 yıllık sektör deneyimiyle hizmet veren RE/MAX Doğuş, gayrimenkul alım, satım ve kiralama süreçlerinde profesyonel, çözüm odaklı ve titiz bir yaklaşım sergilemektedir. Müşteriler, süreçlerin başından sonuna kadar düzenli bilgilendirildiklerini, danışmanların ulaşılabilirliği ve iş süreçlerine hakimiyetleri sayesinde işlemlerin hızlı ve sorunsuz tamamlandığını belirtmektedir. Ekibin güler yüzlü ve destekleyici tutumu, müşteri memnuniyetini artıran temel unsurlar olarak öne çıkmaktadır. Genel olarak ofis, güven veren kurumsal yapısı ve ihtiyaçlara yönelik sunduğu etkili çözümlerle olumlu bir izlenim bırakmaktadır.\n\n08/10/2026 tarihinde oluşturuldu\n\nBülent Karadavut\nŞua İnşaat Elit Concept projesindeki dairemin kiralama sürecinde RE/MAX Doğuş ekibi baştan sona çok profesyonel ve ilgili davrandı. Sürecin her aşamasında düzenli bilgilendirme yaptılar ve tüm işlemleri güven veren bir şekilde yönettiler. Özellikle Orhan Bey e vermiş olduğu hizmet için çok teşekkür ederim. Hızlı geri dönüşleri, çözüm odaklı yaklaşımları ve müşteri memnuniyetine verdikleri önem gerçekten takdire değer. Gönül rahatlığıyla tavsiye ederim.\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\n27/10/2026\nMünibe Müjdenur Celal\nEvimi satmak için yardım aldığım gayrimenkul danışmanı Aysun Yılmaz hanım ve Orhan Özazman bey bu sürecin her aşamasında güler yüzlülükleri, profesyonellikleri ve anında çözüm odaklı yaklaşımları ile yanımda oldular. Her şey için çok teşekkür ediyor emeklerinize sağlık diyorum.\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\n27/10/2026\nFurkan Taşçı\nEv arayışımda İrem hanım çok fazla yardımcı oldu. Ev sahibi ile iletişimimizi çok iyi yönetti. Süreci çok hızlı ve profesyonel bir şekilde tamamladık.\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\n27/10/2026\nŞenay Karamanlı\nGamze Hanıma yardımlarından dolayı teşekkür ederim. 😊\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\n27/10/2026\nMehmet Eren Korkmaz\nAldığım hizmetten gayet memnunum kaldım, Gamze hanıma süreçte göstermiş olduğu ilgiden dolayı teşekkür ederim.\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\n27/10/2026\nHakan Çolak\nÖzlem Hanım’a ev kiralama sürecimizde bize destek olduğu için çok teşekkür ediyorum. Güler yüzlü her sonumuzu özenle cevapladı ayrıca REM MAX ekibine de ofiste bizi ağırdıkları için teşekkür ederiz.\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\n27/10/2026\nDeniz Cem Evrensel\nCok yardımcı oldu iki taraf icin de cok uygun profilleri bir araya getirdi. Tesekkurler.\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\n27/10/2026\nHalil Altınay\nEvsen Hanima cok tesekkur ederim.. Gosterdigi ilgi, destek ve yardimlariyla yeni evime tasindim.. Ender rastlanan, degerli bir acenta oldugunu itiraf etmeliyim.. Basarilarinin devamini dilerim.!\nAraçlar ve Teknoloji, Sektör Bilgisi, Bölge Hakimliği\n27/10/2026\nCalvin Guang\nI had an excellent experience working with Evşen Özazman at RE/MAX Doğuş in Istanbul. As an international buyer, purchasing property in Türkiye involves many complicated procedures. Throughout the entire process, Evşen demonstrated outstanding professionalism, patience, and dedication. From property selection and negotiations to coordinating with lawyers, banks, and the title deed office, she was always responsive, proactive, and willing to go the extra mile to ensure everything went smoothly. What impressed me most was her genuine commitment to her clients. She consistently kept me informed, helped resolve issues efficiently, and made the entire experience much easier and more comfortable. My first property purchase has now been successfully completed, and I am truly grateful for all her hard work and support. I highly recommend Evşen Özazman and RE/MAX Doğuş to anyone looking to purchase property in Istanbul. I look forward to continuing our cooperation on my next property purchase! Thank you again, Evşen, for your exceptional service!\nBölge Hakimliği, Araçlar ve Teknoloji, Sektör Bilgisi\n08/10/2026\nEmre Yurdakul\nEmlak sürecim boyunca aldığım hizmetten çok memnun kaldım. Evşen Hanım ve Özlem Hanım, tüm süreç boyunca ilgileri, hızlı dönüşleri ve çözüm odaklı yaklaşımlarıyla her konuda yardımcı oldular. Kendilerine çok teşekkür ederim. Güvenle tavsiye ederim.\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\n08/10/2026\nÖmür Çulfaz\nGayrimenkulümüzün kiralanma sürecinde gösterdiği "
   }
 }
