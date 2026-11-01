@@ -3998,24 +3998,40 @@ function odemeFiltreSec(deger){
 
 async function deleteRecord(id){
   if(currentUser?.type !== 'admin'){alert('Silme yetkisi yalnızca brokerdedir.');return;}
-  if(!confirm('Bu kaydı silmek istediğinize emin misiniz?'))return;
+  // Ofis içi ortak kapanışsa eş kayıt (ortağın kaydı) da birlikte silinir.
+  // Böylece biri silinip yeniden girildiğinde ortağın eski kaydı ikizlenmez.
+  const _kayit = (Array.isArray(_recordsCache) ? _recordsCache : []).find(x=>String(x.id)===String(id))
+              || (loadRecords()||[]).find(x=>String(x.id)===String(id));
+  let _es = null;
+  try{
+    _es = _kayit ? ortakEsKayitBul(_kayit) : null;
+    // Eş kayıt da bu kayda işaret etmeli (karşılıklı co-op)
+    if(_es && canonAdvisor(String(_es.ref||'').replace(/^Co-op:\s*/,'')) !== canonAdvisor(_kayit.advisor)) _es = null;
+  }catch(e){ _es = null; }
+  const _soru = _es
+    ? 'Bu ortak kapanış kaydı silinecek.\n\nOrtağın kaydı da birlikte silinecek:\n' + (_es.advisor||'') + ' · ' + (_es.address||'') + '\n\nEmin misiniz?'
+    : 'Bu kaydı silmek istediğinize emin misiniz?';
+  if(!confirm(_soru))return;
+  const _silIdler = [String(id)].concat(_es ? [String(_es.id)] : []);
   // localStorage'dan sil (id metin/sayı farkına takılmasın diye String karşılaştırma)
   const recs=loadRecords();
-  saveRecords(recs.filter(r=>String(r.id)!==String(id)));
-  { const b = pendingOku(); if(b[String(id)]){ delete b[String(id)]; pendingYaz(b); } }
+  saveRecords(recs.filter(r=>!_silIdler.includes(String(r.id))));
+  { const b = pendingOku(); let d=false; _silIdler.forEach(k=>{ if(b[k]){ delete b[k]; d=true; } }); if(d) pendingYaz(b); }
   // BELLEKTEN DE SİL — eksik olan buydu. Diğer işlemler _recordsCache'i güncelliyor,
   // silme güncellemiyordu; ekran eski bellekten okuyup kaydı geri çiziyordu.
   if(typeof _recordsCache!=='undefined' && Array.isArray(_recordsCache)){
-    _recordsCache = _recordsCache.filter(x=>String(x.id)!==String(id));
+    _recordsCache = _recordsCache.filter(x=>!_silIdler.includes(String(x.id)));
   }
   _recFetchTime = 0; // önbelleği geçersiz kıl, sonraki okuma Sheets'ten taze gelsin
   // Sheets'ten de sil
   let sheetsHata = null;
   try{
-    const params = new URLSearchParams();
-    params.append('action','deleteRecord');
-    params.append('id', id);
-    await fetch(APPS_SCRIPT_URL,{method:'POST',body:params,redirect:'follow'});
+    await Promise.all(_silIdler.map(k=>{
+      const params = new URLSearchParams();
+      params.append('action','deleteRecord');
+      params.append('id', k);
+      return fetch(APPS_SCRIPT_URL,{method:'POST',body:params,redirect:'follow'});
+    }));
   }catch(e){ sheetsHata = e; console.warn('Sheets silme hatası:',e); }
   renderDashboard(); renderRecords();
   if(sheetsHata) alert('Kayıt ekrandan kaldırıldı ancak Google Sheets tarafına ulaşılamadı. Sayfayı yenilediğinde geri gelirse bağlantını kontrol et.');
