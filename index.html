@@ -554,6 +554,15 @@
           </select>
         </div>
       </div>
+        <div class="field" id="f-ref-side-wrap" style="display:none">
+          <label>Hangi Taraf Paylaşılıyor?</label>
+          <select id="f-ref-side" onchange="if(typeof updateFaturaHesap==='function')updateFaturaHesap()">
+            <option value="">— Seçiniz —</option>
+            <option value="mulk">Mülk sahibi tarafı (alıcı tarafı tamamen benim)</option>
+            <option value="alici">Alıcı / kiracı tarafı (mülk sahibi tarafı tamamen benim)</option>
+          </select>
+          <div style="font-size:11.5px;color:#1A56A0;background:#EEF4FF;border:1px solid #C7D9FF;border-radius:8px;padding:8px 10px;margin-top:6px;line-height:1.5">🤝 Sadece seçilen tarafın HB'si ortakla <b>yarı yarıya</b> bölünür, diğer taraf tamamen senin kalır. Ortağın kaydı otomatik açılır ve yalnızca kendi yarısını taşır.</div>
+        </div>
         <div class="field" id="f-ref-type-wrap" style="display:none">
           <label>Paylaşım Türü</label>
           <select id="f-ref-type" onchange="toggleRefType(this.value)">
@@ -960,9 +969,11 @@ function toggleTaraf(val){
     wAlici.style.display = 'block';
     wHbMulk.style.display = 'block';
     wHbAlici.style.display = 'block';
-    wPaylasim.style.display = 'none';
-    document.getElementById('f-ref-shared').value = 'Hayır';
-    toggleSharedAdvisor('Hayır');
+    // Her İkisi'nde de bir taraf ofis içi ortakla paylaşılmış olabilir
+    // (ör. mülk sahibi tarafı Umut ile 50/50, alıcı tarafı tamamen danışmanın)
+    wPaylasim.style.display = 'block';
+    document.getElementById('f-ref-shared').value = '';
+    toggleSharedAdvisor('');
   }
 }
 
@@ -994,10 +1005,21 @@ function toggleSharedAdvisor(val){
   const typeWrap = document.getElementById('f-ref-type-wrap');
   const partnerWrap = document.getElementById('f-ref-partner-wrap');
   const firmWrap = document.getElementById('f-ref-firm-wrap');
-  if(val === 'Evet'){
+  const sideWrap = document.getElementById('f-ref-side-wrap');
+  const herIkisi = (document.getElementById('f-taraf')?.value || '') === 'her-ikisi';
+  if(val === 'Evet' && herIkisi){
+    // İki taraf da bizde: paylaşım yalnızca ofis içi olabilir
+    typeWrap.style.display = 'none';
+    document.getElementById('f-ref-type').value = 'ofis';
+    if(sideWrap) sideWrap.style.display = 'block';
+    toggleRefType('ofis');
+  } else if(val === 'Evet'){
+    if(sideWrap){ sideWrap.style.display = 'none'; document.getElementById('f-ref-side').value = ''; }
     typeWrap.style.display = 'block';
     toggleRefType(document.getElementById('f-ref-type').value);
   } else {
+    if(sideWrap){ sideWrap.style.display = 'none'; document.getElementById('f-ref-side').value = ''; }
+    if(herIkisi) document.getElementById('f-ref-type').value = '';
     typeWrap.style.display = 'none';
     partnerWrap.style.display = 'none';
     firmWrap.style.display = 'none';
@@ -2036,7 +2058,22 @@ function kibrisUmutOrtakMi(){
 function paylasimliBolmeVarMi(){
   const taraf = document.getElementById('f-taraf')?.value || '';
   const shared = document.getElementById('f-ref-shared')?.value || '';
-  return (taraf === 'mulk-sahibi' || taraf === 'alici-kiraci') && shared === 'Evet';
+  if(shared !== 'Evet') return false;
+  if(taraf === 'mulk-sahibi' || taraf === 'alici-kiraci') return true;
+  // Her İkisi: yalnızca bir taraf ofis içi ortakla paylaşıldıysa
+  return taraf === 'her-ikisi' && !!herIkisiPaylasilanTaraf();
+}
+/* Her İkisi + paylaşım: hangi tarafın HB'si ortakla bölünüyor ('mulk' | 'alici' | '') */
+function herIkisiPaylasilanTaraf(){
+  if((document.getElementById('f-taraf')?.value || '') !== 'her-ikisi') return '';
+  if((document.getElementById('f-ref-shared')?.value || '') !== 'Evet') return '';
+  return document.getElementById('f-ref-side')?.value || '';
+}
+/* Kesinti hangi HB alanına uygulanır: tek taraf temsilinde görünen alan zaten tektir;
+   Her İkisi'nde yalnızca paylaşılan tarafın alanı. */
+function kesintiTaraftaMi(tarafKod){
+  const s = herIkisiPaylasilanTaraf();
+  return s ? s === tarafKod : true;
 }
 
 /* ===== OFİS İÇİ ORTAK KAPANIŞ — TEK GİRİŞ =====
@@ -2258,6 +2295,11 @@ function ortakKesintiOrani(){
 function getToplamHB(){
   const ham = getGirilenHB();
   const k = ortakKesintiOrani();
+  if(k > 0 && herIkisiPaylasilanTaraf()){
+    const n = id => Number(String(document.getElementById(id)?.value || '0').replace(/\./g,'').replace(/[^0-9]/g,'')) || 0;
+    const o = n('f-hb-owner'), b = n('f-hb-buyer');
+    return (kesintiTaraftaMi('mulk') ? Math.round(o*(1-k)) : o) + (kesintiTaraftaMi('alici') ? Math.round(b*(1-k)) : b);
+  }
   return k > 0 ? Math.round(ham * (1 - k)) : ham;
 }
 function getFaturaTutari(){
@@ -2400,7 +2442,7 @@ function faturaOnayDevam(){
 function resetForm(){
   ['f-date','f-amount','f-hb-owner','f-hb-buyer','f-address','f-deposit','f-owner-name','f-owner-tc','f-owner-phone','f-owner-email','f-buyer-name','f-buyer-tc','f-buyer-phone','f-buyer-email','f-notes','f-tahliye-tarih','f-kira-bas','f-ilce','f-mahalle','f-sokak','f-blok','f-daire'].forEach(id=>{const el=document.getElementById(id);if(el){el.value='';el.style.borderColor=''}});
   document.getElementById('f-date').value=new Date().toISOString().split('T')[0];
-  document.getElementById('f-ref-shared').value=''; document.getElementById('f-taraf').value=''; document.getElementById('f-ref').value=''; document.getElementById('f-ref-partner-wrap').style.display='none';
+  document.getElementById('f-ref-shared').value=''; { const _sd=document.getElementById('f-ref-side'); if(_sd) _sd.value=''; const _sw=document.getElementById('f-ref-side-wrap'); if(_sw) _sw.style.display='none'; } document.getElementById('f-taraf').value=''; document.getElementById('f-ref').value=''; document.getElementById('f-ref-partner-wrap').style.display='none';
   { const t=document.getElementById('f-ref-type'); if(t) t.value=''; const fw=document.getElementById('f-ref-firm'); if(fw) fw.value=''; const tw=document.getElementById('f-ref-type-wrap'); if(tw) tw.style.display='none'; const ftw=document.getElementById('f-ref-firm-wrap'); if(ftw) ftw.style.display='none'; }
   document.getElementById('f-review').value='Hayır';
   { const _s=document.getElementById('f-site'); if(_s) _s.value='';
@@ -2451,8 +2493,11 @@ async function submitForm(){
   // Paylaşımlı kapanış detayları
   // Paylaşımlı kapanış: alan görünüyorsa Evet/Hayır seçilmiş olmalı
   const refShared=document.getElementById('f-ref-shared').value;
-  if((taraf==='mulk-sahibi'||taraf==='alici-kiraci') && refShared===''){
+  if((taraf==='mulk-sahibi'||taraf==='alici-kiraci'||taraf==='her-ikisi') && refShared===''){
     errors.push('• Paylaşımlı kapanış (Evet / Hayır)');
+  }
+  if(taraf==='her-ikisi' && refShared==='Evet' && !document.getElementById('f-ref-side').value){
+    errors.push('• Hangi tarafın ortakla paylaşıldığı');
   }
   if(refShared==='Evet'){
     const refType=document.getElementById('f-ref-type').value;
@@ -2631,8 +2676,10 @@ async function submitForm(){
   // Paylaşımlı kapanış + tek taraf → HB otomatik 2'ye bölünür (danışmanın gerçek payı).
   // Paylaşımda karşı tarafın oranı düşülür: ofis içi %50, dış firma seçilen orana göre.
   const _kesinti = ortakKesintiOrani();
-  const hbOwnerKayit = _kesinti > 0 ? Math.round(hbOwner*(1-_kesinti)) : hbOwner;
-  const hbBuyerKayit = _kesinti > 0 ? Math.round(hbBuyer*(1-_kesinti)) : hbBuyer;
+  // Her İkisi + paylaşım: yalnızca paylaşılan tarafın HB'si bölünür
+  const _hiTaraf = herIkisiPaylasilanTaraf();
+  const hbOwnerKayit = (_kesinti > 0 && kesintiTaraftaMi('mulk')) ? Math.round(hbOwner*(1-_kesinti)) : hbOwner;
+  const hbBuyerKayit = (_kesinti > 0 && kesintiTaraftaMi('alici')) ? Math.round(hbBuyer*(1-_kesinti)) : hbBuyer;
   const rec={
     id:Date.now()*1000 + Math.floor(Math.random()*1000), advisor:currentUser.name, type:selectedType, date,
     amount:amount, hbOwner:hbOwnerKayit, hbBuyer:hbBuyerKayit, totalHB:hbOwnerKayit+hbBuyerKayit,
@@ -2717,6 +2764,12 @@ async function submitForm(){
       review: '',
       coopAuto: true,
       coopSourceId: rec.id,
+      // Her İkisi'nde ortak yalnızca paylaşılan tarafın yarısını alır
+      ...(_hiTaraf ? {
+        hbOwner: _hiTaraf==='mulk' ? rec.hbOwner : 0,
+        hbBuyer: _hiTaraf==='alici' ? rec.hbBuyer : 0,
+        totalHB: _hiTaraf==='mulk' ? rec.hbOwner : rec.hbBuyer
+      } : {}),
       notes: (rec.notes ? rec.notes + ' · ' : '') + ortakNotMetni(currentUser.name),
       createdAt: new Date().toISOString()
     });
