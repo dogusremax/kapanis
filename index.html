@@ -560,8 +560,10 @@
             <option value="">— Seçiniz —</option>
             <option value="mulk">Mülk sahibi tarafı (alıcı tarafı tamamen benim)</option>
             <option value="alici">Alıcı / kiracı tarafı (mülk sahibi tarafı tamamen benim)</option>
+            <option value="mulk-tam">Mülk sahibi tarafı TAMAMEN ortağın, alıcı tarafı tamamen benim</option>
+            <option value="alici-tam">Alıcı / kiracı tarafı TAMAMEN ortağın, mülk sahibi tarafı tamamen benim</option>
           </select>
-          <div style="font-size:11.5px;color:#1A56A0;background:#EEF4FF;border:1px solid #C7D9FF;border-radius:8px;padding:8px 10px;margin-top:6px;line-height:1.5">🤝 Sadece seçilen tarafın HB'si ortakla <b>yarı yarıya</b> bölünür, diğer taraf tamamen senin kalır. Ortağın kaydı otomatik açılır ve yalnızca kendi yarısını taşır.</div>
+          <div style="font-size:11.5px;color:#1A56A0;background:#EEF4FF;border:1px solid #C7D9FF;border-radius:8px;padding:8px 10px;margin-top:6px;line-height:1.5">🤝 İlk iki seçenekte yalnızca o tarafın HB'si ortakla <b>yarı yarıya</b> bölünür; "TAMAMEN ortağın" seçeneklerinde o tarafın HB'sinin hepsi ortağa yazılır. Diğer taraf tamamen senin kalır. Ortağın kaydı otomatik açılır ve yalnızca kendi payını taşır.</div>
         </div>
         <div class="field" id="f-ref-type-wrap" style="display:none">
           <label>Paylaşım Türü</label>
@@ -2067,7 +2069,11 @@ function paylasimliBolmeVarMi(){
 function herIkisiPaylasilanTaraf(){
   if((document.getElementById('f-taraf')?.value || '') !== 'her-ikisi') return '';
   if((document.getElementById('f-ref-shared')?.value || '') !== 'Evet') return '';
-  return document.getElementById('f-ref-side')?.value || '';
+  return (document.getElementById('f-ref-side')?.value || '').replace('-tam','');
+}
+/* Her İkisi: paylaşılan tarafın HB'si TAMAMEN ortağın mı (yarı yarıya değil) */
+function herIkisiTamMi(){
+  return !!herIkisiPaylasilanTaraf() && /-tam$/.test(document.getElementById('f-ref-side')?.value || '');
 }
 /* Kesinti hangi HB alanına uygulanır: tek taraf temsilinde görünen alan zaten tektir;
    Her İkisi'nde yalnızca paylaşılan tarafın alanı. */
@@ -2296,9 +2302,10 @@ function getToplamHB(){
   const ham = getGirilenHB();
   const k = ortakKesintiOrani();
   if(k > 0 && herIkisiPaylasilanTaraf()){
+    const kk = herIkisiTamMi() ? 1 : k;
     const n = id => Number(String(document.getElementById(id)?.value || '0').replace(/\./g,'').replace(/[^0-9]/g,'')) || 0;
     const o = n('f-hb-owner'), b = n('f-hb-buyer');
-    return (kesintiTaraftaMi('mulk') ? Math.round(o*(1-k)) : o) + (kesintiTaraftaMi('alici') ? Math.round(b*(1-k)) : b);
+    return (kesintiTaraftaMi('mulk') ? Math.round(o*(1-kk)) : o) + (kesintiTaraftaMi('alici') ? Math.round(b*(1-kk)) : b);
   }
   return k > 0 ? Math.round(ham * (1 - k)) : ham;
 }
@@ -2678,8 +2685,13 @@ async function submitForm(){
   const _kesinti = ortakKesintiOrani();
   // Her İkisi + paylaşım: yalnızca paylaşılan tarafın HB'si bölünür
   const _hiTaraf = herIkisiPaylasilanTaraf();
-  const hbOwnerKayit = (_kesinti > 0 && kesintiTaraftaMi('mulk')) ? Math.round(hbOwner*(1-_kesinti)) : hbOwner;
-  const hbBuyerKayit = (_kesinti > 0 && kesintiTaraftaMi('alici')) ? Math.round(hbBuyer*(1-_kesinti)) : hbBuyer;
+  const _hiTam = herIkisiTamMi();
+  const _kTaraf = _hiTam ? 1 : _kesinti;
+  const hbOwnerKayit = (_kesinti > 0 && kesintiTaraftaMi('mulk')) ? Math.round(hbOwner*(1-_kTaraf)) : hbOwner;
+  const hbBuyerKayit = (_kesinti > 0 && kesintiTaraftaMi('alici')) ? Math.round(hbBuyer*(1-_kTaraf)) : hbBuyer;
+  // Ortağa yazılacak pay (Her İkisi'nde): yarı yarıya ise kalan yarı, TAMAMEN ise tamamı
+  const _ortakPay = _hiTaraf==='mulk' ? (_hiTam ? hbOwner : hbOwnerKayit)
+                  : _hiTaraf==='alici' ? (_hiTam ? hbBuyer : hbBuyerKayit) : 0;
   const rec={
     id:Date.now()*1000 + Math.floor(Math.random()*1000), advisor:currentUser.name, type:selectedType, date,
     amount:amount, hbOwner:hbOwnerKayit, hbBuyer:hbBuyerKayit, totalHB:hbOwnerKayit+hbBuyerKayit,
@@ -2766,9 +2778,9 @@ async function submitForm(){
       coopSourceId: rec.id,
       // Her İkisi'nde ortak yalnızca paylaşılan tarafın yarısını alır
       ...(_hiTaraf ? {
-        hbOwner: _hiTaraf==='mulk' ? rec.hbOwner : 0,
-        hbBuyer: _hiTaraf==='alici' ? rec.hbBuyer : 0,
-        totalHB: _hiTaraf==='mulk' ? rec.hbOwner : rec.hbBuyer
+        hbOwner: _hiTaraf==='mulk' ? _ortakPay : 0,
+        hbBuyer: _hiTaraf==='alici' ? _ortakPay : 0,
+        totalHB: _ortakPay
       } : {}),
       notes: (rec.notes ? rec.notes + ' · ' : '') + ortakNotMetni(currentUser.name),
       createdAt: new Date().toISOString()
