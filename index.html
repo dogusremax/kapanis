@@ -2832,12 +2832,12 @@ async function submitForm(){
 /* ===== GOOGLE YORUM MESAJI (müşteriye WhatsApp) ===== */
 const GOOGLE_YORUM_LINK='https://dogusportal.com/yorum';
 const KADIN_ADLARI=['ayşe','fatma','emine','hatice','zeynep','elif','meryem','şerife','zehra','sultan','hanife','merve','havva','esra','fadime','özlem','yasemin','büşra','kübra','sevim','şenay','gamze','gizem','irem','aysun','evşen','ayşegül','derya','nazlı','ebru','selin','seda','sibel','serap','nurcan','nuray','gül','gülay','gülsüm','gülten','hülya','tuğba','pınar','burcu','deniz','dilek','filiz','sevgi','sevil','nesrin','neslihan','nilgün','nihal','nurten','ayla','aylin','aynur','aysel','ayten','belgin','berna','betül','canan','ceren','cansu','çiğdem','damla','demet','ece','eda','ela','emel','esin','feride','ferda','figen','funda','gonca','gökçe','gülbahar','hale','handan','hande','hilal','ipek','jale','kader','leyla','melek','melike','melis','meltem','mine','mukaddes','nalan','nihan','nur','nurgül','oya','öznur','perihan','rabia','reyhan','rukiye','saadet','sabiha','safiye','selma','semra','sena','serpil','sevda','sevinç','songül','suna','şebnem','şükran','tülay','tülin','ümmü','yeliz','yeşim','yıldız','yonca','zuhal','zübeyde','ayça','ayşenur','beyza','dilara','duygu','ezgi','feyza','gülçin','hazal','ilayda','kıymet','latife','mihriban','naciye','nazan','nebahat','remziye','sabriye','şule','tuba','ümmügülsüm','zeliha','makbule','hira','tannaz'];
-const KADIN_EKLERI=/(nur|gül|han|naz|ay)$/;
 function yorumAd(ad){ return String(ad||'').replace(/\b(bey|hanım|hanim|sn\.?|sayın)\b/gi,'').replace(/\s+/g,' ').trim().split(' ')[0]||''; }
-function yorumCinsTahmin(ad){ const a=yorumAd(ad).toLocaleLowerCase('tr'); if(!a) return 'Hanım'; if(KADIN_ADLARI.includes(a)||KADIN_EKLERI.test(a)) return 'Hanım'; return 'Bey'; }
+const ERKEK_ADLARI=['mehmet','ahmet','mustafa','ali','hüseyin','hasan','ibrahim','ismail','osman','yusuf','murat','ömer','ramazan','halil','süleyman','abdullah','mahmut','recep','salih','fatih','kadir','emre','hakan','adem','kemal','yaşar','bayram','metin','orhan','erhan','ayhan','serkan','volkan','burak','onur','umut','uğur','cem','can','kaan','kerem','berk','arda','emir','eren','efe','barış','tolga','tuncay','olcay','kutay','altay','alper','alp','sinan','selim','serdar','sedat','sefa','cengiz','cemal','celal','cihan','coşkun','doğan','engin','enes','erdem','erkan','ersin','ertuğrul','fikret','gökhan','güven','hamza','hayati','ilker','ilhan','kamil','kenan','levent','mert','necati','nihat','oğuz','okan','orçun','ozan','özgür','ömür','rıza','sami','sezer','şahin','şükrü','taner','tarık','tayfun','turgay','turan','tuncer','ufuk','veli','yavuz','yasin','yiğit','yılmaz','zafer','zeki','erol','erdal','ercan','ender','bülent','cahit','cüneyt','emin','fuat','haluk','harun','idris','kazım','kubilay','mesut','muhammet','muhammed','nail','nuri','orhun','rafet','rahmi','reşat','sabri','sadık','selçuk','tahsin','tekin','tuğrul','vedat','yalçın','yunus','zülfikar','batuhan','oğuzhan','furkan','anıl','berkay','çağrı','doruk','ege','görkem','ilkay','koray','mertcan','ogün','semih','sercan','taylan','ulaş','yağız'];
+function yorumCinsTahmin(ad){ const a=yorumAd(ad).toLocaleLowerCase('tr'); if(!a) return ''; if(KADIN_ADLARI.includes(a)) return 'Hanım'; if(ERKEK_ADLARI.includes(a)) return 'Bey'; return ''; }
 function yorumMesaji(r, taraf, hitapEk){
   const ad=taraf==='owner'?r.ownerName:r.buyerName;
-  const ilk=yorumAd(ad); const ek=hitapEk||yorumCinsTahmin(ad);
+  const ilk=yorumAd(ad); const ek=hitapEk||'';
   const dan=(r.advisor||'').replace(/\s*Team\s*$/i,'');
   const kira=/kira/i.test(String(r.type||''));
   const acilis=taraf==='owner'?(kira?'Kiralamanız tekrar hayırlı olsun.':'Satışınız tekrar hayırlı olsun.'):'Yeni yuvanız tekrar hayırlı olsun.';
@@ -2877,27 +2877,36 @@ function yorumDurumHtml(r){
   return parts.length?`<div style="font-size:11px;color:#555;margin-top:6px;display:flex;gap:10px;flex-wrap:wrap">${parts.map(p=>`<span>${p}</span>`).join('')}</div>`:'';
 }
 function yorumBul(id){ const a=(loadRecords()||[]).find(x=>String(x.id)===String(id)); if(a) return a; return (window._yorumRecs||[]).find(x=>String(x.id)===String(id)); }
-function yorumEk(id,taraf){ const e=document.querySelector('#yh-'+taraf+'-'+id+' .on'); return e?e.dataset.v:''; }
-function yorumEkSec(el){ el.parentNode.querySelectorAll('button').forEach(b=>{b.classList.remove('on');b.style.background='#fff';b.style.color='#333';}); el.classList.add('on'); el.style.background='#1A56A0'; el.style.color='#fff'; }
+/* Hitap seçimi: aynı kayıt ekranda birden fazla yerde (başarı kutusu + kutlama ekranı + liste) çizilebiliyor.
+   Seçim tek bir hafızada tutulur ve tüm kopyalara yansıtılır; ilk bulunan (gizli) kopyadan okunmaz. */
+window._yorumHitap=window._yorumHitap||{};
+function yorumEk(id,taraf){ const k=taraf+'-'+id; if(window._yorumHitap[k]) return window._yorumHitap[k]; const r=yorumBul(id); return r?yorumCinsTahmin(taraf==='owner'?r.ownerName:r.buyerName):''; }
+function yorumEkSec(el){ const kutu=el.parentNode; const k=kutu.dataset.k; const v=el.dataset.v; if(k) window._yorumHitap[k]=v;
+  document.querySelectorAll('[data-k="'+k+'"]').forEach(c=>c.querySelectorAll('button').forEach(b=>{const on=b.dataset.v===v; b.classList.toggle('on',on); b.style.background=on?'#1A56A0':'#fff'; b.style.color=on?'#fff':'#333'; c.style.outline='';})); }
+function yorumEkGerekli(id,taraf){ const v=yorumEk(id,taraf); if(v) return v;
+  document.querySelectorAll('[data-k="'+taraf+'-'+id+'"]').forEach(c=>{c.style.outline='2px solid #E53935';c.style.borderRadius='9px';});
+  alert('Mesaj gönderilmeden önce müşteriye hitabı seç: Hanım mı, Bey mi?'); return ''; }
 function yorumWhatsApp(id, taraf){
   const r=yorumBul(id); if(!r) return;
+  const ek=yorumEkGerekli(id,taraf); if(!ek) return;
   const tel=waNumara(taraf==='owner'?r.ownerPhone:r.buyerPhone);
-  const url=(tel?`https://wa.me/${tel}`:'https://wa.me/')+'?text='+encodeURIComponent(yorumMesaji(r,taraf,yorumEk(id,taraf)));
+  const url=(tel?`https://wa.me/${tel}`:'https://wa.me/')+'?text='+encodeURIComponent(yorumMesaji(r,taraf,ek));
   window.open(url,'_blank');
   yorumIsaretle(id,taraf);
 }
 function yorumKopyala(id, taraf, btn){
   const r=yorumBul(id); if(!r) return;
-  const t=yorumMesaji(r,taraf,yorumEk(id,taraf));
+  const ek=yorumEkGerekli(id,taraf); if(!ek) return;
+  const t=yorumMesaji(r,taraf,ek);
   (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>{ if(btn){const o=btn.textContent;btn.textContent='✓ Kopyalandı';setTimeout(()=>btn.textContent=o,1800);} }).catch(()=>{ prompt('Mesajı kopyala:',t); });
 }
 function yorumButonlari(r, taraf){
   if(yorumAlindi(r)) return '';
   const ad=taraf==='owner'?r.ownerName:r.buyerName; if(!ad) return '';
-  const tah=yorumCinsTahmin(ad);
+  const tah=window._yorumHitap[taraf+'-'+r.id]||yorumCinsTahmin(ad);
   const pill=(v)=>`<button type="button" data-v="${v}" class="${tah===v?'on':''}" onclick="yorumEkSec(this)" style="border:1.5px solid #1A56A0;border-radius:8px;padding:8px 10px;font-size:12px;font-weight:600;cursor:pointer;width:auto;margin:0;background:${tah===v?'#1A56A0':'#fff'};color:${tah===v?'#fff':'#333'}">${v}</button>`;
   return `<div style="display:flex;gap:6px;flex-wrap:nowrap;align-items:center;margin:6px 0 4px">
-    <div id="yh-${taraf}-${r.id}" style="display:flex;gap:4px;flex:0 0 auto">${pill('Hanım')}${pill('Bey')}</div>
+    <div data-k="${taraf}-${r.id}" style="display:flex;gap:4px;flex:0 0 auto">${pill('Hanım')}${pill('Bey')}</div>
     <button type="button" onclick="yorumWhatsApp('${r.id}','${taraf}')" style="border:none;border-radius:8px;padding:9px 10px;font-size:12px;font-weight:600;cursor:pointer;background:#25D366;color:#fff;flex:1;width:auto;margin:0;white-space:nowrap">💬 WhatsApp</button>
     <button type="button" onclick="yorumKopyala('${r.id}','${taraf}',this)" title="Mesajı kopyala" style="border:none;border-radius:8px;padding:9px 10px;font-size:12px;cursor:pointer;background:#f1f2f7;color:#333;width:auto;margin:0">📋</button></div>`;
 }
