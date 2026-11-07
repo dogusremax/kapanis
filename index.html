@@ -607,6 +607,7 @@
     <div class="form-card">
       <div class="form-section-title">👤 Müşteri Bilgileri</div>
       <div id="ortak-musteri-not" style="display:none;font-size:12px;color:#1A56A0;background:#EEF4FF;border:1px solid #C7D9FF;border-radius:8px;padding:9px 11px;margin-bottom:12px;line-height:1.5">🤝 <b>Ofis içi ortak kapanış:</b> ortağının temsil ettiği tarafın müşteri bilgileri de zorunlu. İki tarafın bilgilerini eksiksiz doldur.</div>
+      <div id="karsi-taraf-not" style="display:none;font-size:12px;color:#7A4B00;background:#FFF7E6;border:1px solid #FFE0A3;border-radius:8px;padding:9px 11px;margin-bottom:12px;line-height:1.5"></div>
       <div id="wrap-mulk-sahibi">
       <div class="field"><label>Mülk Sahibi Adı</label><input type="text" id="f-owner-name" placeholder="Ad Soyad" oninput="capitalizeWords(this)"></div>
       <div class="field"><label>T.C. Kimlik No</label><input type="text" id="f-owner-tc" placeholder="11 haneli" inputmode="numeric" maxlength="11" oninput="formatTC(this)"></div>
@@ -977,6 +978,7 @@ function toggleTaraf(val){
     document.getElementById('f-ref-shared').value = '';
     toggleSharedAdvisor('');
   }
+  musteriAlanlariniGuncelle();
 }
 
 /* OFİS İÇİ ORTAK KAPANIŞ — İKİ TARAF ZORUNLU
@@ -996,11 +998,16 @@ function musteriAlanlariniGuncelle(){
   const taraf = document.getElementById('f-taraf')?.value || '';
   if(!taraf) return;
   const ikiTaraf = ortakIkiTarafZorunluMu();
-  const mulkGoster = taraf === 'mulk-sahibi' || taraf === 'her-ikisi' || ikiTaraf;
-  const aliciGoster = taraf === 'alici-kiraci' || taraf === 'her-ikisi' || ikiTaraf;
-  const wM = document.getElementById('wrap-mulk-sahibi'); if(wM) wM.style.display = mulkGoster ? 'block' : 'none';
-  const wA = document.getElementById('wrap-alici-kiraci'); if(wA) wA.style.display = aliciGoster ? 'block' : 'none';
+  // MyRE/MAX ciro raporu iki tarafın ad + telefonunu zorunlu tutar → iki taraf da her zaman görünür
+  const wM = document.getElementById('wrap-mulk-sahibi'); if(wM) wM.style.display = 'block';
+  const wA = document.getElementById('wrap-alici-kiraci'); if(wA) wA.style.display = 'block';
   const not = document.getElementById('ortak-musteri-not'); if(not) not.style.display = ikiTaraf ? 'block' : 'none';
+  const kNot = document.getElementById('karsi-taraf-not');
+  if(kNot){
+    const tek = (taraf === 'mulk-sahibi' || taraf === 'alici-kiraci') && !ikiTaraf;
+    kNot.style.display = tek ? 'block' : 'none';
+    if(tek) kNot.innerHTML = '📋 <b>Karşı taraf (' + (taraf === 'mulk-sahibi' ? 'alıcı / kiracı' : 'mülk sahibi') + '):</b> ad soyad ve telefon zorunlu — RE/MAX Türkiye ciro raporu istiyor. T.C. ve e-posta isteğe bağlı.';
+  }
 }
 
 function toggleSharedAdvisor(val){
@@ -2541,6 +2548,16 @@ async function submitForm(){
     if(!buyerTc) errors.push('• Alıcı / kiracı T.C. kimlik no');
     if(!buyerPhone) errors.push('• Alıcı / kiracı telefonu');
     if(!buyerEmail) errors.push('• Alıcı / kiracı e-postası');
+  }
+  // Karşı taraf (tek taraf temsil, ofis içi ortak değil): RE/MAX Türkiye ciro raporu
+  // iki tarafın ad + telefonunu zorunlu tutar. T.C. ve e-posta isteğe bağlı.
+  if(taraf==='alici-kiraci' && !_ikiTaraf){
+    if(!ownerName) errors.push('• Mülk sahibi adı soyadı (karşı taraf — RE/MAX raporu için zorunlu)');
+    if(!ownerPhone) errors.push('• Mülk sahibi telefonu (karşı taraf — RE/MAX raporu için zorunlu)');
+  }
+  if(taraf==='mulk-sahibi' && !_ikiTaraf){
+    if(!buyerName) errors.push('• Alıcı / kiracı adı soyadı (karşı taraf — RE/MAX raporu için zorunlu)');
+    if(!buyerPhone) errors.push('• Alıcı / kiracı telefonu (karşı taraf — RE/MAX raporu için zorunlu)');
   }
 
   // Format kontrolleri
