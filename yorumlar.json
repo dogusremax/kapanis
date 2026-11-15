@@ -1,5 +1,5 @@
 {
-  "guncelleme": "14.11.2026 14:03:19",
+  "guncelleme": "15.11.2026 14:37:35",
   "ozet": [
     {
       "ad": "Umut Tokkuş",
@@ -9,7 +9,7 @@
     {
       "ad": "Ayşegül Alpay",
       "yorumSayisi": 1,
-      "siteSayisi": 24
+      "siteSayisi": 25
     },
     {
       "ad": "Aysun Yılmaz",
@@ -59,7 +59,7 @@
       {
         "ad": "Ayşegül Alpay",
         "toplanan": 1,
-        "site": 24,
+        "site": 25,
         "tutuyor": false
       },
       {
@@ -103,7 +103,7 @@
       {
         "ad": "Ayşegül Alpay",
         "toplanan": 1,
-        "site": 24,
+        "site": 25,
         "tutuyor": false
       },
       {
@@ -232,7 +232,7 @@
       "profil çöz: id=28251 slug=\"umut-tokkus\" baslik=\"Umut Tokkuş\" h1=\"Toplam Yorum Sayısı\" -> Umut Tokkuş",
       "SAYI FARKI Umut Tokkuş: remax=78, toplanan=1 (kaynak:json, jsonCevap:3)",
       "profil çöz: id=40213 slug=\"aysegul-alpay\" baslik=\"Ayşegül Alpay\" h1=\"Toplam Yorum Sayısı\" -> Ayşegül Alpay",
-      "SAYI FARKI Ayşegül Alpay: remax=24, toplanan=1 (kaynak:json, jsonCevap:3)",
+      "SAYI FARKI Ayşegül Alpay: remax=25, toplanan=1 (kaynak:json, jsonCevap:3)",
       "profil çöz: id=47386 slug=\"aysun-yilmaz\" baslik=\"Aysun Yılmaz\" h1=\"Toplam Yorum Sayısı\" -> Aysun Yılmaz",
       "SAYI FARKI Aysun Yılmaz: remax=6, toplanan=1 (kaynak:json, jsonCevap:3)",
       "profil çöz: id=54267 slug=\"evsen-ozazman\" baslik=\"Evşen Özazman\" h1=\"Toplam Yorum Sayısı\" -> Evşen Özazman",
