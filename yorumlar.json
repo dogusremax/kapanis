@@ -1,5 +1,5 @@
 {
-  "guncelleme": "15.11.2026 14:37:35",
+  "guncelleme": "16.11.2026 15:11:25",
   "ozet": [
     {
       "ad": "Umut Tokkuş",
@@ -24,7 +24,7 @@
     {
       "ad": "Gamze Yetkin",
       "yorumSayisi": 1,
-      "siteSayisi": 24
+      "siteSayisi": 25
     },
     {
       "ad": "Gizem Gök",
@@ -34,7 +34,7 @@
     {
       "ad": "İrem Aleyna Tetik",
       "yorumSayisi": 1,
-      "siteSayisi": 23
+      "siteSayisi": 24
     },
     {
       "ad": "Orhan Özazman",
@@ -77,7 +77,7 @@
       {
         "ad": "Gamze Yetkin",
         "toplanan": 1,
-        "site": 24,
+        "site": 25,
         "tutuyor": false
       },
       {
@@ -89,7 +89,7 @@
       {
         "ad": "İrem Aleyna Tetik",
         "toplanan": 1,
-        "site": 23,
+        "site": 24,
         "tutuyor": false
       }
     ],
@@ -121,7 +121,7 @@
       {
         "ad": "Gamze Yetkin",
         "toplanan": 1,
-        "site": 24,
+        "site": 25,
         "tutuyor": false
       },
       {
@@ -133,7 +133,7 @@
       {
         "ad": "İrem Aleyna Tetik",
         "toplanan": 1,
-        "site": 23,
+        "site": 24,
         "tutuyor": false
       },
       {
@@ -177,9 +177,9 @@
     },
     {
       "ad": "Gamze Yetkin",
-      "musteri": "2026-11-02T18:49:28.833+03:00",
-      "tarih": "2026-11-02",
-      "yorum": "2026-11-02T18:49:28.833+03:00"
+      "musteri": "2026-11-15T08:54:38.68+03:00",
+      "tarih": "2026-11-15",
+      "yorum": "2026-11-15T08:54:38.68+03:00"
     },
     {
       "ad": "Gizem Gök",
@@ -189,9 +189,9 @@
     },
     {
       "ad": "İrem Aleyna Tetik",
-      "musteri": "2026-10-27T00:17:11.69+03:00",
-      "tarih": "2026-10-27",
-      "yorum": "2026-10-27T00:17:11.69+03:00"
+      "musteri": "2026-11-15T08:55:21.033+03:00",
+      "tarih": "2026-11-15",
+      "yorum": "2026-11-15T08:55:21.033+03:00"
     },
     {
       "ad": "Orhan Özazman",
@@ -222,7 +222,7 @@
     "hatalar": [],
     "notlar": [
       "yorum sekmesi tıklandı: true",
-      "daha-fazla sonrası metin uzunluğu: 36663",
+      "daha-fazla sonrası metin uzunluğu: 36650",
       "yorum sayfalaması 1. sayfada bitti",
       "Comment API isteği yakalanamadı",
       "yorum sekmesi ham (yalnızca teşhis, eklenmedi): 101 | json cevap: 2",
@@ -238,11 +238,11 @@
       "profil çöz: id=54267 slug=\"evsen-ozazman\" baslik=\"Evşen Özazman\" h1=\"Toplam Yorum Sayısı\" -> Evşen Özazman",
       "SAYI FARKI Evşen Özazman: remax=10, toplanan=1 (kaynak:json, jsonCevap:3)",
       "profil çöz: id=41709 slug=\"gamze-yetkin\" baslik=\"Gamze Yetkin\" h1=\"Toplam Yorum Sayısı\" -> Gamze Yetkin",
-      "SAYI FARKI Gamze Yetkin: remax=24, toplanan=1 (kaynak:json, jsonCevap:3)",
+      "SAYI FARKI Gamze Yetkin: remax=25, toplanan=1 (kaynak:json, jsonCevap:3)",
       "profil çöz: id=48933 slug=\"gizem-gok\" baslik=\"Gizem Gök\" h1=\"Toplam Yorum Sayısı\" -> Gizem Gök",
       "SAYI FARKI Gizem Gök: remax=5, toplanan=1 (kaynak:json, jsonCevap:3)",
       "profil çöz: id=35392 slug=\"irem-aleyna-tetik\" baslik=\"İrem Aleyna Tetik\" h1=\"Toplam Yorum Sayısı\" -> İrem Aleyna Tetik",
-      "SAYI FARKI İrem Aleyna Tetik: remax=23, toplanan=1 (kaynak:json, jsonCevap:3)",
+      "SAYI FARKI İrem Aleyna Tetik: remax=24, toplanan=1 (kaynak:json, jsonCevap:3)",
       "profil çöz: id=46773 slug=\"leman-ozlem-ozgur\" baslik=\"Leman Özlem Özgür\" h1=\"\" -> EŞLEŞMEDİ",
       "profil eşleşmedi (eski danışman olabilir): leman-ozlem-ozgur | baslik: Leman Özlem Özgür",
       "profil çöz: id=47387 slug=\"orhan-ozazman\" baslik=\"Orhan Özazman\" h1=\"Toplam Yorum Sayısı\" -> Orhan Özazman",
@@ -262,6 +262,6 @@
       "https://remaxsiteapi.remax.com.tr/api/Employee/GetEmployeeReviewSummary?EmployeeId=47387",
       "https://remaxsiteapi.remax.com.tr/api/Employee/GetEmployeeReviewSummary?EmployeeId=46769"
     ],
-    "yorumSekmesiOrnek": "Toplam Yorum Sayısı\n\n272\n\nGenel Puan Durumu\n\n5.0\n\nDüzenli Bilgilendirme\nProfesyonellik\nGüvenirlik\nİletişim Becerisi\nYapay Zeka Özeti\n\n6 yıllık sektör deneyimiyle hizmet veren RE/MAX Doğuş, gayrimenkul alım, satım ve kiralama süreçlerinde profesyonel, şeffaf ve çözüm odaklı bir yaklaşım sergilemektedir. Müşteriler, süreçlerin başından sonuna kadar düzenli bilgilendirilmeleri, danışmanların güler yüzlü iletişimleri ve güven veren tutumları sayesinde işlemlerin hızlı ve sorunsuz tamamlandığını belirtmektedir. Hizmet sonrası destek ve mülk sahipleri ile kiracılar arasındaki iletişimi yönetme konusundaki titizlik, ofisin genel hizmet kalitesine dair öne çıkan ortak temalar arasındadır. Müşteriler, ihtiyaç duydukları her aşamada destekleyici ve samimi bir yaklaşımla karşılaştıklarını ifade ederek ofisin hizmetlerinden duydukları memnuniyeti dile getirmektedir.\n\n12/11/2026 tarihinde oluşturuldu\n\nEvrim Ileri\nAyşegül hanım ev kiralama sürecimizde çok destek oldu, çok teşekkür ederiz.\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\n12/11/2026\nZ******* M*******\nİlk evim için tüm süreç boyunca herşeyi açık, şeffaf ve fazlasıyla bilgilendirme yaparak tüm soru işaretlerini gidermesiyle Gizem GÖK hanımefendiye çok teşekkür ederim. Tüm süreç için tekrar tekrar teşekkürler.\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\n07/11/2026\nGamze Serttaş\nEvimizi satma sürecinde Gizem Hanım büyük bir özveri ile bizlere destek olup, vermiş olduğu güven duygusu ile doğru bir kişiyle çalıştığımızı bize göstermiş oldu. Emekleri için kendisine tekrardan teşekkür ederiz🙏\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\n07/11/2026\nO******* D*******\nEvimizi satma sürecinde bize verdiğiniz tüm destek için çok teşekkür ederiz Gizem Hanım. Profesyonelliğiniz, güler yüzünüz, dürüst yaklaşımınız ve süreci titizlikle yönetmeniz sayesinde satışımız sorunsuz ve hızlı bir şekilde gerçekleşti. Her aşamada kendimizi güvende hissettik. İşini gerçekten hakkıyla yapan bir emlak danışmanı arayan herkese gönül rahatlığıyla tavsiye ederiz. Başarılarınızın devamını diler, her şey için tekrar teşekkür ederiz.\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\n07/11/2026\nS******* Ç*******\nRE/MAX Doğuş tan Evşen hanımla ev kiralama ile çalıştık. Kendisinin naifliği , yardımseverliği ve iyiniyeti emlak sektöründe az rastlanılır türdendi. Kendisine ilgisi ve konusunda verdiği tavsiyeler için teşekkür ediyorum buradan. Gönül rahatlığıyla çalışabilirsiniz .\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\n07/11/2026\nNihal Dilşen\nRE/MAX Doğuş Ofisinden Ayşegül Alpay hanıma çok teşekkürler. Evimizin kiraya verilmesinde tüm sürecimizi takip etti, sözleşme takibimizi yaptı, kısa sürede evimizi güzel bir aileye kiraya verdik. Güler yüzü ve profesyonel yaklaşımı için ayrıca teşekkür ederim.\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\n05/11/2026\nKemal Gözan\nGamze Hanım’a güler yüzü, samimiyeti ve içten ilgisi için çok teşekkür ederim. Süreç boyunca desteği ve profesyonel yaklaşımıyla her şeyi kolaylaştırdı. Kendisine başarılarılar dilerim.\nSektör Bilgisi, Bölge Hakimliği, Araçlar ve Teknoloji\n02/11/2026\nElvira Sürmen\nGizem Gök hanıma daire alım süreci boyunca gösterdiği profesyonellik, ilgi ve güler yüz için çok teşekkür ederiz. Süreci harika ve sorunsuz bir şekilde yönetti. Emeğiniz ve desteğiniz için tekrar teşekkürler. Gayrimenkul süreçlerinde kesinlikle güvenli adresimiz!\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\n02/11/2026\nBora Yerlikaya\nAysun Hanım’a ilgisi için çok teşekkür ederiz gerçekten bizimle çok ilgilendi her detayı titizlikle anlattı. Çok teşekkürler :)\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\n01/11/2026\nAyşe Turgut\nAysun Yılmaz Gayrimenkul danışmanlığı konusunda işini gerçekten özenle yapan, samimi, güven veren ve çözüm odaklı bir danışman. İstanbul dışında yaşamama rağmen, istanbul daki evimin kiraya verilmesi sürecinde iletişimi, titizliği, şeffaf çalışma prensibi ve profesyonel yaklaşımıyla çok memnun kaldım. Mülkünü güvenilir ellere teslim etmek isteyen herkese gönül rahatlığıyla tavsiye ederim.\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\n01/11/2026\nKadir Nergiz\nAysun Hanım'a teşekkürler. Gerçekten işini severek yapan, doğru yönlendirmeleri ile sürecin optimum sürede çözümlenmesini sağlayan, sunduğu alternatifler ile doğru etkili karar almayı sağlayıcı, güler yüzlü bir insan. Saygılarımla\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\n31/10/2026\nAli Sahillioğlu\nGayrimenkul danışmanı Ays"
+    "yorumSekmesiOrnek": "Toplam Yorum Sayısı\n\n274\n\nGenel Puan Durumu\n\n5.0\n\nDüzenli Bilgilendirme\nProfesyonellik\nGüvenirlik\nİletişim Becerisi\nYapay Zeka Özeti\n\n6 yıllık sektör deneyimiyle hizmet veren RE/MAX Doğuş, gayrimenkul alım, satım ve kiralama süreçlerinde profesyonel, şeffaf ve çözüm odaklı bir yaklaşım sergilemektedir. Müşteriler, süreçlerin başından sonuna kadar düzenli bilgilendirilmeleri, danışmanların güler yüzlü iletişimleri ve güven veren tutumları sayesinde işlemlerin hızlı ve sorunsuz tamamlandığını belirtmektedir. Hizmet sonrası destek ve mülk sahipleri ile kiracılar arasındaki iletişimi yönetme konusundaki titizlik, ofisin genel hizmet kalitesine dair öne çıkan ortak temalar arasındadır. Müşteriler, ihtiyaç duydukları her aşamada destekleyici ve samimi bir yaklaşımla karşılaştıklarını ifade ederek ofisin hizmetlerinden duydukları memnuniyeti dile getirmektedir.\n\n12/11/2026 tarihinde oluşturuldu\n\nŞermin Çiftçi\nOldukça memnun kaldım özellikle İrem hanıma gösterdiği ilgi ve alaka için teşekkür ederim.\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\n15/11/2026\nBuğra Çakır\nGamze hanıma teşekkürler.. Çok memnun kaldık.\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\n15/11/2026\nEvrim Ileri\nAyşegül hanım ev kiralama sürecimizde çok destek oldu, çok teşekkür ederiz.\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\n12/11/2026\nZ******* M*******\nİlk evim için tüm süreç boyunca herşeyi açık, şeffaf ve fazlasıyla bilgilendirme yaparak tüm soru işaretlerini gidermesiyle Gizem GÖK hanımefendiye çok teşekkür ederim. Tüm süreç için tekrar tekrar teşekkürler.\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\n07/11/2026\nGamze Serttaş\nEvimizi satma sürecinde Gizem Hanım büyük bir özveri ile bizlere destek olup, vermiş olduğu güven duygusu ile doğru bir kişiyle çalıştığımızı bize göstermiş oldu. Emekleri için kendisine tekrardan teşekkür ederiz🙏\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\n07/11/2026\nO******* D*******\nEvimizi satma sürecinde bize verdiğiniz tüm destek için çok teşekkür ederiz Gizem Hanım. Profesyonelliğiniz, güler yüzünüz, dürüst yaklaşımınız ve süreci titizlikle yönetmeniz sayesinde satışımız sorunsuz ve hızlı bir şekilde gerçekleşti. Her aşamada kendimizi güvende hissettik. İşini gerçekten hakkıyla yapan bir emlak danışmanı arayan herkese gönül rahatlığıyla tavsiye ederiz. Başarılarınızın devamını diler, her şey için tekrar teşekkür ederiz.\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\n07/11/2026\nS******* Ç*******\nRE/MAX Doğuş tan Evşen hanımla ev kiralama ile çalıştık. Kendisinin naifliği , yardımseverliği ve iyiniyeti emlak sektöründe az rastlanılır türdendi. Kendisine ilgisi ve konusunda verdiği tavsiyeler için teşekkür ediyorum buradan. Gönül rahatlığıyla çalışabilirsiniz .\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\n07/11/2026\nNihal Dilşen\nRE/MAX Doğuş Ofisinden Ayşegül Alpay hanıma çok teşekkürler. Evimizin kiraya verilmesinde tüm sürecimizi takip etti, sözleşme takibimizi yaptı, kısa sürede evimizi güzel bir aileye kiraya verdik. Güler yüzü ve profesyonel yaklaşımı için ayrıca teşekkür ederim.\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\n05/11/2026\nKemal Gözan\nGamze Hanım’a güler yüzü, samimiyeti ve içten ilgisi için çok teşekkür ederim. Süreç boyunca desteği ve profesyonel yaklaşımıyla her şeyi kolaylaştırdı. Kendisine başarılarılar dilerim.\nSektör Bilgisi, Bölge Hakimliği, Araçlar ve Teknoloji\n02/11/2026\nElvira Sürmen\nGizem Gök hanıma daire alım süreci boyunca gösterdiği profesyonellik, ilgi ve güler yüz için çok teşekkür ederiz. Süreci harika ve sorunsuz bir şekilde yönetti. Emeğiniz ve desteğiniz için tekrar teşekkürler. Gayrimenkul süreçlerinde kesinlikle güvenli adresimiz!\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\n02/11/2026\nBora Yerlikaya\nAysun Hanım’a ilgisi için çok teşekkür ederiz gerçekten bizimle çok ilgilendi her detayı titizlikle anlattı. Çok teşekkürler :)\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\n01/11/2026\nAyşe Turgut\nAysun Yılmaz Gayrimenkul danışmanlığı konusunda işini gerçekten özenle yapan, samimi, güven veren ve çözüm odaklı bir danışman. İstanbul dışında yaşamama rağmen, istanbul daki evimin kiraya verilmesi sürecinde iletişimi, titizliği, şeffaf çalışma prensibi ve profesyonel yaklaşımıyla çok memnun kaldım. Mülkünü güvenilir ellere teslim etmek isteyen herkese gönül rahatlığıyla tavsiye ederim.\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\n01/11/2026\nKadir Nergiz\nAysun Hanım'a teşekkürler. Gerçekten işini s"
   }
 }
