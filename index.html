@@ -586,6 +586,8 @@
         <div class="field" id="f-ref-firm-wrap" style="display:none">
           <label>Emlak Firması</label>
           <input type="text" id="f-ref-firm" placeholder="Firma adı..." oninput="capitalizeWords(this);if(typeof updateFaturaHesap==='function')updateFaturaHesap()">
+          <label style="margin-top:10px">Karşı Danışmanın Adı Soyadı</label>
+          <input type="text" id="f-ref-agent" placeholder="Ad Soyad" oninput="capitalizeWords(this)">
           <div id="dis-saticidan-not" style="display:none;margin-top:10px;font-size:12px;color:#1A56A0;background:#EEF4FF;border:1px solid #C7D9FF;border-radius:8px;padding:9px 11px;line-height:1.5">🤝 <b id="dis-sat-baslik">Satılıkta alıcı tarafı:</b> <span id="dis-sat-metin">karşı firma genelde komisyonunu satıcıdan alır, alıcıdan aldığın hizmet bedeli paylaşılmaz.</span> Farklı bir anlaşma yaptıysan aşağıdan oranı seç.</div>
           <div id="dis-oran-blok">
           <label style="margin-top:10px">Karşı Firmanın Payı</label>
@@ -609,7 +611,7 @@
     </div>
     <div class="form-card">
       <div class="form-section-title">👤 Müşteri Bilgileri</div>
-      <div id="ortak-musteri-not" style="display:none;font-size:12px;color:#1A56A0;background:#EEF4FF;border:1px solid #C7D9FF;border-radius:8px;padding:9px 11px;margin-bottom:12px;line-height:1.5">🤝 <b>Ofis içi ortak kapanış:</b> ortağının temsil ettiği tarafın müşteri bilgileri de zorunlu. İki tarafın bilgilerini eksiksiz doldur.</div>
+      <div id="ortak-musteri-not" style="display:none;font-size:12px;color:#1A56A0;background:#EEF4FF;border:1px solid #C7D9FF;border-radius:8px;padding:9px 11px;margin-bottom:12px;line-height:1.5">👥 <b>İki tarafın bilgileri de zorunlu:</b> paylaşımlı kapanışta ve karşı taraf başka firmadan gelse bile mülk sahibi ve alıcı/kiracının adı soyadı, T.C. kimlik no ve telefonu girilmeden kapanış kaydedilemez. E-posta yalnız senin temsil ettiğin taraf için zorunlu.</div>
       <div id="wrap-mulk-sahibi">
       <div class="field"><label>Mülk Sahibi Adı</label><input type="text" id="f-owner-name" placeholder="Ad Soyad" oninput="capitalizeWords(this)"></div>
       <div class="field"><label>T.C. Kimlik No</label><input type="text" id="f-owner-tc" placeholder="11 haneli" inputmode="numeric" maxlength="11" oninput="formatTC(this)"></div>
@@ -649,6 +651,7 @@
             <div class="upload-hint" id="uh-kontrat">Tüm sayfalar — sadece PDF</div>
             <button class="upload-remove" id="ur-kontrat" style="display:none" onclick="removeFile(event,'kontrat')">✕ Kaldır</button>
           </div>
+          <div id="kontrat-imza-durum" style="display:none;margin-top:6px;font-size:11.5px;line-height:1.45;border-radius:8px;padding:7px 9px"></div>
         </div>
         <div class="field" style="margin:0">
           <label>Ofise Kesilen Fatura <span style="color:#C0392B">*</span></label>
@@ -980,6 +983,7 @@ function toggleTaraf(val){
     document.getElementById('f-ref-shared').value = '';
     toggleSharedAdvisor('');
   }
+  musteriAlanlariniGuncelle();   // iki tarafın müşteri bilgileri her zaman görünür
 }
 
 /* OFİS İÇİ ORTAK KAPANIŞ — İKİ TARAF ZORUNLU
@@ -998,12 +1002,10 @@ function ortakIkiTarafZorunluMu(){
 function musteriAlanlariniGuncelle(){
   const taraf = document.getElementById('f-taraf')?.value || '';
   if(!taraf) return;
-  const ikiTaraf = ortakIkiTarafZorunluMu();
-  const mulkGoster = taraf === 'mulk-sahibi' || taraf === 'her-ikisi' || ikiTaraf;
-  const aliciGoster = taraf === 'alici-kiraci' || taraf === 'her-ikisi' || ikiTaraf;
-  const wM = document.getElementById('wrap-mulk-sahibi'); if(wM) wM.style.display = mulkGoster ? 'block' : 'none';
-  const wA = document.getElementById('wrap-alici-kiraci'); if(wA) wA.style.display = aliciGoster ? 'block' : 'none';
-  const not = document.getElementById('ortak-musteri-not'); if(not) not.style.display = ikiTaraf ? 'block' : 'none';
+  // Umut, 20.11.2026: her kapanışta İKİ tarafın bilgileri de zorunlu (paylaşımlı / dış firma dahil)
+  const wM = document.getElementById('wrap-mulk-sahibi'); if(wM) wM.style.display = 'block';
+  const wA = document.getElementById('wrap-alici-kiraci'); if(wA) wA.style.display = 'block';
+  const not = document.getElementById('ortak-musteri-not'); if(not) not.style.display = 'block';
 }
 
 function toggleSharedAdvisor(val){
@@ -1030,6 +1032,7 @@ function toggleSharedAdvisor(val){
     firmWrap.style.display = 'none';
     document.getElementById('f-ref').value = '';
     const firm = document.getElementById('f-ref-firm'); if(firm) firm.value = '';
+    const ag = document.getElementById('f-ref-agent'); if(ag) ag.value = '';
   }
   // Paylaşım durumu HB bölmesini etkiler → fatura/pay hesabını yenile
   if(typeof updateFaturaHesap === 'function') updateFaturaHesap();
@@ -1045,6 +1048,7 @@ function toggleRefType(val){
     firmWrap.style.display = 'none';
     sel.value = '';
     const firm = document.getElementById('f-ref-firm'); if(firm) firm.value = '';
+    const ag = document.getElementById('f-ref-agent'); if(ag) ag.value = '';
   } else if(val === 'dis'){
     // Farklı emlak firması → firma adı + karşı firmanın payı
     partnerWrap.style.display = 'none';
@@ -1058,6 +1062,7 @@ function toggleRefType(val){
     firmWrap.style.display = 'none';
     partnerWrap.style.display = 'block';
     const firm = document.getElementById('f-ref-firm'); if(firm) firm.value = '';
+    const ag = document.getElementById('f-ref-agent'); if(ag) ag.value = '';
     const currentName = currentUser ? currentUser.name : '';
     sel.innerHTML = '<option value="">— Seçiniz —</option>' +
       ADVISOR_NAMES.filter(a => a !== currentName)
@@ -1249,17 +1254,19 @@ function saveRecords(recs){try{
 }catch(e){ console.warn('Sessiz hata:', e); }}
 
 // Google Sheets'e kayıt yaz
-async function saveToSheets(rec){
+async function saveToSheets(rec, ops){
   _recFetchTime = 0;   // önbelleği geçersiz kıl
   try{
-    const body = 'action=saveRecord&record=' + encodeURIComponent(JSON.stringify(rec));
-    await fetch(APPS_SCRIPT_URL, {
+    // ilk=1: formdan girilen YENİ kapanış → sunucu eksik bilgi / imza kontrolü yapar (düzenlemeler muaf)
+    const body = 'action=saveRecord' + (ops && ops.ilk ? '&ilk=1' : '') + '&record=' + encodeURIComponent(JSON.stringify(rec));
+    const r = await fetch(APPS_SCRIPT_URL, {
       method: 'POST',
       headers: {'Content-Type': 'application/x-www-form-urlencoded'},
       body: body,
       redirect: 'follow'
     });
-  }catch(e){ console.warn('Sheets kayıt hatası:', e); }
+    try{ return JSON.parse(await r.text()); }catch(x){ return null; }
+  }catch(e){ console.warn('Sheets kayıt hatası:', e); return null; }
 }
 
 // ===== WHATSAPP BİLDİRİMLERİ (merkezi dogus-whatsapp-service) =====
@@ -1425,6 +1432,91 @@ async function uploadBelgeToDrive(file, danismanAdi, belgeTuru, fileName){
 }
 
 
+/* ===== KONTRAT İMZA KONTROLÜ (Umut, 20.11.2026: "kontrat imzasız kapanış yapılamasın") =====
+   Kontrat seçilince dosya WhatsApp servisine gider; Claude tarafların imza yerlerine bakar.
+   İmzasızsa kapanış kaydedilemez. Sunucu (saveRecord) aynı dosyayı Drive'dan tekrar kontrol eder.
+   Birden fazla PDF seçildiyse önce tek PDF'e birleştirilir (eskiden yalnız ilk dosya Drive'a gidiyordu). */
+let kontratImza = { durum:'yok', gerekce:'', eksik:'', no:0 };
+function kontratImzaGoster(){
+  const el = document.getElementById('kontrat-imza-durum'); if(!el) return;
+  const d = kontratImza.durum;
+  if(d==='yok'){ el.style.display='none'; el.innerHTML=''; return; }
+  const stil = {
+    bekliyor:['#EEF4FF','#C7D9FF','#1A56A0','⏳ İmzalar kontrol ediliyor…'],
+    imzali:['#ECFDF3','#A6E9C1','#146C3A','✅ Kontrat imzalı'],
+    imzasiz:['#FEF2F2','#F5B5B5','#B42318','❌ Kontrat imzasız: bu kontratla kapanış kaydedilemez.'],
+    hata:['#FFF8E6','#F5D98B','#8A5A00','⚠️ İmza kontrolü yapılamadı. Kaydederken tekrar denenecek.']
+  }[d];
+  el.style.display='block'; el.style.background=stil[0]; el.style.border='1px solid '+stil[1]; el.style.color=stil[2];
+  const ek = d==='imzasiz' ? [kontratImza.eksik ? 'Eksik: '+kontratImza.eksik : '', kontratImza.gerekce].filter(Boolean).join(' · ') : '';
+  el.innerHTML = '<b>'+stil[3]+'</b>' + (ek ? '<br>'+String(ek).replace(/[<>&]/g,'') : '')
+    + (d==='imzasiz' ? '<br>Tüm tarafların imzaladığı kontratın taramasını yükle.' : '');
+}
+function kontratImzaSifirla(){ kontratImza = { durum:'yok', gerekce:'', eksik:'', no:kontratImza.no+1 }; kontratImzaGoster(); }
+
+let _pdfLibSoz = null;
+function pdfLibYukle(){
+  if(window.PDFLib) return Promise.resolve(window.PDFLib);
+  if(!_pdfLibSoz) _pdfLibSoz = new Promise((res, rej)=>{
+    const sc = document.createElement('script');
+    sc.src = 'https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js';
+    sc.onload = ()=> window.PDFLib ? res(window.PDFLib) : rej(new Error('pdf-lib yok'));
+    sc.onerror = ()=>{ _pdfLibSoz = null; rej(new Error('pdf-lib yüklenemedi')); };
+    document.head.appendChild(sc);
+  });
+  return _pdfLibSoz;
+}
+async function pdfleriBirlestir(files){
+  const L = await pdfLibYukle();
+  const hedef = await L.PDFDocument.create();
+  for(const f of files){
+    const kaynak = await L.PDFDocument.load(await f.arrayBuffer(), { ignoreEncryption:true });
+    const sayfalar = await hedef.copyPages(kaynak, kaynak.getPageIndices());
+    sayfalar.forEach(p=>hedef.addPage(p));
+  }
+  const bytes = await hedef.save();
+  return new File([bytes], files[0].name.replace(/\.pdf$/i,'') + '_birlesik.pdf', { type:'application/pdf', lastModified:Date.now() });
+}
+function dosyaBase64(file){
+  return new Promise((res, rej)=>{ const r = new FileReader(); r.onload = e=>res(String(e.target.result).split(',')[1]||''); r.onerror = ()=>rej(r.error); r.readAsDataURL(file); });
+}
+async function kontratHazirla(files){
+  const no = ++kontratImza.no;
+  kontratImza = { durum:'bekliyor', gerekce:'', eksik:'', no }; kontratImzaGoster();
+  let dosya = files[0];
+  if(files.length > 1){
+    try{ dosya = await pdfleriBirlestir(files); }
+    catch(e){
+      console.warn('Kontrat birleştirilemedi:', e);
+      if(no !== kontratImza.no) return;
+      kontratImza = { durum:'imzasiz', gerekce:'Sayfalar tek PDF\'e birleştirilemedi. Tüm sayfaları tek PDF olarak tarayıp yükle.', eksik:'', no };
+      kontratImzaGoster(); return;
+    }
+    if(no !== kontratImza.no) return;
+    pendingFiles['kontrat'] = dosya;
+  }
+  await kontratImzaKontrolEt(dosya, no);
+}
+async function kontratImzaKontrolEt(dosya, no){
+  try{
+    const p = new URLSearchParams();
+    p.append('action','kontratImzaKontrol');
+    p.append('fileData', await dosyaBase64(dosya));
+    const ctrl = new AbortController(); const zt = setTimeout(()=>ctrl.abort(), 90000);
+    const r = await fetch(WA_SERVICE_URL, { method:'POST', body:p, redirect:'follow', signal:ctrl.signal });
+    clearTimeout(zt);
+    const j = JSON.parse(await r.text());
+    if(no !== kontratImza.no) return;
+    const d = (j.sonuc==='imzali' || j.sonuc==='imzasiz') ? j.sonuc : 'hata';
+    kontratImza = { durum:d, gerekce:String(j.gerekce||''), eksik:String(j.eksik||''), no };
+  }catch(e){
+    console.warn('İmza kontrolü:', e);
+    if(no !== kontratImza.no) return;
+    kontratImza = { durum:'hata', gerekce:'', eksik:'', no };
+  }
+  kontratImzaGoster();
+}
+
 // Kontrat - çoklu dosya (tüm sayfalar)
 let kontratFiles = [];
 function handleKontrat(input){
@@ -1448,7 +1540,8 @@ function handleKontrat(input){
   }
   
   kontratFiles = files;
-  pendingFiles['kontrat'] = files[0]; // Ana dosya
+  pendingFiles['kontrat'] = files[0]; // Ana dosya (birden fazlaysa aşağıda tek PDF'e birleştirilir)
+  kontratHazirla(files);
   
   const ua = document.getElementById('ua-kontrat');
   ua.classList.add('has-file');
@@ -1560,6 +1653,7 @@ function belgeIsimIptal(){
   if(type && !pendingNames[type]){
     pendingFiles[type] = null;
     if(type==='kontrat' && typeof kontratFiles!=='undefined') kontratFiles = [];
+    if(type==='kontrat') kontratImzaSifirla();
     const f = document.getElementById('f-'+type); if(f) f.value = '';
     const ua = document.getElementById('ua-'+type); if(ua) ua.classList.remove('has-file');
     const ul = document.getElementById('ul-'+type); if(ul) ul.textContent = 'Ekle';
@@ -1597,6 +1691,7 @@ function removeFile(e,type){
   document.getElementById('ul-'+type).textContent='Ekle';
   document.getElementById('uh-'+type).textContent = (type==='kontrat') ? 'Tüm sayfalar — sadece PDF' : 'Sadece PDF';
   document.getElementById('ur-'+type).style.display='none';
+  if(type==='kontrat') kontratImzaSifirla();
 }
 
 function setUploadStatus(type, status){
@@ -2521,6 +2616,7 @@ async function submitForm(){
       errors.push('• Paylaşım türü (ofis içi / farklı firma)');
     } else if(refType==='dis'){
       if(!(document.getElementById('f-ref-firm').value||'').trim()) errors.push('• Ortak emlak firması adı');
+      if((document.getElementById('f-ref-agent')?.value||'').trim().split(/\s+/).filter(Boolean).length < 2) errors.push('• Karşı danışmanın adı soyadı');
       if(_disOranSecim === 'ozel'){
         const _v = parseFloat(document.getElementById('f-ref-oran')?.value);
         if(!(isFinite(_v) && _v > 0 && _v < 100)) errors.push('• Karşı firmanın payı (1–99 arası bir yüzde)');
@@ -2534,23 +2630,22 @@ async function submitForm(){
   if(selectedType!=='Kiralık' && !pendingFiles['tapu']) errors.push('• Tapu belgesi (PDF)');
   if(selectedType!=='Satılık' && !pendingFiles['kontrat']) errors.push('• Kontrat belgesi (PDF)');
   if(!pendingFiles['fatura']) errors.push('• Ofise kesilen fatura (PDF) — fatura olmadan kapanış kaydedilemez');
-  // Mülk sahibi bilgileri: mülk sahibi tarafı (veya her ikisi) temsil edildiyse
-  // ya da ofis içi ortak kapanışta (iki taraf da zorunlu) istenir
+  // Kontrat imzası (Claude kontrolü): imzasız kontratla kapanış kaydedilmez
+  if(selectedType!=='Satılık' && pendingFiles['kontrat'] && kontratImza.durum==='imzasiz'){
+    errors.push('• Kontrat imzasız' + (kontratImza.eksik ? ' (eksik: '+kontratImza.eksik+')' : '') + ' — tüm tarafların imzaladığı kontratı yükleyin');
+  }
+  // Müşteri bilgileri: Umut, 20.11.2026 — her kapanışta İKİ tarafın da adı, T.C. ve telefonu zorunlu
+  // (paylaşımlı kapanış ve karşı tarafı başka firmanın getirdiği müşteri dahil).
+  // E-posta yalnız temsil edilen taraf(lar) için zorunlu ("e-posta önemsiz").
   const _ikiTaraf = ortakIkiTarafZorunluMu();
-  if(taraf==='mulk-sahibi' || taraf==='her-ikisi' || _ikiTaraf){
-    if(!ownerName) errors.push('• Mülk sahibi adı soyadı');
-    if(!ownerTc) errors.push('• Mülk sahibi T.C. kimlik no');
-    if(!ownerPhone) errors.push('• Mülk sahibi telefonu');
-    if(!ownerEmail) errors.push('• Mülk sahibi e-postası');
-  }
-  // Alıcı/kiracı bilgileri: alıcı-kiracı tarafı (veya her ikisi) temsil edildiyse
-  // ya da ofis içi ortak kapanışta (iki taraf da zorunlu) istenir
-  if(taraf==='alici-kiraci' || taraf==='her-ikisi' || _ikiTaraf){
-    if(!buyerName) errors.push('• Alıcı / kiracı adı soyadı');
-    if(!buyerTc) errors.push('• Alıcı / kiracı T.C. kimlik no');
-    if(!buyerPhone) errors.push('• Alıcı / kiracı telefonu');
-    if(!buyerEmail) errors.push('• Alıcı / kiracı e-postası');
-  }
+  if(!ownerName) errors.push('• Mülk sahibi adı soyadı');
+  if(!ownerTc) errors.push('• Mülk sahibi T.C. kimlik no');
+  if(!ownerPhone) errors.push('• Mülk sahibi telefonu');
+  if((taraf==='mulk-sahibi' || taraf==='her-ikisi' || _ikiTaraf) && !ownerEmail) errors.push('• Mülk sahibi e-postası');
+  if(!buyerName) errors.push('• Alıcı / kiracı adı soyadı');
+  if(!buyerTc) errors.push('• Alıcı / kiracı T.C. kimlik no');
+  if(!buyerPhone) errors.push('• Alıcı / kiracı telefonu');
+  if((taraf==='alici-kiraci' || taraf==='her-ikisi' || _ikiTaraf) && !buyerEmail) errors.push('• Alıcı / kiracı e-postası');
 
   // Format kontrolleri
   const phoneRegex = /^0 \(5\d{2}\) \d{3} \d{2} \d{2}$/;
@@ -2564,8 +2659,28 @@ async function submitForm(){
   if(buyerTc && !isValidTC(buyerTc)) errors.push('• Alıcı / kiracı T.C. kimlik no geçersiz (11 haneli ve doğru olmalı)');
 
   if(errors.length > 0){
-    alert('Lütfen aşağıdaki alanları kontrol edin:\n\n' + errors.join('\n'));
+    alert('Kapanış kaydedilemedi. Eksik / hatalı bilgiler:\n\n' + errors.join('\n'));
     return;
+  }
+
+  // Kontrat imza kontrolü sürüyorsa bitmesini bekle; teknik hata olduysa bir kez daha dene
+  if(selectedType!=='Satılık' && pendingFiles['kontrat']){
+    if(kontratImza.durum==='bekliyor'){
+      alert('Kontratın imza kontrolü sürüyor. Birkaç saniye sonra tekrar "Kapanışı Kaydet"e bas.');
+      return;
+    }
+    if(kontratImza.durum==='hata' || kontratImza.durum==='yok'){
+      const _sb=document.getElementById('submit-btn');
+      _sb.disabled=true; _sb.innerHTML='<span class="spinner" style="margin-right:6px;border-top-color:#fff"></span>İmzalar kontrol ediliyor...';
+      const _no = ++kontratImza.no; kontratImza = { durum:'bekliyor', gerekce:'', eksik:'', no:_no }; kontratImzaGoster();
+      await kontratImzaKontrolEt(pendingFiles['kontrat'], _no);
+      _sb.disabled=false; _sb.textContent='Kapanışı Kaydet';
+      if(kontratImza.durum==='imzasiz'){
+        alert('Kapanış kaydedilemedi: kontrat imzasız.\n\n' + [kontratImza.eksik ? 'Eksik: '+kontratImza.eksik : '', kontratImza.gerekce].filter(Boolean).join('\n') + '\n\nTüm tarafların imzaladığı kontratı yükleyin.');
+        return;
+      }
+      if(kontratImza.durum==='hata' && !confirm('⚠️ Kontratın imza kontrolü şu an yapılamıyor.\n\nYüklediğin kontrat TÜM TARAFLARCA İMZALI mı?\n\nTamam: imzalı, kaydet (kayda "imza kontrolü yapılamadı" notu düşülür)\nİptal: geri dön')) return;
+    }
   }
 
   // Diğer her şey tamamsa: yüklenmiş ama ismi olmayan belge varsa,
@@ -2689,6 +2804,15 @@ async function submitForm(){
   }
   if(_yukle.length) await Promise.all(_yukle);
 
+  // Zorunlu belge Drive'a ulaşmadıysa kapanış kaydedilmez (fatura/kontrat/tapu olmadan kayıt olmasın)
+  const _zorunluEksik = ['tapu','kontrat','fatura'].filter(t=>pendingFiles[t] && !driveLinks[t]);
+  if(_zorunluEksik.length){
+    btn.disabled=false; btn.textContent='Kapanışı Kaydet';
+    alert('⚠️ Kapanış KAYDEDİLMEDİ. Şu belge(ler) Drive\'a yüklenemedi:\n\n• ' + _zorunluEksik.map(t=>DOC_LABELS[t]).join('\n• ')
+      + '\n\nİnternet bağlantını kontrol edip tekrar "Kapanışı Kaydet"e bas. Belgeler seçili duruyor.');
+    return;
+  }
+
   // Paylaşımlı kapanış + tek taraf → HB otomatik 2'ye bölünür (danışmanın gerçek payı).
   // Paylaşımda karşı tarafın oranı düşülür: ofis içi %50, dış firma seçilen orana göre.
   const _kesinti = ortakKesintiOrani();
@@ -2723,6 +2847,9 @@ async function submitForm(){
       }
       const partner=document.getElementById('f-ref').value; return partner ? 'Co-op: '+partner : 'Yok';
     })(),
+    karsiDanisman: (document.getElementById('f-ref-shared').value==='Evet'
+                    && document.getElementById('f-ref-type').value==='dis')
+                    ? (document.getElementById('f-ref-agent')?.value||'').trim().replace(/\s+/g,' ') : '',
     ownerName:document.getElementById('f-owner-name').value,
     ownerTc:document.getElementById('f-owner-tc').value,
     ownerPhone:document.getElementById('f-owner-phone').value.trim(),
@@ -2764,8 +2891,20 @@ async function submitForm(){
   };
   const recs=loadRecords(); recs.push(rec); saveRecords(recs);
   { const b = pendingOku(); b[String(rec.id)] = Date.now(); pendingYaz(b); }
-  // Google Sheets'e de yaz, ardından danışmana WhatsApp tebriği
-  saveToSheets(rec).then(()=>waBildir('kapanisBildir',{id:rec.id}));
+  // Google Sheets'e yaz: sunucu da eksik bilgi / imzasız kontrat kontrolü yapar (ilk kayıt).
+  // Reddederse kayıt yerelden de silinir; bağlantı koparsa eskisi gibi sonra tekrar gönderilir.
+  btn.innerHTML='<span class="spinner" style="margin-right:6px;border-top-color:#fff"></span>Kontrol ediliyor...';
+  const _sunucu = await saveToSheets(rec, {ilk:true});
+  if(_sunucu && _sunucu.status==='red'){
+    saveRecords(loadRecords().filter(x=>String(x.id)!==String(rec.id)));
+    { const b = pendingOku(); delete b[String(rec.id)]; pendingYaz(b); }
+    btn.disabled=false; btn.textContent='Kapanışı Kaydet';
+    alert('Kapanış kaydedilemedi. Eksik / hatalı bilgiler:\n\n• ' + (_sunucu.eksikler||[]).join('\n• '));
+    if(String((_sunucu.eksikler||[]).join(' ')).indexOf('imzasız')>-1){ kontratImza.durum='imzasiz'; kontratImzaGoster(); }
+    return;
+  }
+  // danışmana WhatsApp tebriği
+  waBildir('kapanisBildir',{id:rec.id});
 
   /* ===== ORTAĞIN KAYDINI OTOMATİK OLUŞTUR =====
      Ortak ikinci kez form doldurmaz. HB zaten ikiye bölünmüş olarak kaydedilir,
