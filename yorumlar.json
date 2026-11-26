@@ -1,124 +1,268 @@
 {
-  "guncelleme": "25.11.2026 16:40:33",
+  "guncelleme": "26.11.2026 16:19:39",
   "ozet": [
     {
       "ad": "Umut Tokkuş",
-      "yorumSayisi": 0,
-      "siteSayisi": null
+      "yorumSayisi": 1,
+      "siteSayisi": 91
     },
     {
       "ad": "Ayşegül Alpay",
-      "yorumSayisi": 0,
-      "siteSayisi": null
+      "yorumSayisi": 1,
+      "siteSayisi": 28
     },
     {
       "ad": "Aysun Yılmaz",
-      "yorumSayisi": 0,
-      "siteSayisi": null
+      "yorumSayisi": 1,
+      "siteSayisi": 7
     },
     {
       "ad": "Evşen Özazman",
-      "yorumSayisi": 0,
-      "siteSayisi": null
+      "yorumSayisi": 1,
+      "siteSayisi": 10
     },
     {
       "ad": "Gamze Yetkin",
-      "yorumSayisi": 0,
-      "siteSayisi": null
+      "yorumSayisi": 1,
+      "siteSayisi": 27
     },
     {
       "ad": "Gizem Gök",
-      "yorumSayisi": 0,
-      "siteSayisi": null
+      "yorumSayisi": 1,
+      "siteSayisi": 6
     },
     {
       "ad": "İrem Aleyna Tetik",
-      "yorumSayisi": 0,
-      "siteSayisi": null
+      "yorumSayisi": 1,
+      "siteSayisi": 25
     },
     {
       "ad": "Orhan Özazman",
-      "yorumSayisi": 0,
-      "siteSayisi": null
+      "yorumSayisi": 2,
+      "siteSayisi": 2
     },
     {
       "ad": "Özlem Varol",
-      "yorumSayisi": 0,
-      "siteSayisi": null
+      "yorumSayisi": 1,
+      "siteSayisi": 5
     }
   ],
   "sayiDenetimi": {
-    "tumUyumlu": true,
-    "uyumsuz": [],
-    "detay": [
+    "tumUyumlu": false,
+    "uyumsuz": [
       {
         "ad": "Umut Tokkuş",
-        "toplanan": 0,
-        "site": null,
-        "tutuyor": null
+        "toplanan": 1,
+        "site": 91,
+        "tutuyor": false
       },
       {
         "ad": "Ayşegül Alpay",
-        "toplanan": 0,
-        "site": null,
-        "tutuyor": null
+        "toplanan": 1,
+        "site": 28,
+        "tutuyor": false
       },
       {
         "ad": "Aysun Yılmaz",
-        "toplanan": 0,
-        "site": null,
-        "tutuyor": null
+        "toplanan": 1,
+        "site": 7,
+        "tutuyor": false
       },
       {
         "ad": "Evşen Özazman",
-        "toplanan": 0,
-        "site": null,
-        "tutuyor": null
+        "toplanan": 1,
+        "site": 10,
+        "tutuyor": false
       },
       {
         "ad": "Gamze Yetkin",
-        "toplanan": 0,
-        "site": null,
-        "tutuyor": null
+        "toplanan": 1,
+        "site": 27,
+        "tutuyor": false
       },
       {
         "ad": "Gizem Gök",
-        "toplanan": 0,
-        "site": null,
-        "tutuyor": null
+        "toplanan": 1,
+        "site": 6,
+        "tutuyor": false
       },
       {
         "ad": "İrem Aleyna Tetik",
-        "toplanan": 0,
-        "site": null,
-        "tutuyor": null
-      },
-      {
-        "ad": "Orhan Özazman",
-        "toplanan": 0,
-        "site": null,
-        "tutuyor": null
+        "toplanan": 1,
+        "site": 25,
+        "tutuyor": false
       },
       {
         "ad": "Özlem Varol",
-        "toplanan": 0,
-        "site": null,
-        "tutuyor": null
+        "toplanan": 1,
+        "site": 5,
+        "tutuyor": false
+      }
+    ],
+    "detay": [
+      {
+        "ad": "Umut Tokkuş",
+        "toplanan": 1,
+        "site": 91,
+        "tutuyor": false
+      },
+      {
+        "ad": "Ayşegül Alpay",
+        "toplanan": 1,
+        "site": 28,
+        "tutuyor": false
+      },
+      {
+        "ad": "Aysun Yılmaz",
+        "toplanan": 1,
+        "site": 7,
+        "tutuyor": false
+      },
+      {
+        "ad": "Evşen Özazman",
+        "toplanan": 1,
+        "site": 10,
+        "tutuyor": false
+      },
+      {
+        "ad": "Gamze Yetkin",
+        "toplanan": 1,
+        "site": 27,
+        "tutuyor": false
+      },
+      {
+        "ad": "Gizem Gök",
+        "toplanan": 1,
+        "site": 6,
+        "tutuyor": false
+      },
+      {
+        "ad": "İrem Aleyna Tetik",
+        "toplanan": 1,
+        "site": 25,
+        "tutuyor": false
+      },
+      {
+        "ad": "Orhan Özazman",
+        "toplanan": 2,
+        "site": 2,
+        "tutuyor": true
+      },
+      {
+        "ad": "Özlem Varol",
+        "toplanan": 1,
+        "site": 5,
+        "tutuyor": false
       }
     ]
   },
-  "yorumlar": [],
+  "yorumlar": [
+    {
+      "ad": "Umut Tokkuş",
+      "musteri": "2026-11-24T22:21:13.98+03:00",
+      "tarih": "2026-11-24",
+      "yorum": "2026-11-24T22:21:13.98+03:00"
+    },
+    {
+      "ad": "Ayşegül Alpay",
+      "musteri": "2026-11-25T21:32:35.557+03:00",
+      "tarih": "2026-11-25",
+      "yorum": "2026-11-25T21:32:35.557+03:00"
+    },
+    {
+      "ad": "Aysun Yılmaz",
+      "musteri": "2026-11-24T19:45:15.383+03:00",
+      "tarih": "2026-11-24",
+      "yorum": "2026-11-24T19:45:15.383+03:00"
+    },
+    {
+      "ad": "Evşen Özazman",
+      "musteri": "2026-11-07T15:44:41.89+03:00",
+      "tarih": "2026-11-07",
+      "yorum": "2026-11-07T15:44:41.89+03:00"
+    },
+    {
+      "ad": "Gamze Yetkin",
+      "musteri": "2026-11-24T19:35:51.54+03:00",
+      "tarih": "2026-11-24",
+      "yorum": "2026-11-24T19:35:51.54+03:00"
+    },
+    {
+      "ad": "Gizem Gök",
+      "musteri": "2026-11-24T19:39:07.347+03:00",
+      "tarih": "2026-11-24",
+      "yorum": "2026-11-24T19:39:07.347+03:00"
+    },
+    {
+      "ad": "İrem Aleyna Tetik",
+      "musteri": "2026-11-24T19:44:28.267+03:00",
+      "tarih": "2026-11-24",
+      "yorum": "2026-11-24T19:44:28.267+03:00"
+    },
+    {
+      "ad": "Orhan Özazman",
+      "musteri": "Bülent Karadavut",
+      "tarih": "24/11/2026",
+      "yorum": "Şua İnşaat Elit Concept projesindeki dairemin kiralama sürecinde RE/MAX Doğuş ekibi baştan sona çok profesyonel ve ilgili davrandı. Sürecin her aşamasında düzenli bilgilendirme yaptılar ve tüm işlemleri güven veren bir şekilde yönettiler. Özellikle Orhan Bey e vermiş olduğu hizmet için çok teşekkür ederim. Hızlı geri dönüşleri, çözüm odaklı yaklaşımları ve müşteri memnuniyetine verdikleri önem gerçekten takdire değer. Gönül rahatlığıyla tavsiye ederim."
+    },
+    {
+      "ad": "Orhan Özazman",
+      "musteri": "Mobil Uygulamamızı",
+      "tarih": "27/10/2026",
+      "yorum": "Binlerce özel portföyü kaçırmayın! RE/MAX ile Satalım Kiralayalım"
+    },
+    {
+      "ad": "Özlem Varol",
+      "musteri": "2026-11-24T19:51:51.277+03:00",
+      "tarih": "2026-11-24",
+      "yorum": "2026-11-24T19:51:51.277+03:00"
+    }
+  ],
   "debug": {
     "hatalar": [],
     "notlar": [
-      "yorum sekmesi tıklandı: false",
-      "daha-fazla sonrası metin uzunluğu: 954",
+      "yorum sekmesi tıklandı: true",
+      "daha-fazla sonrası metin uzunluğu: 34787",
       "yorum sayfalaması 1. sayfada bitti",
       "Comment API isteği yakalanamadı",
-      "yorum sekmesi ham (yalnızca teşhis, eklenmedi): 0 | json cevap: 0",
-      "ekip linki: 0 (ham: 0, tekil ID: 0)"
+      "yorum sekmesi ham (yalnızca teşhis, eklenmedi): 101 | json cevap: 2",
+      "ekip linki: 11 (ham: 11, tekil ID: 11)",
+      "profil çöz: id=28250 slug=\"makbule-tokkus\" baslik=\"Makbule Tokkuş\" h1=\"\" -> EŞLEŞMEDİ",
+      "profil eşleşmedi (eski danışman olabilir): makbule-tokkus | baslik: Makbule Tokkuş",
+      "profil çöz: id=28251 slug=\"umut-tokkus\" baslik=\"Umut Tokkuş\" h1=\"Toplam Yorum Sayısı\" -> Umut Tokkuş",
+      "SAYI FARKI Umut Tokkuş: remax=91, toplanan=1 (kaynak:json, jsonCevap:3)",
+      "profil çöz: id=40213 slug=\"aysegul-alpay\" baslik=\"Ayşegül Alpay\" h1=\"Toplam Yorum Sayısı\" -> Ayşegül Alpay",
+      "SAYI FARKI Ayşegül Alpay: remax=28, toplanan=1 (kaynak:json, jsonCevap:3)",
+      "profil çöz: id=47386 slug=\"aysun-yilmaz\" baslik=\"Aysun Yılmaz\" h1=\"Toplam Yorum Sayısı\" -> Aysun Yılmaz",
+      "SAYI FARKI Aysun Yılmaz: remax=7, toplanan=1 (kaynak:json, jsonCevap:3)",
+      "profil çöz: id=54267 slug=\"evsen-ozazman\" baslik=\"Evşen Özazman\" h1=\"Toplam Yorum Sayısı\" -> Evşen Özazman",
+      "SAYI FARKI Evşen Özazman: remax=10, toplanan=1 (kaynak:json, jsonCevap:3)",
+      "profil çöz: id=41709 slug=\"gamze-yetkin\" baslik=\"Gamze Yetkin\" h1=\"Toplam Yorum Sayısı\" -> Gamze Yetkin",
+      "SAYI FARKI Gamze Yetkin: remax=27, toplanan=1 (kaynak:json, jsonCevap:3)",
+      "profil çöz: id=48933 slug=\"gizem-gok\" baslik=\"Gizem Gök\" h1=\"Toplam Yorum Sayısı\" -> Gizem Gök",
+      "SAYI FARKI Gizem Gök: remax=6, toplanan=1 (kaynak:json, jsonCevap:3)",
+      "profil çöz: id=35392 slug=\"irem-aleyna-tetik\" baslik=\"İrem Aleyna Tetik\" h1=\"Toplam Yorum Sayısı\" -> İrem Aleyna Tetik",
+      "SAYI FARKI İrem Aleyna Tetik: remax=25, toplanan=1 (kaynak:json, jsonCevap:3)",
+      "profil çöz: id=46773 slug=\"leman-ozlem-ozgur\" baslik=\"Leman Özlem Özgür\" h1=\"\" -> EŞLEŞMEDİ",
+      "profil eşleşmedi (eski danışman olabilir): leman-ozlem-ozgur | baslik: Leman Özlem Özgür",
+      "profil çöz: id=47387 slug=\"orhan-ozazman\" baslik=\"Orhan Özazman\" h1=\"Toplam Yorum Sayısı\" -> Orhan Özazman",
+      "profil çöz: id=46769 slug=\"ozlem-varol\" baslik=\"Özlem Varol\" h1=\"Toplam Yorum Sayısı\" -> Özlem Varol",
+      "SAYI FARKI Özlem Varol: remax=5, toplanan=1 (kaynak:json, jsonCevap:3)"
     ],
-    "jsonUrller": [],
-    "yorumSekmesiOrnek": "This page couldn’t load\n\nReload to try again, or go back.\n\nReload\nBack"
+    "jsonUrller": [
+      "https://remaxsiteapi.remax.com.tr/api/Common/GetPropertyCategoryTree",
+      "https://remaxsiteapi.remax.com.tr/api/Office/GetOfficeReviewSummary?OfficeId=801",
+      "https://remaxsiteapi.remax.com.tr/api/Employee/Comment",
+      "https://remaxsiteapi.remax.com.tr/api/Employee/GetEmployeeReviewSummary?EmployeeId=28251",
+      "https://remaxsiteapi.remax.com.tr/api/Employee/GetEmployeeReviewSummary?EmployeeId=40213",
+      "https://remaxsiteapi.remax.com.tr/api/Employee/GetEmployeeReviewSummary?EmployeeId=47386",
+      "https://remaxsiteapi.remax.com.tr/api/Employee/GetEmployeeReviewSummary?EmployeeId=54267",
+      "https://remaxsiteapi.remax.com.tr/api/Employee/GetEmployeeReviewSummary?EmployeeId=41709",
+      "https://remaxsiteapi.remax.com.tr/api/Employee/GetEmployeeReviewSummary?EmployeeId=48933",
+      "https://remaxsiteapi.remax.com.tr/api/Employee/GetEmployeeReviewSummary?EmployeeId=35392",
+      "https://remaxsiteapi.remax.com.tr/api/Employee/GetEmployeeReviewSummary?EmployeeId=47387",
+      "https://remaxsiteapi.remax.com.tr/api/Employee/GetEmployeeReviewSummary?EmployeeId=46769"
+    ],
+    "yorumSekmesiOrnek": "Toplam Yorum Sayısı\n\n298\n\nGenel Puan Durumu\n\n5.0\n\nDüzenli Bilgilendirme\nProfesyonellik\nGüvenirlik\nİletişim Becerisi\nYapay Zeka Özeti\n\n6 yıllık sektör deneyimiyle hizmet veren RE/MAX Doğuş, gayrimenkul alım, satım ve kiralama süreçlerinde profesyonel, çözüm odaklı ve güven veren bir yaklaşım sergilemektedir. Müşteriler, ofis ekibinin süreç boyunca gösterdiği titiz takibi, şeffaf iletişimi ve her iki tarafın haklarını gözeten sorumluluk bilincini öne çıkarmaktadır. Özellikle karmaşık süreçlerin hızlı ve sorunsuz bir şekilde sonuçlandırılması, ekibin bilgi birikimi ve destekleyici tutumuyla birleşerek yüksek müşteri memnuniyeti sağlamaktadır. Genel olarak ofis, hem yatırım hem de kiralama aşamalarında güvenilir bir iş ortağı olarak değerlendirilmektedir.\n\n24/11/2026 tarihinde oluşturuldu\n\nR******* K*******\nDanışmanımdan aldığım hizmetten memnun kaldım. Örgördükleri süre içinde dairem istediğim rakama kiralandı.\nAraçlar ve Teknoloji, Sektör Bilgisi, Bölge Hakimliği\n25/11/2026\nMünire Cihan\nKuzey Kıbrıs projeleri bize göre çok uzak bir ihtimalken Umut bey bu ihtimali bize çok yakınlaştırdı. Sayesinde çok ama çok iyi bir hamle yaptığımızı düşünüyorum. Kendisine ve eşi Makbule hanıma sevgiler.\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\n24/11/2026\nOrhan Hakkı\nUmut beyin yönlendirmesi ile harika kiracılarım var artık. Kusursuz süreç için teşekkürler. Yeniden görüşmek üzere.\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\n24/11/2026\nYakup Tamiş\nUmut Tokkuş bey için tek kelime ile şunu söyleyebilirim ; İşini hakkıyla yapıyor. Kendisine ve ekibine çok teşekkür ederim. Kiralamam sorunsuz bir şekilde sonuçlandı. Kesinlikle tavsiye ederim.\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\n24/11/2026\nGül Çoktemiz\nRE/MAX Doğuş ofisinden Umut bey ile Akasya Acıbadem de bulunan mülküm vasıtasıyla tanıştık. Kendisine titiz çalışması ve özverili gayretleri için çok teşekkür ederim.\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\n24/11/2026\nÇiğdem Türk\nUmut bey kesinlikle bu sektörde tanışılması gereken bir emlak danışmanı. En başından beri dediklerini ve söz verdiklerini hep yerine getirdi. Şu an yeni evimizde oturuyorsak Umut beyin gayretleri çok önemliydi. Ailem adına kendisine çok teşekkür ederim.\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\n24/11/2026\nSevinç Boyut\nUmut Bey'in gayrimenkul sektöründeki tecrübesi konuşmalarından bile anlaşılıyor. Güven veren yaklaşımı için teşekkür ederim.\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\n24/11/2026\nZeynep Hakyılmaz\nGayrimenkul sektöründe bilgi, tecrübe ve güvenin bir arada olması çok önemli. Umut Bey'in yaklaşımında bu üç özelliği de görmek mümkün. Kendisine ve RE/MAX Doğuş ekibine başarılarının devamını diliyorum.\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\n24/11/2026\nMeltem Güzelyüz\nKuzey Kıbrıs projeleri konusunda oldukça bilgili ve güven veren bir danışman kendisi. Çok sıkıntılı bir süreci Umut bey ile çok kısa bir sürede olumluya çevirdik. Çok teşekkürler.\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\n24/11/2026\nBurcin Doğruyurt\nKuzey Kıbrıs projeleri hakkında merak ettiğimiz pek çok konuya açıklık getirdi. Umut Bey'e ilgisinden dolayı teşekkür ediyoruz.\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\n24/11/2026\nMahmut Dumlu\nUmut Bey'e ilgisi ve profesyonel yaklaşımı için teşekkür ederim.\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\n24/11/2026\nOğuzhan Yavuz\nEv kiralama sürecinde Orhan Bey tarafından fazlasıyla destek olundu, teşekkür ederiz.\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\n24/11/2026\nAyşegül Kandemir\nÖzlem Hanım ile kiralama sürecinde tanıştık. Verdiği güven sayesinde hiç pişman olmadım. Süreç boyunca hep yanımızda oldu. Anlaşma aşamasında da tüm her şeyin yasal bir şekilde her iki tarafa (ev sahibi-kiracı) dosyalayarak vermesi de en başta Verdiği güveni perçinledi. Kendisine çok teşekkür ediyorum.\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\n24/11/2026\nBirkan Kösedağ\nİş yeri kiralama konusunda gösterdikleri ilgi ve alakalarına teşekkür ederiz.\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\n24/11/2026\nPınar Şenel\nAyşegül hanım gayet ilgili,işinde ciddi,profesyonel ve sorumluluk sahibi.Kendisiyle kısa sürede gayrimenkulümün kiralanması konusunda neticeye ulaştık.Kendisine teşekkür ediyorum.\nBölge Hakimliği, Sektör Bilgisi, Araçlar ve Teknoloji\n24/11/2026\nŞenay Koç\nAysun Yılmaz Hanımefendi ile kiralık daire aşamasında tanıştım. Kendisinden kiraladım. Bu dönemdeki profesyonel"
   }
 }
