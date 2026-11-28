@@ -1147,6 +1147,121 @@ function isValidTC(tc){
   return true;
 }
 
+/* ═══ KİMLİK FİLTRESİ (Umut, 28.11.2026: "danışman sallama TC, sallama tel, sallama mail; kendi mailini,
+   ofisin mailini, kendi telefonunu, kendi TC'sini girememeli") ═══
+   Kapanış Formu, Matbu Evraklar ve Yer Gösterme'de aynı kurallar; sunucu (kapanis-matbu KimlikFiltre.js)
+   aynısını bir kez daha uygular ve ayrıca "bu TC ofis kayıtlarında başka bir kişi adına" kontrolünü yapar.
+   Ekip üyesi formda kendisi taraf olarak yazılmışsa (adı soyadı aynı) kendi bilgisi kabul edilir. */
+const KF_EKIP=[
+  {ad:"Umut Tokkuş",tel:["5324724148"]},{ad:"Makbule Tokkuş",tel:["5324781331"]},
+  {ad:"Ayşegül Alpay",tel:["5324567956"]},{ad:"Aysun Yılmaz",tel:["5323633554"]},
+  {ad:"Evşen Özazman",tel:["5325181167"]},{ad:"Gamze Yetkin",tel:["5383544165"]},
+  {ad:"Gizem Gök",tel:["5070977431"]},{ad:"İrem Aleyna Tetik",tel:["5462819177","5304454461"]},
+  {ad:"Orhan Özazman",tel:["5334361995"]},{ad:"Özlem Varol",tel:["5336248598"]}];
+const KF_OFIS_TEL=["2163151515","8502222222"];
+const KF_OFIS_ALAN=["remaxdogus.com.tr","remax.com.tr","remaxdogus.com","dogusportal.com","umtgroup.com.tr"];
+const KF_SAHTE_ALAN=["example.com","example.org","test.com","ornek.com","deneme.com","mail.com.tr","email.com","abc.com","xxx.com","asd.com","domain.com","site.com","yok.com"];
+const KF_YAZIM={"gmial.com":"gmail.com","gmal.com":"gmail.com","gmai.com":"gmail.com","gamil.com":"gmail.com","gnail.com":"gmail.com","gmail.co":"gmail.com","gmail.con":"gmail.com","gmail.cm":"gmail.com","gmail.om":"gmail.com","gmail.com.tr":"gmail.com","gmaill.com":"gmail.com","hotmial.com":"hotmail.com","hotmai.com":"hotmail.com","hotmail.co":"hotmail.com","hotmal.com":"hotmail.com","homail.com":"hotmail.com","hotmail.con":"hotmail.com","yaho.com":"yahoo.com","yahooo.com":"yahoo.com","yahoo.con":"yahoo.com","outlok.com":"outlook.com","outlook.con":"outlook.com","iclud.com":"icloud.com","icloud.co":"icloud.com","icloud.con":"icloud.com"};
+const KF_SAHTE_YEREL=/^(test|deneme|ornek|örnek|example|sample|asd+|asdf+|asdasd|qwe+|qwerty|xxx+|abc|aaa+|yok|mail|email|e-?posta|noreply|no-?reply|bos|boş|none|null|musteri|müşteri|isim|ad|adsoyad|bilgi|kimse|yoktur|1+|123+|1234+|12345+|123456+)$/i;
+function kfKatla(s){return String(s||"").replace(/İ/g,"i").replace(/I/g,"ı").toLowerCase().normalize("NFKD").replace(/[\u0300-\u036f]/g,"").replace(/ı/g,"i");}
+function kfKelime(s){return kfKatla(s).split(/[^a-z]+/).filter(w=>w.length>1);}
+/* Girilen ad soyad bu ekip üyesinin kendisi mi (ad + soyad ikisi de geçiyor) */
+function kfEkipKendisi(isim,u){const g=kfKelime(isim),e=kfKelime(u.ad);return e.length>1&&g.includes(e[0])&&g.includes(e[e.length-1]);}
+function kfTelRakam(v){let d=String(v||"").replace(/\D/g,"");if(d.startsWith("90")&&d.length===12)d=d.slice(2);if(d.startsWith("0"))d=d.slice(1);return d;}
+/* T.C. no: algoritma + bilinen sahte kalıplar. sec.yabanci: pasaport (harf+rakam) kabul; sec.vergi: 10 haneli vergi no kabul */
+function kfTcHata(v,sec){
+  sec=sec||{};const s=String(v||"").trim();if(!s)return "";
+  if(sec.yabanci&&/^[A-Za-z]{1,3}\s?\d{5,9}$/.test(s))return "";
+  const d=s.replace(/\D/g,"");
+  if(sec.vergi&&d.length===10&&!/[A-Za-z]/.test(s)){
+    if(/^(\d)\1{9}$/.test(d)||d==="1234567890")return "vergi no sahte görünüyor";
+    return kfVknGecerli(d)?"":"vergi no hatalı (10 hane tutmuyor, bir rakam yanlış)";
+  }
+  if(d.length!==11||/[A-Za-z]/.test(s))return sec.vergi?"T.C. no 11 hane (vergi no ise 10 hane) olmalı":"T.C. kimlik no 11 hane olmalı";
+  if(d[0]==="0")return "T.C. kimlik no 0 ile başlamaz";
+  const n=d.split("").map(Number),t1=((n[0]+n[2]+n[4]+n[6]+n[8])*7-(n[1]+n[3]+n[5]+n[7]))%10;
+  if((t1+10)%10!==n[9]||n.slice(0,10).reduce((a,b)=>a+b,0)%10!==n[10])return "T.C. kimlik no geçersiz (son iki hane tutmuyor, bir rakam yanlış yazılmış)";
+  const ilk9=d.slice(0,9);
+  if(/^(\d)\1{8}$/.test(ilk9)||"0123456789".includes(ilk9)||"9876543210".includes(ilk9)||(ilk9.match(/0/g)||[]).length>=7||d==="10000000146")
+    return "T.C. kimlik no uydurma görünüyor (gerçek kimlik numarasını yazın)";
+  return "";
+}
+function kfVknGecerli(d){
+  if(!/^\d{10}$/.test(d))return false;let t=0;
+  for(let i=0;i<9;i++){const x=(+d[i]+10-(i+1))%10;let y=(x*Math.pow(2,10-(i+1)))%9;if(x!==0&&y===0)y=9;t+=y;}
+  return (10-(t%10))%10===+d[9];
+}
+/* Telefon: gerçek operatör kodu, uydurma kalıp, ofis / ekip numarası. sec.sabit: sabit hat (0212, 0216…) kabul */
+function kfTelHata(v,isim,sec){
+  sec=sec||{};const s=String(v||"").trim();if(!s)return "";
+  if(/^(\+|00)/.test(s)&&!/^(\+|00)90/.test(s.replace(/\s/g,"")))return ""; // yurt dışı
+  const d=kfTelRakam(s);
+  if(KF_OFIS_TEL.includes(d))return "ofisin telefonu yazılmış, müşterinin kendi numarasını yazın";
+  for(const u of KF_EKIP){if(u.tel.includes(d)&&!kfEkipKendisi(isim,u))return "bu numara ekipten "+u.ad+" (danışman numarası), müşterinin kendi numarasını yazın";}
+  if(d.length!==10)return "telefon 0 ile birlikte 11 hane olmalı";
+  const sabit=/^[234]\d{9}$/.test(d);
+  if(!/^5(0[1-7]|1[0-9]|3\d|4\d|5\d|6[01])\d{7}$/.test(d)&&!(sec.sabit&&sabit))
+    return sabit?"cep telefonu olmalı (05xx…)":"telefon numarası geçersiz (böyle bir operatör kodu yok)";
+  const abone=d.slice(3);
+  if(/^(\d)\1{6}$/.test(abone)||/(\d)\1{5}/.test(d)||"01234567890".includes(abone)||"09876543210".includes(abone)||/^(\d\d)\1\1/.test(abone))
+    return "telefon numarası uydurma görünüyor (gerçek numarayı yazın)";
+  return "";
+}
+/* E-posta: biçim, yazım hatası, uydurma, ofis adresi */
+function kfMailHata(v){
+  const s=String(v||"").trim().toLowerCase();if(!s)return "";
+  if(/[^\x00-\x7f]/.test(s))return "e-postada Türkçe harf (ı, ğ, ü, ş, ö, ç) ya da boşluk olamaz";
+  if(!/^[a-z0-9._%+'-]+@[a-z0-9-]+(\.[a-z0-9-]+)*\.[a-z]{2,}$/.test(s)||/\.\.|^\.|\.@|@-/.test(s))return "e-posta biçimi hatalı";
+  const [yerel,alan]=s.split("@");
+  if(KF_OFIS_ALAN.some(a=>alan===a||alan.endsWith("."+a)))return "ofis / danışman e-postası yazılmış, müşterinin kendi e-postasını yazın";
+  if(KF_YAZIM[alan])return "e-posta yazım hatası: @"+alan+" değil @"+KF_YAZIM[alan]+" olmalı";
+  if(KF_SAHTE_ALAN.includes(alan)||KF_SAHTE_YEREL.test(yerel)||/^(.)\1+$/.test(yerel))return "e-posta uydurma görünüyor (müşterinin gerçek e-postasını yazın)";
+  if(alan==="gmail.com"&&yerel.replace(/\./g,"").length<6)return "gmail adresi en az 6 harf olur, e-posta hatalı";
+  return "";
+}
+/* Farklı taraflara aynı TC / telefon / e-posta yazılmış mı. kisiler: [{rol, isim, tc, tel, mail}] */
+function kfTekrarHata(kisiler){
+  const h=[],gor={};
+  kisiler.forEach(k=>{
+    [["tc",String(k.tc||"").replace(/\D/g,""),"T.C. no"],["tel",kfTelRakam(k.tel),"telefon"],["mail",String(k.mail||"").trim().toLowerCase(),"e-posta"]].forEach(([t,v,ad])=>{
+      if(!v||v.length<5)return;const a=t+":"+v;
+      if(gor[a]&&gor[a]!==k.rol)h.push(k.rol+" ile "+gor[a]+" aynı "+ad+" girilmiş, her kişinin kendi bilgisi olmalı");
+      else gor[a]=k.rol;
+    });
+  });
+  return h;
+}
+/* Tek çağrı: hata listesi döner ("• Rol: mesaj") */
+function kfKontrol(kisiler,sec){
+  const h=[];
+  kisiler.forEach(k=>{
+    const r=k.rol;let m;
+    if((m=kfTcHata(k.tc,k.tcSec||sec)))h.push(r+": "+m);
+    if((m=kfTelHata(k.tel,k.isim,k.telSec||sec)))h.push(r+": "+m);
+    if((m=kfMailHata(k.mail)))h.push(r+": "+m);
+  });
+  return h.concat(kfTekrarHata(kisiler));
+}
+
+/* Alan altında canlı uyarı (yazarken değil, alandan çıkınca) */
+const KF_BICIM_RX=/geçersiz \(son iki|11 hane olmalı|11 hane \(vergi|0 ile başlamaz|biçimi hatalı/;
+function kfAlanUyar(el,mesaj){
+  if(!el)return;let h=el.parentNode.querySelector('.kf-uyari');
+  if(!mesaj){if(h)h.remove();return;}
+  if(!h){h=document.createElement('div');h.className='kf-uyari';h.style.cssText='color:#B91C1C;font:600 12px Arial,sans-serif;margin-top:4px';el.parentNode.appendChild(h);}
+  h.textContent='⚠️ '+mesaj;el.style.borderColor='#EF4444';
+}
+function kfCanliBagla(){
+  [['owner','f-owner-name'],['buyer','f-buyer-name']].forEach(([t,isimId])=>{
+    const isim=()=>(document.getElementById(isimId)||{}).value||'';
+    const tc=document.getElementById('f-'+t+'-tc'),tel=document.getElementById('f-'+t+'-phone'),ml=document.getElementById('f-'+t+'-email');
+    if(tc)tc.addEventListener('blur',()=>kfAlanUyar(tc,kfTcHata(tc.value)));
+    if(tel)tel.addEventListener('blur',()=>kfAlanUyar(tel,kfTelHata(tel.value,isim())));
+    if(ml)ml.addEventListener('blur',()=>kfAlanUyar(ml,kfMailHata(ml.value)));
+  });
+}
+document.addEventListener('DOMContentLoaded',kfCanliBagla);
+
 function formatCurrency(el){
   // İmleç pozisyonunu kaydet
   let pos = el.selectionStart;
@@ -2551,7 +2666,7 @@ function faturaOnayDevam(){
 }
 
 function resetForm(){
-  ['f-date','f-amount','f-hb-owner','f-hb-buyer','f-address','f-deposit','f-owner-name','f-owner-tc','f-owner-phone','f-owner-email','f-buyer-name','f-buyer-tc','f-buyer-phone','f-buyer-email','f-notes','f-tahliye-tarih','f-kira-bas','f-ilce','f-mahalle','f-sokak','f-blok','f-daire'].forEach(id=>{const el=document.getElementById(id);if(el){el.value='';el.style.borderColor=''}});
+  ['f-date','f-amount','f-hb-owner','f-hb-buyer','f-address','f-deposit','f-owner-name','f-owner-tc','f-owner-phone','f-owner-email','f-buyer-name','f-buyer-tc','f-buyer-phone','f-buyer-email','f-notes','f-tahliye-tarih','f-kira-bas','f-ilce','f-mahalle','f-sokak','f-blok','f-daire'].forEach(id=>{const el=document.getElementById(id);if(el){el.value='';el.style.borderColor=''}});document.querySelectorAll('.kf-uyari').forEach(x=>x.remove());
   document.getElementById('f-date').value=new Date().toISOString().split('T')[0];
   document.getElementById('f-ref-shared').value=''; { const _sd=document.getElementById('f-ref-side'); if(_sd) _sd.value=''; const _sw=document.getElementById('f-ref-side-wrap'); if(_sw) _sw.style.display='none'; } document.getElementById('f-taraf').value=''; document.getElementById('f-ref').value=''; document.getElementById('f-ref-partner-wrap').style.display='none';
   { const t=document.getElementById('f-ref-type'); if(t) t.value=''; const fw=document.getElementById('f-ref-firm'); if(fw) fw.value=''; const tw=document.getElementById('f-ref-type-wrap'); if(tw) tw.style.display='none'; const ftw=document.getElementById('f-ref-firm-wrap'); if(ftw) ftw.style.display='none'; }
@@ -2657,6 +2772,10 @@ async function submitForm(){
   if(buyerEmail && !emailRegex.test(buyerEmail)) errors.push('• Alıcı e-postası geçersiz format');
   if(ownerTc && !isValidTC(ownerTc)) errors.push('• Mülk sahibi T.C. kimlik no geçersiz (11 haneli ve doğru olmalı)');
   if(buyerTc && !isValidTC(buyerTc)) errors.push('• Alıcı / kiracı T.C. kimlik no geçersiz (11 haneli ve doğru olmalı)');
+  // Kimlik filtresi (28.11.2026): uydurma TC / telefon / e-posta, ofisin ve danışmanların kendi bilgileri girilemez
+  kfKontrol([{rol:'Mülk sahibi',isim:ownerName,tc:ownerTc,tel:ownerPhone,mail:ownerEmail},
+             {rol:'Alıcı / kiracı',isim:buyerName,tc:buyerTc,tel:buyerPhone,mail:buyerEmail}])
+    .filter(x=>!KF_BICIM_RX.test(x)).forEach(x=>errors.push('• '+x));   // biçim hataları yukarıda zaten yazıldı
 
   if(errors.length > 0){
     alert('Kapanış kaydedilemedi. Eksik / hatalı bilgiler:\n\n' + errors.join('\n'));
@@ -3698,6 +3817,12 @@ async function saveRecordEdit(id){
   if(eOp && !telGecerliMi(eOp)) eErrors.push('• Mülk sahibi telefonu geçersiz format (0 (5XX) XXX XX XX veya yurt dışı için +ülke kodu)');
   if(eBp && !telGecerliMi(eBp)) eErrors.push('• Alıcı telefonu geçersiz format (0 (5XX) XXX XX XX veya yurt dışı için +ülke kodu)');
   if(eOe && !eMailRx.test(eOe)) eErrors.push('• Mülk sahibi e-postası geçersiz format');
+  // Kimlik filtresi: yalnız bu düzenlemede DEĞİŞEN alanlara (eski kayıtlar kilitlenmesin)
+  { const _k=v=>String(v||'').toLowerCase().replace(/[^0-9a-z@._+-]/g,''), _d=(yeni,eski)=>_k(yeni)!==_k(eski)?yeni:'';
+    kfKontrol([{rol:'Mülk sahibi',isim:gv('edit-ownerName'),tc:_d(eOtc,old.ownerTc),tel:_d(eOp,old.ownerPhone),mail:_d(eOe,old.ownerEmail)},
+               {rol:'Alıcı / kiracı',isim:gv('edit-buyerName'),tc:_d(eBtc,old.buyerTc),tel:_d(eBp,old.buyerPhone),mail:_d(eBe,old.buyerEmail)}])
+      .filter(x=>!KF_BICIM_RX.test(x))
+      .forEach(x=>eErrors.push('• '+x)); }
   if(eBe && !eMailRx.test(eBe)) eErrors.push('• Alıcı e-postası geçersiz format');
   // En az bir tarafın müşteri bilgisi eksiksiz olmalı
   const ownerOk = gv('edit-ownerName') && eOp && eOe;
