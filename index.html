@@ -1154,7 +1154,7 @@ function isValidTC(tc){
    Ekip üyesi formda kendisi taraf olarak yazılmışsa (adı soyadı aynı) kendi bilgisi kabul edilir. */
 const KF_EKIP=[
   {ad:"Umut Tokkuş",tel:["5324724148"]},{ad:"Makbule Tokkuş",tel:["5324781331"]},
-  {ad:"Ayşegül Alpay",tel:["5324567956"]},{ad:"Aysun Yılmaz",tel:["5323633554"]},
+  {ad:"Ayşegül Alpay",tel:["5324567956"]},{ad:"Aysun Yılmaz",tel:["5323633554"],sirket:["zencan"]},
   {ad:"Evşen Özazman",tel:["5325181167"]},{ad:"Gamze Yetkin",tel:["5383544165"]},
   {ad:"Gizem Gök",tel:["5070977431"]},{ad:"İrem Aleyna Tetik",tel:["5462819177","5304454461"]},
   {ad:"Orhan Özazman",tel:["5334361995"]},{ad:"Özlem Varol",tel:["5336248598"]}];
@@ -1166,7 +1166,8 @@ const KF_SAHTE_YEREL=/^(test|deneme|ornek|örnek|example|sample|asd+|asdf+|asdas
 function kfKatla(s){return String(s||"").replace(/İ/g,"i").replace(/I/g,"ı").toLowerCase().normalize("NFKD").replace(/[\u0300-\u036f]/g,"").replace(/ı/g,"i");}
 function kfKelime(s){return kfKatla(s).split(/[^a-z]+/).filter(w=>w.length>1);}
 /* Girilen ad soyad bu ekip üyesinin kendisi mi (ad + soyad ikisi de geçiyor) */
-function kfEkipKendisi(isim,u){const g=kfKelime(isim),e=kfKelime(u.ad);return e.length>1&&g.includes(e[0])&&g.includes(e[e.length-1]);}
+/* sirket: ekip üyesinin aynı zamanda çalıştığı firma (Umut 28.11: Aysun Zencan'ın da çalışanı) — o firma adına kendi bilgisi geçer */
+function kfEkipKendisi(isim,u){const g=kfKelime(isim),e=kfKelime(u.ad);if((u.sirket||[]).some(s=>g.includes(s)))return true;return e.length>1&&g.includes(e[0])&&g.includes(e[e.length-1]);}
 function kfTelRakam(v){let d=String(v||"").replace(/\D/g,"");if(d.startsWith("90")&&d.length===12)d=d.slice(2);if(d.startsWith("0"))d=d.slice(1);return d;}
 /* T.C. no: algoritma + bilinen sahte kalıplar. sec.yabanci: pasaport (harf+rakam) kabul; sec.vergi: 10 haneli vergi no kabul */
 function kfTcHata(v,sec){
